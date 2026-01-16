@@ -22,4 +22,7 @@ class ReminderLocalRepositoryImpl implements ReminderLocalRepository {
   @override
   Future<Either<Failure, void>> deleteReminder(int id) =>
       dataSource.deleteReminder(id);
+  @override
+  Future<Either<Failure, void>> deleteReminders(List<int> ids) =>
+      dataSource.deleteReminders(ids);
 }

@@ -10,6 +10,7 @@ class ReminderListBlocState with _$ReminderListBlocState {
       _GetReminderListBlocStateErrorState;
   const factory ReminderListBlocState.loaded({
     required ReminderListState state,
+    ReminderListActionState? action,
   }) = _GetReminderListBlocStateLoadedState;
 }
 
@@ -25,4 +26,16 @@ class ReminderListState {
     this.onLoadMore = false,
     required this.items,
   });
+}
+
+@freezed
+class ReminderListActionState with _$ReminderListActionState {
+  const factory ReminderListActionState.initial() =
+      _ReminderListActionInitialState;
+  const factory ReminderListActionState.loading() =
+      _GetReminderListActionLoadingState;
+  const factory ReminderListActionState.error(String message) =
+      _GetReminderListActionErrorState;
+  const factory ReminderListActionState.success({required String actionName}) =
+      _GetReminderListActionLoadedState;
 }

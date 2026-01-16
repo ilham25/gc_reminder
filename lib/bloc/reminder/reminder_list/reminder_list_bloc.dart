@@ -28,4 +28,34 @@ class ReminderListBloc extends SafeCubit<ReminderListBlocState> {
   Future refresh() async {
     getData();
   }
+
+  Future delete(List<int> ids) async {
+    state.maybeWhen(
+      orElse: () {},
+      loaded: (oldState, action) async {
+        emit(
+          ReminderListBlocState.loaded(
+            state: oldState,
+            action: ReminderListActionState.loading(),
+          ),
+        );
+        try {
+          await _localRepository.deleteReminders(ids);
+          emit(
+            ReminderListBlocState.loaded(
+              state: oldState,
+              action: ReminderListActionState.success(actionName: "delete"),
+            ),
+          );
+        } catch (e) {
+          emit(
+            ReminderListBlocState.loaded(
+              state: oldState,
+              action: ReminderListActionState.error(e.toString()),
+            ),
+          );
+        }
+      },
+    );
+  }
 }

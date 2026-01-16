@@ -179,6 +179,10 @@ class $AssetsIconsGen {
   /// File path: assets/icons/success.png
   AssetGenImage get success => const AssetGenImage('assets/icons/success.png');
 
+  /// File path: assets/icons/trash_outlined.png
+  AssetGenImage get trashOutlined =>
+      const AssetGenImage('assets/icons/trash_outlined.png');
+
   /// File path: assets/icons/vertical_dots.png
   AssetGenImage get verticalDots =>
       const AssetGenImage('assets/icons/vertical_dots.png');
@@ -236,6 +240,7 @@ class $AssetsIconsGen {
     starOutlined,
     store,
     success,
+    trashOutlined,
     verticalDots,
     warning,
   ];

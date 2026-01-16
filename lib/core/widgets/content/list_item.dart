@@ -15,6 +15,7 @@ class UIKitListItem extends StatelessWidget {
   final int count;
 
   final VoidCallback? onTap;
+  final VoidCallback? onLongPress;
 
   final Widget? left;
   final Widget? right;
@@ -38,6 +39,7 @@ class UIKitListItem extends StatelessWidget {
     this.leftIcon,
     this.rightIcon,
     this.onTap,
+    this.onLongPress,
     this.right,
     this.variant,
     this.value = false,
@@ -104,6 +106,7 @@ class UIKitListItem extends StatelessWidget {
     required String description,
     required int count,
     VoidCallback? onTap,
+    VoidCallback? onLongPress,
     Widget? left,
     Widget? right,
     AssetGenImage? leftIcon,
@@ -121,6 +124,7 @@ class UIKitListItem extends StatelessWidget {
     right: right,
     count: count,
     onTap: onTap,
+    onLongPress: onLongPress,
     decoration: decoration,
     padding: padding,
     leftAlignment: leftAlignment,
@@ -208,6 +212,7 @@ class UIKitListItem extends StatelessWidget {
         ),
         child: InkWell(
           onTap: onTap,
+          onLongPress: onLongPress,
           borderRadius: decoration?.borderRadius,
           child: Padding(
             padding: _padding,

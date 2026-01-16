@@ -64,4 +64,17 @@ class ReminderLocalDataSource {
       );
     }
   }
+
+  Future<Either<Failure, void>> deleteReminders(List<int> ids) async {
+    try {
+      await (db.delete(
+        db.reminderTable,
+      )..where((tbl) => tbl.id.isIn(ids))).go();
+      return const Right(null);
+    } catch (e) {
+      return Left(
+        Failure(message: e.toString(), statusCode: ResponseCode.badRequest),
+      );
+    }
+  }
 }

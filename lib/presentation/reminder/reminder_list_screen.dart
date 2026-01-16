@@ -10,13 +10,10 @@ import 'package:gc_reminder/core/widgets/button/button.dart';
 import 'package:gc_reminder/core/widgets/button/icon_button.dart';
 import 'package:gc_reminder/core/widgets/content/list_item.dart';
 import 'package:gc_reminder/core/widgets/image/image_caching.dart';
-import 'package:gc_reminder/core/widgets/progress/progress_bar.dart';
-import 'package:gc_reminder/core/widgets/toast/toast.dart';
 import 'package:gc_reminder/gen/assets.gen.dart';
 import 'package:gc_reminder/presentation/common/widgets/empty/empty_list.dart';
 import 'package:gc_reminder/presentation/reminder/widgets/bottom_sheet/reminder_create_bottom_sheet.dart';
 import 'package:gc_reminder/presentation/reminder/widgets/bottom_sheet/reminder_update_bottom_sheet.dart';
-import 'package:gc_reminder/routing/route.gr.dart';
 import 'package:gc_reminder/theme/theme.dart';
 import 'package:gc_reminder/utils/date/date_format_utils.dart';
 
@@ -118,123 +115,7 @@ class _ReminderListBodyState extends State<ReminderListBody> {
             children: [
               _TotalBalanceCard(),
               Space.h(8),
-              Container(
-                clipBehavior: .antiAlias,
-                decoration: BoxDecoration(
-                  color: MyTheme.color.palette.light.light,
-                  borderRadius: .circular(16),
-                ),
-
-                child: Column(
-                  crossAxisAlignment: .stretch,
-                  children: [
-                    Padding(
-                      padding: .symmetric(
-                        horizontal: AppSetting.setWidth(8),
-                        vertical: AppSetting.setHeight(8),
-                      ),
-                      child: Row(
-                        children: [
-                          Flexible(
-                            fit: .tight,
-                            child: Text(
-                              "Recent Reminders",
-                              style: MyTheme.style.action.m,
-                            ),
-                          ),
-                          Space.w(4),
-                          UIKitIconButton.secondary(
-                            Assets.icons.filter,
-                            iconSize: 14,
-                            size: 20,
-                            decoration: UIKitIconButtonDecoration(
-                              iconColor: MyTheme.color.palette.dark.darkest,
-                            ),
-                          ),
-                          // Assets.icons.filter.image(
-                          //   height: AppSetting.setHeight(14),
-                          //   width: AppSetting.setWidth(14),
-                          //   color: MyTheme.color.palette.dark.darkest,
-                          // ),
-                        ],
-                      ),
-                    ),
-                    BlocBuilder<ReminderListBloc, ReminderListBlocState>(
-                      builder: (context, state) => state.maybeWhen(
-                        orElse: () =>
-                            Center(child: CircularProgressIndicator()),
-                        loaded: (state) {
-                          if (state.items.isEmpty) {
-                            return EmptyList(onRefresh: _onRefresh);
-                          }
-
-                          return ListView.builder(
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            // padding: .symmetric(vertical: AppSetting.setHeight(8)),
-                            // separatorBuilder: (context, index) => Space.h(2),
-                            itemCount: state.items.length,
-                            itemBuilder: (context, index) {
-                              final item = state.items[index];
-
-                              return UIKitListItem(
-                                title: item.title,
-                                description:
-                                    "${formatterDate.format(item.startAt)}${item.endAt == null ? "" : " - ${formatterTimeMinute.format(item.endAt!)}"}",
-                                decoration: UIKitListItemDecoration(
-                                  titleTextStyle: MyTheme.style.action.m,
-                                  descriptionTextStyle: MyTheme.style.body.xs
-                                      .copyWith(
-                                        color: MyTheme.color.palette.dark.light,
-                                      ),
-                                  leftSpacing: 8,
-                                ),
-                                leftAlignment: .center,
-                                onTap: () async {
-                                  debugPrint("onTap: $item");
-                                  await ReminderUpdateBottomSheet.show(
-                                    reminder: item,
-                                  );
-                                  _onRefresh();
-                                },
-                                left: SizedBox(
-                                  height: AppSetting.setHeight(32),
-                                  width: AppSetting.setHeight(32),
-                                  child: ImageCaching(
-                                    imageUrl:
-                                        "https://picsum.photos/200?random=$index",
-                                    borderRadius: 100,
-                                  ),
-                                ),
-                                padding: .symmetric(
-                                  horizontal: AppSetting.setWidth(8),
-                                  vertical: AppSetting.setHeight(8),
-                                ),
-                                right: Column(
-                                  crossAxisAlignment: .end,
-                                  children: [
-                                    Text(
-                                      "\$32.16",
-                                      style: MyTheme.style.action.m,
-                                    ),
-                                    Space.h(4),
-                                    Text(
-                                      "Debit Card",
-                                      style: MyTheme.style.body.xs.copyWith(
-                                        color: MyTheme.color.palette.dark.light,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              );
-                            },
-                          );
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+              RecentReminders(onRefresh: _onRefresh),
             ],
           ),
         ),
@@ -252,8 +133,178 @@ class _ReminderListBodyState extends State<ReminderListBody> {
   }
 }
 
+class RecentReminders extends StatefulWidget {
+  final VoidCallback onRefresh;
+
+  const RecentReminders({super.key, required this.onRefresh});
+
+  @override
+  State<RecentReminders> createState() => _RecentRemindersState();
+}
+
+class _RecentRemindersState extends State<RecentReminders> {
+  List<int> selectedIds = [];
+
+  bool get isDeleteMode => selectedIds.isNotEmpty;
+
+  Future _onDelete() {
+    return context.read<ReminderListBloc>().delete(selectedIds);
+  }
+
+  Widget _buildActionIcon() {
+    return UIKitIconButton.secondary(
+      !isDeleteMode ? Assets.icons.filter : Assets.icons.trashOutlined,
+      iconSize: !isDeleteMode ? 14 : 16,
+      size: 20,
+      decoration: UIKitIconButtonDecoration(
+        iconColor: !isDeleteMode
+            ? MyTheme.color.palette.dark.darkest
+            : MyTheme.color.danger,
+      ),
+      onTap: () async {
+        if (!isDeleteMode) {
+          return;
+        }
+
+        await _onDelete();
+        widget.onRefresh();
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      clipBehavior: .antiAlias,
+      decoration: BoxDecoration(
+        color: MyTheme.color.palette.light.light,
+        borderRadius: .circular(16),
+      ),
+
+      child: Column(
+        crossAxisAlignment: .stretch,
+        children: [
+          Padding(
+            padding: .symmetric(
+              horizontal: AppSetting.setWidth(8),
+              vertical: AppSetting.setHeight(8),
+            ),
+            child: Row(
+              children: [
+                Flexible(
+                  fit: .tight,
+                  child: Text(
+                    "Recent Reminders",
+                    style: MyTheme.style.action.m,
+                  ),
+                ),
+                Space.w(4),
+                _buildActionIcon(),
+                // Assets.icons.filter.image(
+                //   height: AppSetting.setHeight(14),
+                //   width: AppSetting.setWidth(14),
+                //   color: MyTheme.color.palette.dark.darkest,
+                // ),
+              ],
+            ),
+          ),
+          BlocBuilder<ReminderListBloc, ReminderListBlocState>(
+            builder: (context, state) => state.maybeWhen(
+              orElse: () => Center(child: CircularProgressIndicator()),
+              loaded: (state, action) {
+                if (state.items.isEmpty) {
+                  return EmptyList(onRefresh: widget.onRefresh);
+                }
+
+                return ListView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  // padding: .symmetric(vertical: AppSetting.setHeight(8)),
+                  // separatorBuilder: (context, index) => Space.h(2),
+                  itemCount: state.items.length,
+                  itemBuilder: (context, index) {
+                    final item = state.items[index];
+                    final selected = selectedIds.contains(item.id);
+
+                    return UIKitListItem(
+                      title: item.title,
+                      description:
+                          "${formatterDate.format(item.startAt)}${item.endAt == null ? "" : " - ${formatterTimeMinute.format(item.endAt!)}"}",
+                      decoration: UIKitListItemDecoration(
+                        titleTextStyle: MyTheme.style.action.m,
+                        descriptionTextStyle: MyTheme.style.body.xs.copyWith(
+                          color: MyTheme.color.palette.dark.light,
+                        ),
+                        leftSpacing: 8,
+                        backgroundColor: selected
+                            ? MyTheme.color.palette.error.light
+                            : null,
+                      ),
+                      leftAlignment: .center,
+                      onTap: () async {
+                        if (isDeleteMode) {
+                          setState(() {
+                            if (selected) {
+                              selectedIds.remove(item.id);
+                            } else {
+                              selectedIds.add(item.id);
+                            }
+                          });
+
+                          return;
+                        }
+
+                        await ReminderUpdateBottomSheet.show(reminder: item);
+                        widget.onRefresh();
+                      },
+                      onLongPress: () {
+                        setState(() {
+                          if (selected) {
+                            selectedIds.remove(item.id);
+                          } else {
+                            selectedIds.add(item.id);
+                          }
+                        });
+                      },
+                      left: SizedBox(
+                        height: AppSetting.setHeight(32),
+                        width: AppSetting.setHeight(32),
+                        child: ImageCaching(
+                          imageUrl: "https://picsum.photos/200?random=$index",
+                          borderRadius: 100,
+                        ),
+                      ),
+                      padding: .symmetric(
+                        horizontal: AppSetting.setWidth(8),
+                        vertical: AppSetting.setHeight(8),
+                      ),
+                      right: Column(
+                        crossAxisAlignment: .end,
+                        children: [
+                          Text("\$32.16", style: MyTheme.style.action.m),
+                          Space.h(4),
+                          Text(
+                            "Debit Card",
+                            style: MyTheme.style.body.xs.copyWith(
+                              color: MyTheme.color.palette.dark.light,
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class _TotalBalanceCard extends StatelessWidget {
-  const _TotalBalanceCard({super.key});
+  const _TotalBalanceCard();
 
   @override
   Widget build(BuildContext context) {

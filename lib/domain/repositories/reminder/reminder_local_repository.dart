@@ -17,4 +17,5 @@ abstract class ReminderLocalRepository {
     required UpdateReminderDTO dto,
   });
   Future<Either<Failure, void>> deleteReminder(int id);
+  Future<Either<Failure, void>> deleteReminders(List<int> ids);
 }
