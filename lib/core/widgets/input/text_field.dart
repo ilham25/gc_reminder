@@ -26,6 +26,9 @@ class UIKitTextField extends StatefulWidget {
 
   final TextInputType? keyboardType;
 
+  final ValueChanged<String>? onChanged;
+  final String? initialValue;
+
   const UIKitTextField({
     super.key,
     this.placeholder,
@@ -43,6 +46,8 @@ class UIKitTextField extends StatefulWidget {
     this.keyboardType,
     this.readOnly = false,
     this.title = "",
+    this.onChanged,
+    this.initialValue,
   });
 
   factory UIKitTextField.textArea({
@@ -58,6 +63,9 @@ class UIKitTextField extends StatefulWidget {
     Color? rightIconColor,
     bool readOnly = false,
     TextInputType? keyboardType,
+    String title = "",
+    ValueChanged<String>? onChanged,
+    String? initialValue,
   }) {
     return UIKitTextField(
       placeholder: placeholder,
@@ -72,6 +80,9 @@ class UIKitTextField extends StatefulWidget {
       rightIconColor: rightIconColor,
       readOnly: readOnly,
       keyboardType: keyboardType,
+      title: title,
+      onChanged: onChanged,
+      initialValue: initialValue,
     );
   }
 
@@ -87,7 +98,8 @@ class _UIKitTextFieldState extends State<UIKitTextField> {
   @override
   void initState() {
     super.initState();
-    _controller = widget.controller ?? TextEditingController();
+    _controller =
+        widget.controller ?? TextEditingController(text: widget.initialValue);
     _focusNode = FocusNode();
   }
 
@@ -108,7 +120,7 @@ class _UIKitTextFieldState extends State<UIKitTextField> {
 
   // Calculate padding based on height
   EdgeInsets get _padding {
-    final double vertical = 14;
+    final double vertical = 12;
     final double horizontal = 16;
 
     double top = vertical;
@@ -260,6 +272,7 @@ class _UIKitTextFieldState extends State<UIKitTextField> {
           minLines: widget.minLines,
           keyboardType: widget.keyboardType,
           readOnly: widget.readOnly,
+          onChanged: widget.onChanged,
         ),
         if (widget.errorText != null) ...[
           Space.h(4),

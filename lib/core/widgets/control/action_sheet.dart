@@ -1,7 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:gc_reminder/config/app_config.dart';
-import 'package:gc_reminder/core/widgets/bottom_sheet/bottom_sheet.dart';
+import 'package:gc_reminder/core/widgets/bottom_sheet/base_bottom_sheet.dart';
 import 'package:gc_reminder/gen/assets.gen.dart';
 import 'package:gc_reminder/injection/injector.dart';
 import 'package:gc_reminder/routing/route.dart';
@@ -55,7 +55,7 @@ class _UIKitActionSheet<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return UIKitBottomSheet(
+    return UIKitBaseBottomSheet(
       child: items.isEmpty
           ? Column(
               mainAxisSize: MainAxisSize.min,

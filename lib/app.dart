@@ -8,6 +8,7 @@ import 'package:gc_reminder/injection/injector.dart';
 import 'package:gc_reminder/utils/flavor/flavor_utils.dart';
 import 'package:gc_reminder/routing/route.dart';
 import 'package:gc_reminder/routing/route_observer.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 final appRouter = inject<AppRouter>();
 
@@ -69,6 +70,12 @@ class _AppState extends State<App> {
                           // If the locale of the device is not supported, use the first one
                           return supportedLocales.first;
                         },
+                        localizationsDelegates: const [
+                          GlobalMaterialLocalizations.delegate,
+                          GlobalWidgetsLocalizations.delegate,
+                          GlobalCupertinoLocalizations.delegate,
+                          // FormBuilderLocalizations.delegate,
+                        ],
                         builder: (ctx, child) {
                           return MediaQuery(
                             data: MediaQuery.of(ctx).copyWith(),

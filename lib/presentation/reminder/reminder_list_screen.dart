@@ -14,6 +14,7 @@ import 'package:gc_reminder/core/widgets/progress/progress_bar.dart';
 import 'package:gc_reminder/core/widgets/toast/toast.dart';
 import 'package:gc_reminder/gen/assets.gen.dart';
 import 'package:gc_reminder/presentation/common/widgets/empty/empty_list.dart';
+import 'package:gc_reminder/presentation/reminder/widgets/bottom_sheet/create_reminder_bottom_sheet.dart';
 import 'package:gc_reminder/routing/route.gr.dart';
 import 'package:gc_reminder/theme/theme.dart';
 import 'package:gc_reminder/utils/date/date_format_utils.dart';
@@ -228,7 +229,13 @@ class _ReminderListBodyState extends State<ReminderListBody> {
           ),
         ),
       ),
-      floatingActionButton: UIKitIconButton(Assets.icons.add, iconSize: 16),
+      floatingActionButton: UIKitIconButton(
+        Assets.icons.add,
+        iconSize: 16,
+        onTap: () async {
+          await CreateReminderBottomSheet.show();
+        },
+      ),
       floatingActionButtonLocation: .centerFloat,
     );
   }
