@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:gc_reminder/infrastructure/database/database.dart';
 
 part 'reminder_model.freezed.dart';
 part 'reminder_model.g.dart';
@@ -25,4 +26,27 @@ abstract class ReminderModel with _$ReminderModel {
 
 extension ReminderModelExt on ReminderModel {
   bool get isDone => doneAt != null;
+
+  ReminderTableData toReminderTableData() {
+    return ReminderTableData(
+      id: id,
+      title: title,
+      description: description,
+      startAt: startAt,
+      endAt: endAt,
+      createdAt: createdAt,
+      doneAt: doneAt,
+      place: place,
+    );
+  }
+
+  Map<String, dynamic> toReminderUpdateForm() {
+    return {
+      'title': title,
+      'description': description,
+      'startAt': startAt,
+      'endAt': endAt,
+      'place': place,
+    };
+  }
 }

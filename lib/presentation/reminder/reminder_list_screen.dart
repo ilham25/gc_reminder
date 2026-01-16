@@ -15,6 +15,7 @@ import 'package:gc_reminder/core/widgets/toast/toast.dart';
 import 'package:gc_reminder/gen/assets.gen.dart';
 import 'package:gc_reminder/presentation/common/widgets/empty/empty_list.dart';
 import 'package:gc_reminder/presentation/reminder/widgets/bottom_sheet/reminder_create_bottom_sheet.dart';
+import 'package:gc_reminder/presentation/reminder/widgets/bottom_sheet/reminder_update_bottom_sheet.dart';
 import 'package:gc_reminder/routing/route.gr.dart';
 import 'package:gc_reminder/theme/theme.dart';
 import 'package:gc_reminder/utils/date/date_format_utils.dart';
@@ -137,7 +138,7 @@ class _ReminderListBodyState extends State<ReminderListBody> {
                           Flexible(
                             fit: .tight,
                             child: Text(
-                              "Recent Transactions",
+                              "Recent Reminders",
                               style: MyTheme.style.action.m,
                             ),
                           ),
@@ -178,7 +179,8 @@ class _ReminderListBodyState extends State<ReminderListBody> {
 
                               return UIKitListItem(
                                 title: item.title,
-                                description: "08.00 PM - 09.00 PM",
+                                description:
+                                    "${formatterDate.format(item.startAt)}${item.endAt == null ? "" : " - ${formatterTimeMinute.format(item.endAt!)}"}",
                                 decoration: UIKitListItemDecoration(
                                   titleTextStyle: MyTheme.style.action.m,
                                   descriptionTextStyle: MyTheme.style.body.xs
@@ -188,8 +190,12 @@ class _ReminderListBodyState extends State<ReminderListBody> {
                                   leftSpacing: 8,
                                 ),
                                 leftAlignment: .center,
-                                onTap: () {
-                                  //
+                                onTap: () async {
+                                  debugPrint("onTap: $item");
+                                  await ReminderUpdateBottomSheet.show(
+                                    reminder: item,
+                                  );
+                                  _onRefresh();
                                 },
                                 left: SizedBox(
                                   height: AppSetting.setHeight(32),

@@ -12,4 +12,14 @@ class ReminderLocalRepositoryImpl implements ReminderLocalRepository {
   Future<Either<Failure, void>> createReminder({
     required CreateReminderDTO dto,
   }) => dataSource.createReminder(dto: dto);
+
+  @override
+  Future<Either<Failure, void>> updateReminder(
+    int id, {
+    required UpdateReminderDTO dto,
+  }) => dataSource.updateReminder(id, dto: dto);
+
+  @override
+  Future<Either<Failure, void>> deleteReminder(int id) =>
+      dataSource.deleteReminder(id);
 }

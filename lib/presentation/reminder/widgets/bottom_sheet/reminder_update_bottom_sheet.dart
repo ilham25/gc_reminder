@@ -2,18 +2,19 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:gc_reminder/bloc/reminder/reminder_create/reminder_create_bloc.dart';
+import 'package:gc_reminder/bloc/reminder/reminder_update/reminder_update_bloc.dart';
 import 'package:gc_reminder/core/widgets/bottom_sheet/bottom_sheet.dart';
 import 'package:gc_reminder/core/widgets/button/button.dart';
 import 'package:gc_reminder/core/widgets/toast/toast.dart';
+import 'package:gc_reminder/domain/models/reminder/reminder_model.dart';
 import 'package:gc_reminder/injection/injector.dart';
-import 'package:gc_reminder/presentation/reminder/widgets/form/reminder_create_form.dart';
+import 'package:gc_reminder/presentation/reminder/widgets/form/reminder_update_form.dart';
 import 'package:gc_reminder/routing/route.dart';
 
-class ReminderCreateBottomSheet {
+class ReminderUpdateBottomSheet {
   static final AppRouter _router = inject<AppRouter>();
 
-  static Future<bool?> show() async {
+  static Future<bool?> show({required ReminderModel reminder}) async {
     return await showModalBottomSheet(
       context: _router.navigatorKey.currentContext!,
       isDismissible: true,
@@ -22,8 +23,8 @@ class ReminderCreateBottomSheet {
       enableDrag: false,
       builder: (context) {
         return MultiBlocProvider(
-          providers: [BlocProvider(create: (context) => ReminderCreateBloc())],
-          child: const _BottomSheet(),
+          providers: [BlocProvider(create: (context) => ReminderUpdateBloc())],
+          child: _BottomSheet(reminder: reminder),
         );
       },
     );
@@ -31,7 +32,8 @@ class ReminderCreateBottomSheet {
 }
 
 class _BottomSheet extends StatelessWidget {
-  const _BottomSheet();
+  final ReminderModel reminder;
+  const _BottomSheet({required this.reminder});
 
   Future _onSubmit({
     required BuildContext context,
@@ -42,7 +44,7 @@ class _BottomSheet extends StatelessWidget {
 
     final formData = formKey.currentState!.value;
 
-    context.read<ReminderCreateBloc>().submit(formData);
+    context.read<ReminderUpdateBloc>().submit(reminder.id, formData);
   }
 
   @override
@@ -54,20 +56,20 @@ class _BottomSheet extends StatelessWidget {
 
     return MultiBlocListener(
       listeners: [
-        BlocListener<ReminderCreateBloc, ReminderCreateBlocState>(
+        BlocListener<ReminderUpdateBloc, ReminderUpdateBlocState>(
           listener: (context, state) {
             state.maybeWhen(
               orElse: () {},
               error: (message) {
                 UIKitToast.danger(
-                  title: "Create Reminder Error",
+                  title: "Update Reminder Error",
                   description: message,
                 );
               },
               success: () {
                 UIKitToast.success(
-                  title: "Create Reminder Success",
-                  description: "Reminder has been created",
+                  title: "Update Reminder Success",
+                  description: "Reminder has been updated",
                 );
                 context.router.pop(true);
               },
@@ -76,11 +78,11 @@ class _BottomSheet extends StatelessWidget {
         ),
       ],
       child: UIKitBottomSheet(
-        title: "Create Reminder",
+        title: "Update Reminder",
         action: ValueListenableBuilder(
           valueListenable: isFormValid,
           builder: (context, value, child) =>
-              BlocBuilder<ReminderCreateBloc, ReminderCreateBlocState>(
+              BlocBuilder<ReminderUpdateBloc, ReminderUpdateBlocState>(
                 builder: (context, state) => UIKitButton(
                   title: "Submit",
                   enable: value,
@@ -94,11 +96,12 @@ class _BottomSheet extends StatelessWidget {
                 ),
               ),
         ),
-        child: ReminderCreateForm(
+        child: ReminderUpdateForm(
           formKey: formKey,
           onValidate: (isValid) {
             isFormValid.value = isValid;
           },
+          initialValue: reminder.toReminderUpdateForm(),
         ),
       ),
     );
