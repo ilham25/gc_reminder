@@ -6,11 +6,11 @@ import 'package:gc_reminder/core/widgets/input/primary_date_picker.dart';
 import 'package:gc_reminder/core/widgets/input/text_field.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 
-class CreateReminderForm extends StatelessWidget {
+class ReminderCreateForm extends StatelessWidget {
   final GlobalKey<FormBuilderState> formKey;
   final Function(bool isValid)? onValidate;
 
-  const CreateReminderForm({super.key, required this.formKey, this.onValidate});
+  const ReminderCreateForm({super.key, required this.formKey, this.onValidate});
 
   @override
   Widget build(BuildContext context) {

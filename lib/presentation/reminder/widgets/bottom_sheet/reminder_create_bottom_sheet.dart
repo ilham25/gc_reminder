@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:gc_reminder/bloc/reminder/reminder_create/reminder_create_bloc.dart';
 import 'package:gc_reminder/core/widgets/bottom_sheet/bottom_sheet.dart';
 import 'package:gc_reminder/core/widgets/button/button.dart';
 import 'package:gc_reminder/injection/injector.dart';
-import 'package:gc_reminder/presentation/reminder/widgets/form/create_reminder_form.dart';
+import 'package:gc_reminder/presentation/reminder/widgets/form/reminder_create_form.dart';
 import 'package:gc_reminder/routing/route.dart';
 
-class CreateReminderBottomSheet {
+class ReminderCreateBottomSheet {
   static final AppRouter _router = inject<AppRouter>();
 
   static Future<bool?> show() async {
@@ -17,7 +19,10 @@ class CreateReminderBottomSheet {
       useSafeArea: true,
       enableDrag: false,
       builder: (context) {
-        return const _BottomSheet();
+        return MultiBlocProvider(
+          providers: [BlocProvider(create: (context) => ReminderCreateBloc())],
+          child: const _BottomSheet(),
+        );
       },
     );
   }
@@ -35,7 +40,7 @@ class _BottomSheet extends StatelessWidget {
 
     final formData = formKey.currentState!.value;
 
-    debugPrint("formData: $formData");
+    context.read<ReminderCreateBloc>().submit(formData);
   }
 
   @override
@@ -57,7 +62,7 @@ class _BottomSheet extends StatelessWidget {
           );
         },
       ),
-      child: CreateReminderForm(
+      child: ReminderCreateForm(
         formKey: formKey,
         onValidate: (isValid) {
           isFormValid.value = isValid;

@@ -12,7 +12,9 @@ _ReminderModel _$ReminderModelFromJson(Map<String, dynamic> json) =>
       title: json['title'] as String? ?? "",
       description: json['description'] as String? ?? "",
       startAt: DateTime.parse(json['startAt'] as String),
-      endAt: DateTime.parse(json['endAt'] as String),
+      endAt: json['endAt'] == null
+          ? null
+          : DateTime.parse(json['endAt'] as String),
       createdAt: DateTime.parse(json['createdAt'] as String),
       place: json['place'] as String? ?? "",
       lat: (json['lat'] as num?)?.toDouble() ?? 0,
@@ -28,7 +30,7 @@ Map<String, dynamic> _$ReminderModelToJson(_ReminderModel instance) =>
       'title': instance.title,
       'description': instance.description,
       'startAt': instance.startAt.toIso8601String(),
-      'endAt': instance.endAt.toIso8601String(),
+      'endAt': instance.endAt?.toIso8601String(),
       'createdAt': instance.createdAt.toIso8601String(),
       'place': instance.place,
       'lat': instance.lat,

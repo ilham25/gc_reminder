@@ -38,7 +38,7 @@ class $ReminderTableTable extends ReminderTable
   late final GeneratedColumn<String> description = GeneratedColumn<String>(
     'description',
     aliasedName,
-    false,
+    true,
     type: DriftSqlType.string,
     requiredDuringInsert: false,
     defaultValue: const Constant(''),
@@ -48,7 +48,7 @@ class $ReminderTableTable extends ReminderTable
   late final GeneratedColumn<String> place = GeneratedColumn<String>(
     'place',
     aliasedName,
-    false,
+    true,
     type: DriftSqlType.string,
     requiredDuringInsert: false,
     defaultValue: const Constant(''),
@@ -69,9 +69,9 @@ class $ReminderTableTable extends ReminderTable
   late final GeneratedColumn<DateTime> endAt = GeneratedColumn<DateTime>(
     'end_at',
     aliasedName,
-    false,
+    true,
     type: DriftSqlType.dateTime,
-    requiredDuringInsert: true,
+    requiredDuringInsert: false,
   );
   static const VerificationMeta _doneAtMeta = const VerificationMeta('doneAt');
   @override
@@ -155,8 +155,6 @@ class $ReminderTableTable extends ReminderTable
         _endAtMeta,
         endAt.isAcceptableOrUnknown(data['end_at']!, _endAtMeta),
       );
-    } else if (isInserting) {
-      context.missing(_endAtMeta);
     }
     if (data.containsKey('done_at')) {
       context.handle(
@@ -190,11 +188,11 @@ class $ReminderTableTable extends ReminderTable
       description: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}description'],
-      )!,
+      ),
       place: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}place'],
-      )!,
+      ),
       startAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}start_at'],
@@ -202,7 +200,7 @@ class $ReminderTableTable extends ReminderTable
       endAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}end_at'],
-      )!,
+      ),
       doneAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}done_at'],
@@ -224,19 +222,19 @@ class ReminderTableData extends DataClass
     implements Insertable<ReminderTableData> {
   final int id;
   final String title;
-  final String description;
-  final String place;
+  final String? description;
+  final String? place;
   final DateTime startAt;
-  final DateTime endAt;
+  final DateTime? endAt;
   final DateTime? doneAt;
   final DateTime? createdAt;
   const ReminderTableData({
     required this.id,
     required this.title,
-    required this.description,
-    required this.place,
+    this.description,
+    this.place,
     required this.startAt,
-    required this.endAt,
+    this.endAt,
     this.doneAt,
     this.createdAt,
   });
@@ -245,10 +243,16 @@ class ReminderTableData extends DataClass
     final map = <String, Expression>{};
     map['id'] = Variable<int>(id);
     map['title'] = Variable<String>(title);
-    map['description'] = Variable<String>(description);
-    map['place'] = Variable<String>(place);
+    if (!nullToAbsent || description != null) {
+      map['description'] = Variable<String>(description);
+    }
+    if (!nullToAbsent || place != null) {
+      map['place'] = Variable<String>(place);
+    }
     map['start_at'] = Variable<DateTime>(startAt);
-    map['end_at'] = Variable<DateTime>(endAt);
+    if (!nullToAbsent || endAt != null) {
+      map['end_at'] = Variable<DateTime>(endAt);
+    }
     if (!nullToAbsent || doneAt != null) {
       map['done_at'] = Variable<DateTime>(doneAt);
     }
@@ -262,10 +266,16 @@ class ReminderTableData extends DataClass
     return ReminderTableCompanion(
       id: Value(id),
       title: Value(title),
-      description: Value(description),
-      place: Value(place),
+      description: description == null && nullToAbsent
+          ? const Value.absent()
+          : Value(description),
+      place: place == null && nullToAbsent
+          ? const Value.absent()
+          : Value(place),
       startAt: Value(startAt),
-      endAt: Value(endAt),
+      endAt: endAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(endAt),
       doneAt: doneAt == null && nullToAbsent
           ? const Value.absent()
           : Value(doneAt),
@@ -283,10 +293,10 @@ class ReminderTableData extends DataClass
     return ReminderTableData(
       id: serializer.fromJson<int>(json['id']),
       title: serializer.fromJson<String>(json['title']),
-      description: serializer.fromJson<String>(json['description']),
-      place: serializer.fromJson<String>(json['place']),
+      description: serializer.fromJson<String?>(json['description']),
+      place: serializer.fromJson<String?>(json['place']),
       startAt: serializer.fromJson<DateTime>(json['startAt']),
-      endAt: serializer.fromJson<DateTime>(json['endAt']),
+      endAt: serializer.fromJson<DateTime?>(json['endAt']),
       doneAt: serializer.fromJson<DateTime?>(json['doneAt']),
       createdAt: serializer.fromJson<DateTime?>(json['createdAt']),
     );
@@ -297,10 +307,10 @@ class ReminderTableData extends DataClass
     return <String, dynamic>{
       'id': serializer.toJson<int>(id),
       'title': serializer.toJson<String>(title),
-      'description': serializer.toJson<String>(description),
-      'place': serializer.toJson<String>(place),
+      'description': serializer.toJson<String?>(description),
+      'place': serializer.toJson<String?>(place),
       'startAt': serializer.toJson<DateTime>(startAt),
-      'endAt': serializer.toJson<DateTime>(endAt),
+      'endAt': serializer.toJson<DateTime?>(endAt),
       'doneAt': serializer.toJson<DateTime?>(doneAt),
       'createdAt': serializer.toJson<DateTime?>(createdAt),
     };
@@ -309,19 +319,19 @@ class ReminderTableData extends DataClass
   ReminderTableData copyWith({
     int? id,
     String? title,
-    String? description,
-    String? place,
+    Value<String?> description = const Value.absent(),
+    Value<String?> place = const Value.absent(),
     DateTime? startAt,
-    DateTime? endAt,
+    Value<DateTime?> endAt = const Value.absent(),
     Value<DateTime?> doneAt = const Value.absent(),
     Value<DateTime?> createdAt = const Value.absent(),
   }) => ReminderTableData(
     id: id ?? this.id,
     title: title ?? this.title,
-    description: description ?? this.description,
-    place: place ?? this.place,
+    description: description.present ? description.value : this.description,
+    place: place.present ? place.value : this.place,
     startAt: startAt ?? this.startAt,
-    endAt: endAt ?? this.endAt,
+    endAt: endAt.present ? endAt.value : this.endAt,
     doneAt: doneAt.present ? doneAt.value : this.doneAt,
     createdAt: createdAt.present ? createdAt.value : this.createdAt,
   );
@@ -383,10 +393,10 @@ class ReminderTableData extends DataClass
 class ReminderTableCompanion extends UpdateCompanion<ReminderTableData> {
   final Value<int> id;
   final Value<String> title;
-  final Value<String> description;
-  final Value<String> place;
+  final Value<String?> description;
+  final Value<String?> place;
   final Value<DateTime> startAt;
-  final Value<DateTime> endAt;
+  final Value<DateTime?> endAt;
   final Value<DateTime?> doneAt;
   final Value<DateTime?> createdAt;
   const ReminderTableCompanion({
@@ -405,12 +415,11 @@ class ReminderTableCompanion extends UpdateCompanion<ReminderTableData> {
     this.description = const Value.absent(),
     this.place = const Value.absent(),
     required DateTime startAt,
-    required DateTime endAt,
+    this.endAt = const Value.absent(),
     this.doneAt = const Value.absent(),
     this.createdAt = const Value.absent(),
   }) : title = Value(title),
-       startAt = Value(startAt),
-       endAt = Value(endAt);
+       startAt = Value(startAt);
   static Insertable<ReminderTableData> custom({
     Expression<int>? id,
     Expression<String>? title,
@@ -436,10 +445,10 @@ class ReminderTableCompanion extends UpdateCompanion<ReminderTableData> {
   ReminderTableCompanion copyWith({
     Value<int>? id,
     Value<String>? title,
-    Value<String>? description,
-    Value<String>? place,
+    Value<String?>? description,
+    Value<String?>? place,
     Value<DateTime>? startAt,
-    Value<DateTime>? endAt,
+    Value<DateTime?>? endAt,
     Value<DateTime?>? doneAt,
     Value<DateTime?>? createdAt,
   }) {
@@ -516,10 +525,10 @@ typedef $$ReminderTableTableCreateCompanionBuilder =
     ReminderTableCompanion Function({
       Value<int> id,
       required String title,
-      Value<String> description,
-      Value<String> place,
+      Value<String?> description,
+      Value<String?> place,
       required DateTime startAt,
-      required DateTime endAt,
+      Value<DateTime?> endAt,
       Value<DateTime?> doneAt,
       Value<DateTime?> createdAt,
     });
@@ -527,10 +536,10 @@ typedef $$ReminderTableTableUpdateCompanionBuilder =
     ReminderTableCompanion Function({
       Value<int> id,
       Value<String> title,
-      Value<String> description,
-      Value<String> place,
+      Value<String?> description,
+      Value<String?> place,
       Value<DateTime> startAt,
-      Value<DateTime> endAt,
+      Value<DateTime?> endAt,
       Value<DateTime?> doneAt,
       Value<DateTime?> createdAt,
     });
@@ -708,10 +717,10 @@ class $$ReminderTableTableTableManager
               ({
                 Value<int> id = const Value.absent(),
                 Value<String> title = const Value.absent(),
-                Value<String> description = const Value.absent(),
-                Value<String> place = const Value.absent(),
+                Value<String?> description = const Value.absent(),
+                Value<String?> place = const Value.absent(),
                 Value<DateTime> startAt = const Value.absent(),
-                Value<DateTime> endAt = const Value.absent(),
+                Value<DateTime?> endAt = const Value.absent(),
                 Value<DateTime?> doneAt = const Value.absent(),
                 Value<DateTime?> createdAt = const Value.absent(),
               }) => ReminderTableCompanion(
@@ -728,10 +737,10 @@ class $$ReminderTableTableTableManager
               ({
                 Value<int> id = const Value.absent(),
                 required String title,
-                Value<String> description = const Value.absent(),
-                Value<String> place = const Value.absent(),
+                Value<String?> description = const Value.absent(),
+                Value<String?> place = const Value.absent(),
                 required DateTime startAt,
-                required DateTime endAt,
+                Value<DateTime?> endAt = const Value.absent(),
                 Value<DateTime?> doneAt = const Value.absent(),
                 Value<DateTime?> createdAt = const Value.absent(),
               }) => ReminderTableCompanion.insert(

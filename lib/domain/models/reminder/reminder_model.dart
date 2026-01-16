@@ -10,7 +10,7 @@ abstract class ReminderModel with _$ReminderModel {
     @Default("") String title,
     @Default("") String description,
     required DateTime startAt,
-    required DateTime endAt,
+    DateTime? endAt,
     required DateTime createdAt,
     @Default("") String place,
     @Default(0) double lat,

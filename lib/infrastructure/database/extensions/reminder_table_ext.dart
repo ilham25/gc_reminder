@@ -6,12 +6,12 @@ extension ReminderTableExt on ReminderTableData {
     return ReminderModel(
       id: id,
       title: title,
-      description: description,
+      description: description ?? "",
       startAt: startAt,
       endAt: endAt,
       createdAt: createdAt ?? DateTime.now(),
       doneAt: doneAt,
-      place: place,
+      place: place ?? "",
     );
   }
 }

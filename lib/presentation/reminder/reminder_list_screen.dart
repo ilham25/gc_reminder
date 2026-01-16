@@ -14,7 +14,7 @@ import 'package:gc_reminder/core/widgets/progress/progress_bar.dart';
 import 'package:gc_reminder/core/widgets/toast/toast.dart';
 import 'package:gc_reminder/gen/assets.gen.dart';
 import 'package:gc_reminder/presentation/common/widgets/empty/empty_list.dart';
-import 'package:gc_reminder/presentation/reminder/widgets/bottom_sheet/create_reminder_bottom_sheet.dart';
+import 'package:gc_reminder/presentation/reminder/widgets/bottom_sheet/reminder_create_bottom_sheet.dart';
 import 'package:gc_reminder/routing/route.gr.dart';
 import 'package:gc_reminder/theme/theme.dart';
 import 'package:gc_reminder/utils/date/date_format_utils.dart';
@@ -42,6 +42,10 @@ class ReminderListBody extends StatefulWidget {
 }
 
 class _ReminderListBodyState extends State<ReminderListBody> {
+  Future _onRefresh() async {
+    await context.read<ReminderListBloc>().refresh();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -160,7 +164,7 @@ class _ReminderListBodyState extends State<ReminderListBody> {
                             Center(child: CircularProgressIndicator()),
                         loaded: (state) {
                           if (state.items.isEmpty) {
-                            return EmptyList(onRefresh: () {});
+                            return EmptyList(onRefresh: _onRefresh);
                           }
 
                           return ListView.builder(
@@ -233,7 +237,8 @@ class _ReminderListBodyState extends State<ReminderListBody> {
         Assets.icons.add,
         iconSize: 16,
         onTap: () async {
-          await CreateReminderBottomSheet.show();
+          await ReminderCreateBottomSheet.show();
+          _onRefresh();
         },
       ),
       floatingActionButtonLocation: .centerFloat,
