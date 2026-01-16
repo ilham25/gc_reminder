@@ -1,0 +1,108 @@
+import 'package:flutter/material.dart';
+import 'package:gc_reminder/config/app_config.dart';
+import 'package:google_fonts/google_fonts.dart';
+
+// Text Theme
+class Style {
+  // Singleton instance
+  static final Style _instance = Style._internal();
+
+  // Factory constructor returns the same instance
+  factory Style() => _instance;
+
+  // Private constructor
+  Style._internal();
+
+  HeadingTextStyle heading = HeadingTextStyle();
+  BodyTextStyle body = BodyTextStyle();
+  ActionTextStyle action = ActionTextStyle();
+  CaptionTextStyle caption = CaptionTextStyle();
+}
+
+class HeadingTextStyle {
+  TextStyle get h1 => GoogleFonts.inter(
+    fontSize: AppSetting.setFontSize(24),
+    fontWeight: FontWeight.w800,
+  );
+
+  TextStyle get h2 => GoogleFonts.inter(
+    fontSize: AppSetting.setFontSize(18),
+    fontWeight: FontWeight.w800,
+  );
+
+  TextStyle get h3 => GoogleFonts.inter(
+    fontSize: AppSetting.setFontSize(16),
+    fontWeight: FontWeight.w800,
+  );
+
+  TextStyle get h4 => GoogleFonts.inter(
+    fontSize: AppSetting.setFontSize(14),
+    fontWeight: FontWeight.w700,
+  );
+
+  TextStyle get h5 => GoogleFonts.inter(
+    fontSize: AppSetting.setFontSize(12),
+    fontWeight: FontWeight.w700,
+  );
+
+  TextStyle get h6 => GoogleFonts.inter(
+    fontSize: AppSetting.setFontSize(10),
+    fontWeight: FontWeight.w700,
+  );
+}
+
+class BodyTextStyle {
+  TextStyle get xl => GoogleFonts.inter(
+    fontSize: AppSetting.setFontSize(18),
+    fontWeight: FontWeight.w400,
+    height: AppSetting.setHeight(24) / AppSetting.setFontSize(18),
+  );
+
+  TextStyle get l => GoogleFonts.inter(
+    fontSize: AppSetting.setFontSize(16),
+    fontWeight: FontWeight.w400,
+    height: AppSetting.setHeight(22) / AppSetting.setFontSize(16),
+  );
+
+  TextStyle get m => GoogleFonts.inter(
+    fontSize: AppSetting.setFontSize(14),
+    fontWeight: FontWeight.w400,
+    height: AppSetting.setHeight(20) / AppSetting.setFontSize(14),
+  );
+
+  TextStyle get s => GoogleFonts.inter(
+    fontSize: AppSetting.setFontSize(12),
+    fontWeight: FontWeight.w400,
+    height: AppSetting.setHeight(16) / AppSetting.setFontSize(12),
+  );
+
+  TextStyle get xs => GoogleFonts.inter(
+    fontSize: AppSetting.setFontSize(10),
+    fontWeight: FontWeight.w500,
+    height: AppSetting.setHeight(14) / AppSetting.setFontSize(10),
+  );
+}
+
+class ActionTextStyle {
+  TextStyle get l => GoogleFonts.inter(
+    fontSize: AppSetting.setFontSize(14),
+    fontWeight: FontWeight.w600,
+  );
+
+  TextStyle get m => GoogleFonts.inter(
+    fontSize: AppSetting.setFontSize(12),
+    fontWeight: FontWeight.w600,
+  );
+
+  TextStyle get s => GoogleFonts.inter(
+    fontSize: AppSetting.setFontSize(10),
+    fontWeight: FontWeight.w600,
+  );
+}
+
+class CaptionTextStyle {
+  TextStyle get m => GoogleFonts.inter(
+    fontSize: AppSetting.setFontSize(10),
+    fontWeight: FontWeight.w600,
+  );
+}

@@ -1,0 +1,63 @@
+import 'package:auto_route/auto_route.dart';
+import 'package:gc_reminder/routing/route.gr.dart';
+
+@AutoRouterConfig(replaceInRouteName: 'Screen|Page,Route')
+class AppRouter extends RootStackRouter {
+  @override
+  RouteType get defaultRouteType => const RouteType.cupertino();
+
+  @override
+  List<AutoRoute> get routes => [
+    AutoRoute(page: SplashRoute.page, initial: true),
+    AutoRoute(page: HomeRoute.page),
+
+    // Templates
+    // -- Chat
+    AutoRoute(page: ChatListRoute.page),
+    AutoRoute(page: ChatDetailRoute.page),
+    // -- Feedback
+    AutoRoute(page: FeedbackRoute.page),
+    // -- Login
+    AutoRoute(page: LoginRoute.page),
+    AutoRoute(page: SignUpRoute.page),
+    AutoRoute(page: ConfirmationCodeRoute.page),
+
+    // -- Settings
+    AutoRoute(page: SettingsRoute.page),
+
+    // -- Empty State
+    AutoRoute(page: EmptyStateRoute.page),
+
+    // -- Subscription Plans
+    AutoRoute(page: SubscriptionPlansRoute.page),
+
+    // -- Onboarding
+    AutoRoute(page: OnboardingInitRoute.page),
+    AutoRoute(page: OnboardingPersonalizeRoute.page),
+
+    // -- Search Filter
+    AutoRoute(
+      page: SearchFilterRoute.page,
+      children: [AutoRoute(page: SearchRoute.page)],
+    ),
+
+    // -- Events
+    AutoRoute(page: EventsRoute.page),
+
+    // -- E-Commerce
+    AutoRoute(page: EcommerceRoute.page),
+    AutoRoute(page: EcommerceProductDetailRoute.page),
+    AutoRoute(page: EcommerceBagRoute.page),
+    AutoRoute(page: EcommerceCheckoutRoute.page),
+
+    // -- Finance
+    AutoRoute(page: FinanceRoute.page),
+    AutoRoute(page: FinanceOverviewRoute.page),
+
+    // Common
+    AutoRoute(page: SearchRoute.page),
+    AutoRoute(page: FilterRoute.page),
+  ];
+  @override
+  List<AutoRouteGuard> get guards => [];
+}

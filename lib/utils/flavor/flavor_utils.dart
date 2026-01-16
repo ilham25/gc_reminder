@@ -1,0 +1,78 @@
+import 'package:flutter/material.dart';
+import 'package:gc_reminder/injection/injector.dart';
+import 'package:gc_reminder/domain/models/flavor/flavor_model.dart';
+import 'package:gc_reminder/gen/assets.gen.dart';
+import 'package:gc_reminder/theme/color_theme.dart';
+import 'package:package_info_plus/package_info_plus.dart';
+
+enum FlavorType { prod, dev, staging }
+
+final flavor = inject<FlavorUtils>();
+
+class FlavorUtils {
+  /// Current index of flavor
+  static int? index;
+
+  /// Define list of available flavors
+  /// for every company or project
+  ///
+
+  static ColorPalette palette = ColorPalette();
+  static List<FlavorModel> flavors = [
+    FlavorModel(
+      packages: "com.gc.reminder.dev",
+      type: FlavorType.dev,
+      logoPath: Assets.images.logoFull.path,
+      name: "GC Reminder App Dev",
+      primaryColor: palette.highlight.darkest,
+      primaryLightColor: palette.highlight.darkest,
+      secondaryColor: const Color(0xffDAB272),
+      api: FlavorAPIModel(baseURL: "https://reqres.in/api"),
+    ),
+    FlavorModel(
+      packages: "com.gc.reminder.staging",
+      type: FlavorType.staging,
+      logoPath: Assets.images.logoFull.path,
+      name: "GC Reminder App",
+      primaryColor: palette.highlight.darkest,
+      primaryLightColor: palette.highlight.darkest,
+      secondaryColor: const Color(0xffDAB272),
+      api: FlavorAPIModel(baseURL: "https://reqres.in/api"),
+    ),
+    FlavorModel(
+      packages: "com.gc.reminder",
+      type: FlavorType.prod,
+      logoPath: Assets.images.logoFull.path,
+      name: "GC Reminder App",
+      primaryColor: palette.highlight.darkest,
+      primaryLightColor: palette.highlight.darkest,
+      secondaryColor: const Color(0xffDAB272),
+      api: FlavorAPIModel(baseURL: "https://reqres.in/api"),
+    ),
+  ];
+
+  /// Find current flavor by package name
+  Future initType({PackageInfo? package}) async {
+    package ??= await PackageInfo.fromPlatform();
+    String packageName = package.packageName;
+    index = flavors.indexWhere((item) => item.packages == packageName);
+  }
+
+  FlavorUtils() {
+    PackageInfo.fromPlatform().then((value) {
+      initType(package: value);
+    });
+  }
+
+  /// Get current flavor type
+  FlavorType getType() {
+    final type = flavors[index!].type;
+    return type;
+  }
+
+  /// Get current flavor
+  FlavorModel get current {
+    final type = getType();
+    return flavors.firstWhere((item) => item.type == type);
+  }
+}
