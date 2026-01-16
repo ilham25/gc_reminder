@@ -1,3 +1,4 @@
+import 'package:gc_reminder/domain/permission/permission_service.dart';
 import 'package:gc_reminder/domain/repositories/reminder/reminder_local_repository.dart';
 import 'package:gc_reminder/infrastructure/database/database.dart';
 import 'package:gc_reminder/infrastructure/datasource/reminder/reminder_local_datasource.dart';
@@ -41,6 +42,11 @@ Future<void> setupInjector() async {
   );
   inject.registerLazySingleton<ReminderLocalDataSource>(
     () => ReminderLocalDataSource(inject<AppDatabase>()),
+  );
+
+  /// Register services
+  inject.registerLazySingleton<PermissionService>(
+    () => PermissionServiceImpl(),
   );
 
   /// Register bloc

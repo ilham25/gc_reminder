@@ -8,18 +8,18 @@ import 'package:gc_reminder/theme/theme.dart';
 class UIKitDialog {
   static final AppRouter _router = inject<AppRouter>();
 
-  static void show({
+  static Future<T?> show<T>({
     required String title,
     required String description,
     required List<UIKitButton> actions,
     bool barrierDismissible = true,
-  }) {
+  }) async {
     assert(
       actions.length == 2 || actions.length == 3,
       "Actions must be 2 or 3",
     );
 
-    showDialog(
+    return await showDialog(
       context: _router.navigatorKey.currentContext!,
       useSafeArea: true,
       barrierDismissible: barrierDismissible,
