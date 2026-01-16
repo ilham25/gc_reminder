@@ -1,3 +1,6 @@
+import 'package:gc_reminder/domain/repositories/reminder/reminder_local_repository.dart';
+import 'package:gc_reminder/infrastructure/database/database.dart';
+import 'package:gc_reminder/infrastructure/datasource/reminder/reminder_local_datasource.dart';
 import 'package:gc_reminder/infrastructure/datasource/user/user_datasource.dart';
 import 'package:gc_reminder/infrastructure/repositories/user/user_repository_impl.dart';
 import 'package:get_it/get_it.dart';
@@ -16,11 +19,15 @@ Future<void> setupInjector() async {
 
   /// Registering flavors
   inject.registerSingleton(FlavorUtils()..initType());
+
   /// Reinitialize flavor
   await flavor.initType();
 
   /// Core api client
   inject.registerLazySingleton(() => ApiClient());
+
+  /// Local Database
+  inject.registerLazySingleton<AppDatabase>(() => AppDatabase());
 
   /// Registering data source
   inject.registerLazySingleton<AuthLocalDataSource>(
@@ -31,6 +38,9 @@ Future<void> setupInjector() async {
   );
   inject.registerLazySingleton<UserDataSource>(
     () => UserDataSource(inject<ApiClient>()),
+  );
+  inject.registerLazySingleton<ReminderLocalDataSource>(
+    () => ReminderLocalDataSource(inject<AppDatabase>()),
   );
 
   /// Register bloc
@@ -44,8 +54,10 @@ Future<void> setupInjector() async {
     ),
   );
   inject.registerLazySingleton<UserRepositoryImpl>(
-    () => UserRepositoryImpl(
-      inject<UserDataSource>(),
-    ),
+    () => UserRepositoryImpl(inject<UserDataSource>()),
+  );
+
+  inject.registerLazySingleton<ReminderLocalRepository>(
+    () => ReminderLocalRepositoryImpl(inject<ReminderLocalDataSource>()),
   );
 }

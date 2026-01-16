@@ -11,6 +11,10 @@ class AppRouter extends RootStackRouter {
     AutoRoute(page: SplashRoute.page, initial: true),
     AutoRoute(page: HomeRoute.page),
 
+    // App
+    AutoRoute(page: ReminderListRoute.page),
+    // AutoRoute(page: ReminderDetailRoute.page),
+
     // Templates
     // -- Chat
     AutoRoute(page: ChatListRoute.page),

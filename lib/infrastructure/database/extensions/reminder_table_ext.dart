@@ -7,8 +7,11 @@ extension ReminderTableExt on ReminderTableData {
       id: id,
       title: title,
       description: description,
+      startAt: startAt,
+      endAt: endAt,
       createdAt: createdAt ?? DateTime.now(),
       doneAt: doneAt,
+      place: place,
     );
   }
 }

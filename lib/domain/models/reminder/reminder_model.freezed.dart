@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ReminderModel {
 
- int get id; String get title; String get description; DateTime get createdAt; DateTime? get doneAt;
+ int get id; String get title; String get description; DateTime get startAt; DateTime get endAt; DateTime get createdAt; String get place; double get lat; double get lng; DateTime? get doneAt;
 /// Create a copy of ReminderModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $ReminderModelCopyWith<ReminderModel> get copyWith => _$ReminderModelCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ReminderModel&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.doneAt, doneAt) || other.doneAt == doneAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ReminderModel&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.startAt, startAt) || other.startAt == startAt)&&(identical(other.endAt, endAt) || other.endAt == endAt)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.place, place) || other.place == place)&&(identical(other.lat, lat) || other.lat == lat)&&(identical(other.lng, lng) || other.lng == lng)&&(identical(other.doneAt, doneAt) || other.doneAt == doneAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,title,description,createdAt,doneAt);
+int get hashCode => Object.hash(runtimeType,id,title,description,startAt,endAt,createdAt,place,lat,lng,doneAt);
 
 @override
 String toString() {
-  return 'ReminderModel(id: $id, title: $title, description: $description, createdAt: $createdAt, doneAt: $doneAt)';
+  return 'ReminderModel(id: $id, title: $title, description: $description, startAt: $startAt, endAt: $endAt, createdAt: $createdAt, place: $place, lat: $lat, lng: $lng, doneAt: $doneAt)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $ReminderModelCopyWith<$Res>  {
   factory $ReminderModelCopyWith(ReminderModel value, $Res Function(ReminderModel) _then) = _$ReminderModelCopyWithImpl;
 @useResult
 $Res call({
- int id, String title, String description, DateTime createdAt, DateTime? doneAt
+ int id, String title, String description, DateTime startAt, DateTime endAt, DateTime createdAt, String place, double lat, double lng, DateTime? doneAt
 });
 
 
@@ -65,13 +65,18 @@ class _$ReminderModelCopyWithImpl<$Res>
 
 /// Create a copy of ReminderModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? description = null,Object? createdAt = null,Object? doneAt = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? description = null,Object? startAt = null,Object? endAt = null,Object? createdAt = null,Object? place = null,Object? lat = null,Object? lng = null,Object? doneAt = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,description: null == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
-as String,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
-as DateTime,doneAt: freezed == doneAt ? _self.doneAt : doneAt // ignore: cast_nullable_to_non_nullable
+as String,startAt: null == startAt ? _self.startAt : startAt // ignore: cast_nullable_to_non_nullable
+as DateTime,endAt: null == endAt ? _self.endAt : endAt // ignore: cast_nullable_to_non_nullable
+as DateTime,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as DateTime,place: null == place ? _self.place : place // ignore: cast_nullable_to_non_nullable
+as String,lat: null == lat ? _self.lat : lat // ignore: cast_nullable_to_non_nullable
+as double,lng: null == lng ? _self.lng : lng // ignore: cast_nullable_to_non_nullable
+as double,doneAt: freezed == doneAt ? _self.doneAt : doneAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,
   ));
 }
@@ -157,10 +162,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String title,  String description,  DateTime createdAt,  DateTime? doneAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String title,  String description,  DateTime startAt,  DateTime endAt,  DateTime createdAt,  String place,  double lat,  double lng,  DateTime? doneAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ReminderModel() when $default != null:
-return $default(_that.id,_that.title,_that.description,_that.createdAt,_that.doneAt);case _:
+return $default(_that.id,_that.title,_that.description,_that.startAt,_that.endAt,_that.createdAt,_that.place,_that.lat,_that.lng,_that.doneAt);case _:
   return orElse();
 
 }
@@ -178,10 +183,10 @@ return $default(_that.id,_that.title,_that.description,_that.createdAt,_that.don
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String title,  String description,  DateTime createdAt,  DateTime? doneAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String title,  String description,  DateTime startAt,  DateTime endAt,  DateTime createdAt,  String place,  double lat,  double lng,  DateTime? doneAt)  $default,) {final _that = this;
 switch (_that) {
 case _ReminderModel():
-return $default(_that.id,_that.title,_that.description,_that.createdAt,_that.doneAt);case _:
+return $default(_that.id,_that.title,_that.description,_that.startAt,_that.endAt,_that.createdAt,_that.place,_that.lat,_that.lng,_that.doneAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -198,10 +203,10 @@ return $default(_that.id,_that.title,_that.description,_that.createdAt,_that.don
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String title,  String description,  DateTime createdAt,  DateTime? doneAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String title,  String description,  DateTime startAt,  DateTime endAt,  DateTime createdAt,  String place,  double lat,  double lng,  DateTime? doneAt)?  $default,) {final _that = this;
 switch (_that) {
 case _ReminderModel() when $default != null:
-return $default(_that.id,_that.title,_that.description,_that.createdAt,_that.doneAt);case _:
+return $default(_that.id,_that.title,_that.description,_that.startAt,_that.endAt,_that.createdAt,_that.place,_that.lat,_that.lng,_that.doneAt);case _:
   return null;
 
 }
@@ -213,13 +218,18 @@ return $default(_that.id,_that.title,_that.description,_that.createdAt,_that.don
 @JsonSerializable()
 
 class _ReminderModel implements ReminderModel {
-  const _ReminderModel({this.id = 0, this.title = "", this.description = "", required this.createdAt, this.doneAt});
+  const _ReminderModel({this.id = 0, this.title = "", this.description = "", required this.startAt, required this.endAt, required this.createdAt, this.place = "", this.lat = 0, this.lng = 0, this.doneAt});
   factory _ReminderModel.fromJson(Map<String, dynamic> json) => _$ReminderModelFromJson(json);
 
 @override@JsonKey() final  int id;
 @override@JsonKey() final  String title;
 @override@JsonKey() final  String description;
+@override final  DateTime startAt;
+@override final  DateTime endAt;
 @override final  DateTime createdAt;
+@override@JsonKey() final  String place;
+@override@JsonKey() final  double lat;
+@override@JsonKey() final  double lng;
 @override final  DateTime? doneAt;
 
 /// Create a copy of ReminderModel
@@ -235,16 +245,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ReminderModel&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.doneAt, doneAt) || other.doneAt == doneAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ReminderModel&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.startAt, startAt) || other.startAt == startAt)&&(identical(other.endAt, endAt) || other.endAt == endAt)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.place, place) || other.place == place)&&(identical(other.lat, lat) || other.lat == lat)&&(identical(other.lng, lng) || other.lng == lng)&&(identical(other.doneAt, doneAt) || other.doneAt == doneAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,title,description,createdAt,doneAt);
+int get hashCode => Object.hash(runtimeType,id,title,description,startAt,endAt,createdAt,place,lat,lng,doneAt);
 
 @override
 String toString() {
-  return 'ReminderModel(id: $id, title: $title, description: $description, createdAt: $createdAt, doneAt: $doneAt)';
+  return 'ReminderModel(id: $id, title: $title, description: $description, startAt: $startAt, endAt: $endAt, createdAt: $createdAt, place: $place, lat: $lat, lng: $lng, doneAt: $doneAt)';
 }
 
 
@@ -255,7 +265,7 @@ abstract mixin class _$ReminderModelCopyWith<$Res> implements $ReminderModelCopy
   factory _$ReminderModelCopyWith(_ReminderModel value, $Res Function(_ReminderModel) _then) = __$ReminderModelCopyWithImpl;
 @override @useResult
 $Res call({
- int id, String title, String description, DateTime createdAt, DateTime? doneAt
+ int id, String title, String description, DateTime startAt, DateTime endAt, DateTime createdAt, String place, double lat, double lng, DateTime? doneAt
 });
 
 
@@ -272,13 +282,18 @@ class __$ReminderModelCopyWithImpl<$Res>
 
 /// Create a copy of ReminderModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? title = null,Object? description = null,Object? createdAt = null,Object? doneAt = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? title = null,Object? description = null,Object? startAt = null,Object? endAt = null,Object? createdAt = null,Object? place = null,Object? lat = null,Object? lng = null,Object? doneAt = freezed,}) {
   return _then(_ReminderModel(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,description: null == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
-as String,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
-as DateTime,doneAt: freezed == doneAt ? _self.doneAt : doneAt // ignore: cast_nullable_to_non_nullable
+as String,startAt: null == startAt ? _self.startAt : startAt // ignore: cast_nullable_to_non_nullable
+as DateTime,endAt: null == endAt ? _self.endAt : endAt // ignore: cast_nullable_to_non_nullable
+as DateTime,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as DateTime,place: null == place ? _self.place : place // ignore: cast_nullable_to_non_nullable
+as String,lat: null == lat ? _self.lat : lat // ignore: cast_nullable_to_non_nullable
+as double,lng: null == lng ? _self.lng : lng // ignore: cast_nullable_to_non_nullable
+as double,doneAt: freezed == doneAt ? _self.doneAt : doneAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,
   ));
 }

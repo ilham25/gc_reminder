@@ -14,7 +14,8 @@ import 'package:flutter/material.dart' as _i26;
 import 'package:gc_reminder/core/widgets/filter/filter.dart' as _i11;
 import 'package:gc_reminder/core/widgets/search/search.dart' as _i20;
 import 'package:gc_reminder/presentation/home/home_screen.dart' as _i14;
-import 'package:gc_reminder/presentation/reminder/reminder_screen.dart' as _i18;
+import 'package:gc_reminder/presentation/reminder/reminder_list_screen.dart'
+    as _i18;
 import 'package:gc_reminder/presentation/splash/splash_screen.dart' as _i23;
 import 'package:gc_reminder/presentation/templates/chat/chat_detail_screen.dart'
     as _i1;
@@ -390,17 +391,17 @@ class OnboardingPersonalizeRoute extends _i25.PageRouteInfo<void> {
 }
 
 /// generated route for
-/// [_i18.ReminderScreen]
-class ReminderRoute extends _i25.PageRouteInfo<void> {
-  const ReminderRoute({List<_i25.PageRouteInfo>? children})
-    : super(ReminderRoute.name, initialChildren: children);
+/// [_i18.ReminderListScreen]
+class ReminderListRoute extends _i25.PageRouteInfo<void> {
+  const ReminderListRoute({List<_i25.PageRouteInfo>? children})
+    : super(ReminderListRoute.name, initialChildren: children);
 
-  static const String name = 'ReminderRoute';
+  static const String name = 'ReminderListRoute';
 
   static _i25.PageInfo page = _i25.PageInfo(
     name,
     builder: (data) {
-      return const _i18.ReminderScreen();
+      return const _i18.ReminderListScreen();
     },
   );
 }
