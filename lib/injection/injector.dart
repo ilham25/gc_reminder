@@ -1,3 +1,6 @@
+import 'package:gc_reminder/domain/location/services/location_service.dart';
+import 'package:gc_reminder/domain/location/usecases/get_current_placemark_usecase.dart';
+import 'package:gc_reminder/domain/location/usecases/get_current_position_usecase.dart';
 import 'package:gc_reminder/domain/notification/notification_service.dart';
 import 'package:gc_reminder/domain/notification/usecases/delete_notifications_usecase.dart';
 import 'package:gc_reminder/domain/notification/usecases/schedule_notification_usecase.dart';
@@ -53,10 +56,10 @@ Future<void> setupInjector() async {
   inject.registerLazySingleton<NotificationService>(
     () => NotificationServiceImpl(),
   );
-
   inject.registerLazySingleton<PermissionService>(
     () => PermissionServiceImpl(),
   );
+  inject.registerLazySingleton<LocationService>(() => LocationServiceImpl());
 
   // Register usecases
   inject.registerLazySingleton<RequestPermissionUseCase>(
@@ -72,6 +75,12 @@ Future<void> setupInjector() async {
   );
   inject.registerLazySingleton<DeleteNotificationsUseCase>(
     () => DeleteNotificationsUseCase(inject<NotificationService>()),
+  );
+  inject.registerLazySingleton<GetCurrentPositionUseCase>(
+    () => GetCurrentPositionUseCase(inject<LocationService>()),
+  );
+  inject.registerLazySingleton<GetCurrentPlacemarkUseCase>(
+    () => GetCurrentPlacemarkUseCase(inject<LocationService>()),
   );
 
   /// Register bloc

@@ -4,6 +4,18 @@ import 'package:gc_reminder/gen/assets.gen.dart';
 import 'package:gc_reminder/presentation/common/widgets/map/map_marker.dart';
 import 'package:latlong2/latlong.dart';
 
+class MapInitialPositionModel {
+  final double latitude;
+  final double longitude;
+  final double zoom;
+
+  MapInitialPositionModel({
+    this.latitude = 0,
+    this.longitude = 0,
+    this.zoom = 13,
+  });
+}
+
 class MapMarkerModel {
   final double latitude;
   final double longitude;
