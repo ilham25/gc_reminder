@@ -10,5 +10,6 @@ part 'package:gc_reminder/infrastructure/location/location_reminder_service_impl
 
 abstract class LocationReminderService {
   Future<void> initialize();
+  Future<void> start();
   Future<Either<BaseError, void>> createGeofence(int id);
 }

@@ -36,6 +36,9 @@ class ReminderListBody extends StatefulWidget {
 }
 
 class _ReminderListBodyState extends State<ReminderListBody> {
+  final LocationReminderService locationReminderService =
+      inject<LocationReminderService>();
+
   Future _onRefresh() async {
     await context.read<ReminderListBloc>().refresh();
   }
@@ -63,6 +66,8 @@ class _ReminderListBodyState extends State<ReminderListBody> {
   Future _onInit() async {
     final requestPermission = await _onRequestPermission();
     if (requestPermission == null) return;
+
+    await locationReminderService.start();
   }
 
   @override

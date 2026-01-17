@@ -36,6 +36,27 @@ class LocationReminderServiceImpl implements LocationReminderService {
   }
 
   @override
+  Future<void> start() async {
+    await _geofence.start();
+    final reminders = await reminderLocalRepository.getReminders();
+
+    reminders.fold((l) {}, (r) {
+      _geofence.addRegions(
+        r
+            .map(
+              (reminder) => GeofenceRegion.circular(
+                id: id.toString(),
+                center: LatLng(reminder.lat!, reminder.lng!),
+                radius: 100, // 100 meters
+                data: reminder,
+              ),
+            )
+            .toSet(),
+      );
+    });
+  }
+
+  @override
   Future<Either<BaseError, void>> createGeofence(int id) async {
     debugPrint("createGeofence: $id");
     final result = await reminderLocalRepository.getReminder(id);
