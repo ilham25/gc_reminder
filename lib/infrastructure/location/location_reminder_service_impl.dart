@@ -28,6 +28,7 @@ class LocationReminderServiceImpl implements LocationReminderService {
       geofenceStatus,
       location,
     ) async {
+      debugPrint("geofenceStatus: $geofenceStatus");
       if (geofenceStatus == .enter) {
         _showNotification(geofenceRegion);
       }
@@ -50,7 +51,12 @@ class LocationReminderServiceImpl implements LocationReminderService {
           data: row,
         );
 
-        await _geofence.start(regions: {region});
+        if (_geofence.isRunningService) {
+          _geofence.addRegion(region);
+        } else {
+          await _geofence.start(regions: {region});
+        }
+
         return Right(null);
       },
     );
