@@ -6,7 +6,9 @@ class ReminderTable extends Table {
   TextColumn get description =>
       text().withDefault(const Constant('')).nullable()();
 
-  TextColumn get place => text().withDefault(const Constant('')).nullable()();
+  TextColumn get place => text().nullable()();
+  RealColumn get latitude => real().nullable()();
+  RealColumn get longitude => real().nullable()();
 
   DateTimeColumn get startAt => dateTime()();
   DateTimeColumn get endAt => dateTime().nullable()();

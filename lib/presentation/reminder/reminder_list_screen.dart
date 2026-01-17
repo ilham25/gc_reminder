@@ -86,7 +86,9 @@ class _ReminderListBodyState extends State<ReminderListBody> {
           final requestPermission = await _onRequestPermission();
           if (requestPermission == null) return;
 
-          await ReminderCreateBottomSheet.show();
+          final result = await ReminderCreateBottomSheet.show();
+          if (result != true) return;
+
           _onRefresh();
         },
       ),

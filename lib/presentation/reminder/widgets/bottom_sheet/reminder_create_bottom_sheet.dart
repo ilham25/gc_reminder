@@ -59,17 +59,19 @@ class _BottomSheet extends StatelessWidget {
             state.maybeWhen(
               orElse: () {},
               error: (message) {
+                if (!context.mounted) return;
                 UIKitToast.danger(
                   title: "Create Reminder Error",
                   description: message,
                 );
               },
               success: () {
-                UIKitToast.success(
-                  title: "Create Reminder Success",
-                  description: "Reminder has been created",
-                );
-                context.router.pop(true);
+                if (!context.mounted) return;
+                // UIKitToast.success(
+                //   title: "Create Reminder Success",
+                //   description: "Reminder has been created",
+                // );
+                context.router.maybePop(true);
               },
             );
           },

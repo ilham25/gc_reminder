@@ -1,6 +1,7 @@
 import 'package:drift/drift.dart' as drift;
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:gc_reminder/infrastructure/database/database.dart';
+import 'package:latlong2/latlong.dart';
 
 part 'create_reminder_dto.freezed.dart';
 
@@ -11,6 +12,8 @@ abstract class CreateReminderDTO with _$CreateReminderDTO {
     String? description,
     required DateTime startAt,
     String? place,
+    double? latitude,
+    double? longitude,
     DateTime? endAt,
   }) = _CreateReminderDTO;
 
@@ -31,11 +34,15 @@ abstract class CreateReminderDTO with _$CreateReminderDTO {
       );
     }
 
+    final position = formData["position"] as LatLng?;
+
     return CreateReminderDTO(
       title: formData["title"],
       description: formData["description"],
       startAt: startAt,
       place: formData["place"],
+      latitude: position?.latitude,
+      longitude: position?.longitude,
     );
   }
 }
@@ -48,6 +55,8 @@ extension CreateReminderDTOExt on CreateReminderDTO {
       startAt: drift.Value(startAt),
       endAt: drift.Value(endAt),
       place: drift.Value(place),
+      latitude: drift.Value(latitude),
+      longitude: drift.Value(longitude),
     );
   }
 }

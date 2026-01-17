@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$CreateReminderDTO {
 
- String get title; String? get description; DateTime get startAt; String? get place; DateTime? get endAt;
+ String get title; String? get description; DateTime get startAt; String? get place; double? get latitude; double? get longitude; DateTime? get endAt;
 /// Create a copy of CreateReminderDTO
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $CreateReminderDTOCopyWith<CreateReminderDTO> get copyWith => _$CreateReminderDT
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CreateReminderDTO&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.startAt, startAt) || other.startAt == startAt)&&(identical(other.place, place) || other.place == place)&&(identical(other.endAt, endAt) || other.endAt == endAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CreateReminderDTO&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.startAt, startAt) || other.startAt == startAt)&&(identical(other.place, place) || other.place == place)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude)&&(identical(other.endAt, endAt) || other.endAt == endAt));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,title,description,startAt,place,endAt);
+int get hashCode => Object.hash(runtimeType,title,description,startAt,place,latitude,longitude,endAt);
 
 @override
 String toString() {
-  return 'CreateReminderDTO(title: $title, description: $description, startAt: $startAt, place: $place, endAt: $endAt)';
+  return 'CreateReminderDTO(title: $title, description: $description, startAt: $startAt, place: $place, latitude: $latitude, longitude: $longitude, endAt: $endAt)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $CreateReminderDTOCopyWith<$Res>  {
   factory $CreateReminderDTOCopyWith(CreateReminderDTO value, $Res Function(CreateReminderDTO) _then) = _$CreateReminderDTOCopyWithImpl;
 @useResult
 $Res call({
- String title, String? description, DateTime startAt, String? place, DateTime? endAt
+ String title, String? description, DateTime startAt, String? place, double? latitude, double? longitude, DateTime? endAt
 });
 
 
@@ -62,13 +62,15 @@ class _$CreateReminderDTOCopyWithImpl<$Res>
 
 /// Create a copy of CreateReminderDTO
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? title = null,Object? description = freezed,Object? startAt = null,Object? place = freezed,Object? endAt = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? title = null,Object? description = freezed,Object? startAt = null,Object? place = freezed,Object? latitude = freezed,Object? longitude = freezed,Object? endAt = freezed,}) {
   return _then(_self.copyWith(
 title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String?,startAt: null == startAt ? _self.startAt : startAt // ignore: cast_nullable_to_non_nullable
 as DateTime,place: freezed == place ? _self.place : place // ignore: cast_nullable_to_non_nullable
-as String?,endAt: freezed == endAt ? _self.endAt : endAt // ignore: cast_nullable_to_non_nullable
+as String?,latitude: freezed == latitude ? _self.latitude : latitude // ignore: cast_nullable_to_non_nullable
+as double?,longitude: freezed == longitude ? _self.longitude : longitude // ignore: cast_nullable_to_non_nullable
+as double?,endAt: freezed == endAt ? _self.endAt : endAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,
   ));
 }
@@ -154,10 +156,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String title,  String? description,  DateTime startAt,  String? place,  DateTime? endAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String title,  String? description,  DateTime startAt,  String? place,  double? latitude,  double? longitude,  DateTime? endAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _CreateReminderDTO() when $default != null:
-return $default(_that.title,_that.description,_that.startAt,_that.place,_that.endAt);case _:
+return $default(_that.title,_that.description,_that.startAt,_that.place,_that.latitude,_that.longitude,_that.endAt);case _:
   return orElse();
 
 }
@@ -175,10 +177,10 @@ return $default(_that.title,_that.description,_that.startAt,_that.place,_that.en
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String title,  String? description,  DateTime startAt,  String? place,  DateTime? endAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String title,  String? description,  DateTime startAt,  String? place,  double? latitude,  double? longitude,  DateTime? endAt)  $default,) {final _that = this;
 switch (_that) {
 case _CreateReminderDTO():
-return $default(_that.title,_that.description,_that.startAt,_that.place,_that.endAt);case _:
+return $default(_that.title,_that.description,_that.startAt,_that.place,_that.latitude,_that.longitude,_that.endAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -195,10 +197,10 @@ return $default(_that.title,_that.description,_that.startAt,_that.place,_that.en
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String title,  String? description,  DateTime startAt,  String? place,  DateTime? endAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String title,  String? description,  DateTime startAt,  String? place,  double? latitude,  double? longitude,  DateTime? endAt)?  $default,) {final _that = this;
 switch (_that) {
 case _CreateReminderDTO() when $default != null:
-return $default(_that.title,_that.description,_that.startAt,_that.place,_that.endAt);case _:
+return $default(_that.title,_that.description,_that.startAt,_that.place,_that.latitude,_that.longitude,_that.endAt);case _:
   return null;
 
 }
@@ -210,13 +212,15 @@ return $default(_that.title,_that.description,_that.startAt,_that.place,_that.en
 
 
 class _CreateReminderDTO implements CreateReminderDTO {
-  const _CreateReminderDTO({required this.title, this.description, required this.startAt, this.place, this.endAt});
+  const _CreateReminderDTO({required this.title, this.description, required this.startAt, this.place, this.latitude, this.longitude, this.endAt});
   
 
 @override final  String title;
 @override final  String? description;
 @override final  DateTime startAt;
 @override final  String? place;
+@override final  double? latitude;
+@override final  double? longitude;
 @override final  DateTime? endAt;
 
 /// Create a copy of CreateReminderDTO
@@ -229,16 +233,16 @@ _$CreateReminderDTOCopyWith<_CreateReminderDTO> get copyWith => __$CreateReminde
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CreateReminderDTO&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.startAt, startAt) || other.startAt == startAt)&&(identical(other.place, place) || other.place == place)&&(identical(other.endAt, endAt) || other.endAt == endAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CreateReminderDTO&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.startAt, startAt) || other.startAt == startAt)&&(identical(other.place, place) || other.place == place)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude)&&(identical(other.endAt, endAt) || other.endAt == endAt));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,title,description,startAt,place,endAt);
+int get hashCode => Object.hash(runtimeType,title,description,startAt,place,latitude,longitude,endAt);
 
 @override
 String toString() {
-  return 'CreateReminderDTO(title: $title, description: $description, startAt: $startAt, place: $place, endAt: $endAt)';
+  return 'CreateReminderDTO(title: $title, description: $description, startAt: $startAt, place: $place, latitude: $latitude, longitude: $longitude, endAt: $endAt)';
 }
 
 
@@ -249,7 +253,7 @@ abstract mixin class _$CreateReminderDTOCopyWith<$Res> implements $CreateReminde
   factory _$CreateReminderDTOCopyWith(_CreateReminderDTO value, $Res Function(_CreateReminderDTO) _then) = __$CreateReminderDTOCopyWithImpl;
 @override @useResult
 $Res call({
- String title, String? description, DateTime startAt, String? place, DateTime? endAt
+ String title, String? description, DateTime startAt, String? place, double? latitude, double? longitude, DateTime? endAt
 });
 
 
@@ -266,13 +270,15 @@ class __$CreateReminderDTOCopyWithImpl<$Res>
 
 /// Create a copy of CreateReminderDTO
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? title = null,Object? description = freezed,Object? startAt = null,Object? place = freezed,Object? endAt = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? title = null,Object? description = freezed,Object? startAt = null,Object? place = freezed,Object? latitude = freezed,Object? longitude = freezed,Object? endAt = freezed,}) {
   return _then(_CreateReminderDTO(
 title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String?,startAt: null == startAt ? _self.startAt : startAt // ignore: cast_nullable_to_non_nullable
 as DateTime,place: freezed == place ? _self.place : place // ignore: cast_nullable_to_non_nullable
-as String?,endAt: freezed == endAt ? _self.endAt : endAt // ignore: cast_nullable_to_non_nullable
+as String?,latitude: freezed == latitude ? _self.latitude : latitude // ignore: cast_nullable_to_non_nullable
+as double?,longitude: freezed == longitude ? _self.longitude : longitude // ignore: cast_nullable_to_non_nullable
+as double?,endAt: freezed == endAt ? _self.endAt : endAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,
   ));
 }

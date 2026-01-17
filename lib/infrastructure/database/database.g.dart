@@ -51,7 +51,28 @@ class $ReminderTableTable extends ReminderTable
     true,
     type: DriftSqlType.string,
     requiredDuringInsert: false,
-    defaultValue: const Constant(''),
+  );
+  static const VerificationMeta _latitudeMeta = const VerificationMeta(
+    'latitude',
+  );
+  @override
+  late final GeneratedColumn<double> latitude = GeneratedColumn<double>(
+    'latitude',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _longitudeMeta = const VerificationMeta(
+    'longitude',
+  );
+  @override
+  late final GeneratedColumn<double> longitude = GeneratedColumn<double>(
+    'longitude',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
   );
   static const VerificationMeta _startAtMeta = const VerificationMeta(
     'startAt',
@@ -99,6 +120,8 @@ class $ReminderTableTable extends ReminderTable
     title,
     description,
     place,
+    latitude,
+    longitude,
     startAt,
     endAt,
     doneAt,
@@ -140,6 +163,18 @@ class $ReminderTableTable extends ReminderTable
       context.handle(
         _placeMeta,
         place.isAcceptableOrUnknown(data['place']!, _placeMeta),
+      );
+    }
+    if (data.containsKey('latitude')) {
+      context.handle(
+        _latitudeMeta,
+        latitude.isAcceptableOrUnknown(data['latitude']!, _latitudeMeta),
+      );
+    }
+    if (data.containsKey('longitude')) {
+      context.handle(
+        _longitudeMeta,
+        longitude.isAcceptableOrUnknown(data['longitude']!, _longitudeMeta),
       );
     }
     if (data.containsKey('start_at')) {
@@ -193,6 +228,14 @@ class $ReminderTableTable extends ReminderTable
         DriftSqlType.string,
         data['${effectivePrefix}place'],
       ),
+      latitude: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}latitude'],
+      ),
+      longitude: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}longitude'],
+      ),
       startAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}start_at'],
@@ -224,6 +267,8 @@ class ReminderTableData extends DataClass
   final String title;
   final String? description;
   final String? place;
+  final double? latitude;
+  final double? longitude;
   final DateTime startAt;
   final DateTime? endAt;
   final DateTime? doneAt;
@@ -233,6 +278,8 @@ class ReminderTableData extends DataClass
     required this.title,
     this.description,
     this.place,
+    this.latitude,
+    this.longitude,
     required this.startAt,
     this.endAt,
     this.doneAt,
@@ -248,6 +295,12 @@ class ReminderTableData extends DataClass
     }
     if (!nullToAbsent || place != null) {
       map['place'] = Variable<String>(place);
+    }
+    if (!nullToAbsent || latitude != null) {
+      map['latitude'] = Variable<double>(latitude);
+    }
+    if (!nullToAbsent || longitude != null) {
+      map['longitude'] = Variable<double>(longitude);
     }
     map['start_at'] = Variable<DateTime>(startAt);
     if (!nullToAbsent || endAt != null) {
@@ -272,6 +325,12 @@ class ReminderTableData extends DataClass
       place: place == null && nullToAbsent
           ? const Value.absent()
           : Value(place),
+      latitude: latitude == null && nullToAbsent
+          ? const Value.absent()
+          : Value(latitude),
+      longitude: longitude == null && nullToAbsent
+          ? const Value.absent()
+          : Value(longitude),
       startAt: Value(startAt),
       endAt: endAt == null && nullToAbsent
           ? const Value.absent()
@@ -295,6 +354,8 @@ class ReminderTableData extends DataClass
       title: serializer.fromJson<String>(json['title']),
       description: serializer.fromJson<String?>(json['description']),
       place: serializer.fromJson<String?>(json['place']),
+      latitude: serializer.fromJson<double?>(json['latitude']),
+      longitude: serializer.fromJson<double?>(json['longitude']),
       startAt: serializer.fromJson<DateTime>(json['startAt']),
       endAt: serializer.fromJson<DateTime?>(json['endAt']),
       doneAt: serializer.fromJson<DateTime?>(json['doneAt']),
@@ -309,6 +370,8 @@ class ReminderTableData extends DataClass
       'title': serializer.toJson<String>(title),
       'description': serializer.toJson<String?>(description),
       'place': serializer.toJson<String?>(place),
+      'latitude': serializer.toJson<double?>(latitude),
+      'longitude': serializer.toJson<double?>(longitude),
       'startAt': serializer.toJson<DateTime>(startAt),
       'endAt': serializer.toJson<DateTime?>(endAt),
       'doneAt': serializer.toJson<DateTime?>(doneAt),
@@ -321,6 +384,8 @@ class ReminderTableData extends DataClass
     String? title,
     Value<String?> description = const Value.absent(),
     Value<String?> place = const Value.absent(),
+    Value<double?> latitude = const Value.absent(),
+    Value<double?> longitude = const Value.absent(),
     DateTime? startAt,
     Value<DateTime?> endAt = const Value.absent(),
     Value<DateTime?> doneAt = const Value.absent(),
@@ -330,6 +395,8 @@ class ReminderTableData extends DataClass
     title: title ?? this.title,
     description: description.present ? description.value : this.description,
     place: place.present ? place.value : this.place,
+    latitude: latitude.present ? latitude.value : this.latitude,
+    longitude: longitude.present ? longitude.value : this.longitude,
     startAt: startAt ?? this.startAt,
     endAt: endAt.present ? endAt.value : this.endAt,
     doneAt: doneAt.present ? doneAt.value : this.doneAt,
@@ -343,6 +410,8 @@ class ReminderTableData extends DataClass
           ? data.description.value
           : this.description,
       place: data.place.present ? data.place.value : this.place,
+      latitude: data.latitude.present ? data.latitude.value : this.latitude,
+      longitude: data.longitude.present ? data.longitude.value : this.longitude,
       startAt: data.startAt.present ? data.startAt.value : this.startAt,
       endAt: data.endAt.present ? data.endAt.value : this.endAt,
       doneAt: data.doneAt.present ? data.doneAt.value : this.doneAt,
@@ -357,6 +426,8 @@ class ReminderTableData extends DataClass
           ..write('title: $title, ')
           ..write('description: $description, ')
           ..write('place: $place, ')
+          ..write('latitude: $latitude, ')
+          ..write('longitude: $longitude, ')
           ..write('startAt: $startAt, ')
           ..write('endAt: $endAt, ')
           ..write('doneAt: $doneAt, ')
@@ -371,6 +442,8 @@ class ReminderTableData extends DataClass
     title,
     description,
     place,
+    latitude,
+    longitude,
     startAt,
     endAt,
     doneAt,
@@ -384,6 +457,8 @@ class ReminderTableData extends DataClass
           other.title == this.title &&
           other.description == this.description &&
           other.place == this.place &&
+          other.latitude == this.latitude &&
+          other.longitude == this.longitude &&
           other.startAt == this.startAt &&
           other.endAt == this.endAt &&
           other.doneAt == this.doneAt &&
@@ -395,6 +470,8 @@ class ReminderTableCompanion extends UpdateCompanion<ReminderTableData> {
   final Value<String> title;
   final Value<String?> description;
   final Value<String?> place;
+  final Value<double?> latitude;
+  final Value<double?> longitude;
   final Value<DateTime> startAt;
   final Value<DateTime?> endAt;
   final Value<DateTime?> doneAt;
@@ -404,6 +481,8 @@ class ReminderTableCompanion extends UpdateCompanion<ReminderTableData> {
     this.title = const Value.absent(),
     this.description = const Value.absent(),
     this.place = const Value.absent(),
+    this.latitude = const Value.absent(),
+    this.longitude = const Value.absent(),
     this.startAt = const Value.absent(),
     this.endAt = const Value.absent(),
     this.doneAt = const Value.absent(),
@@ -414,6 +493,8 @@ class ReminderTableCompanion extends UpdateCompanion<ReminderTableData> {
     required String title,
     this.description = const Value.absent(),
     this.place = const Value.absent(),
+    this.latitude = const Value.absent(),
+    this.longitude = const Value.absent(),
     required DateTime startAt,
     this.endAt = const Value.absent(),
     this.doneAt = const Value.absent(),
@@ -425,6 +506,8 @@ class ReminderTableCompanion extends UpdateCompanion<ReminderTableData> {
     Expression<String>? title,
     Expression<String>? description,
     Expression<String>? place,
+    Expression<double>? latitude,
+    Expression<double>? longitude,
     Expression<DateTime>? startAt,
     Expression<DateTime>? endAt,
     Expression<DateTime>? doneAt,
@@ -435,6 +518,8 @@ class ReminderTableCompanion extends UpdateCompanion<ReminderTableData> {
       if (title != null) 'title': title,
       if (description != null) 'description': description,
       if (place != null) 'place': place,
+      if (latitude != null) 'latitude': latitude,
+      if (longitude != null) 'longitude': longitude,
       if (startAt != null) 'start_at': startAt,
       if (endAt != null) 'end_at': endAt,
       if (doneAt != null) 'done_at': doneAt,
@@ -447,6 +532,8 @@ class ReminderTableCompanion extends UpdateCompanion<ReminderTableData> {
     Value<String>? title,
     Value<String?>? description,
     Value<String?>? place,
+    Value<double?>? latitude,
+    Value<double?>? longitude,
     Value<DateTime>? startAt,
     Value<DateTime?>? endAt,
     Value<DateTime?>? doneAt,
@@ -457,6 +544,8 @@ class ReminderTableCompanion extends UpdateCompanion<ReminderTableData> {
       title: title ?? this.title,
       description: description ?? this.description,
       place: place ?? this.place,
+      latitude: latitude ?? this.latitude,
+      longitude: longitude ?? this.longitude,
       startAt: startAt ?? this.startAt,
       endAt: endAt ?? this.endAt,
       doneAt: doneAt ?? this.doneAt,
@@ -478,6 +567,12 @@ class ReminderTableCompanion extends UpdateCompanion<ReminderTableData> {
     }
     if (place.present) {
       map['place'] = Variable<String>(place.value);
+    }
+    if (latitude.present) {
+      map['latitude'] = Variable<double>(latitude.value);
+    }
+    if (longitude.present) {
+      map['longitude'] = Variable<double>(longitude.value);
     }
     if (startAt.present) {
       map['start_at'] = Variable<DateTime>(startAt.value);
@@ -501,6 +596,8 @@ class ReminderTableCompanion extends UpdateCompanion<ReminderTableData> {
           ..write('title: $title, ')
           ..write('description: $description, ')
           ..write('place: $place, ')
+          ..write('latitude: $latitude, ')
+          ..write('longitude: $longitude, ')
           ..write('startAt: $startAt, ')
           ..write('endAt: $endAt, ')
           ..write('doneAt: $doneAt, ')
@@ -527,6 +624,8 @@ typedef $$ReminderTableTableCreateCompanionBuilder =
       required String title,
       Value<String?> description,
       Value<String?> place,
+      Value<double?> latitude,
+      Value<double?> longitude,
       required DateTime startAt,
       Value<DateTime?> endAt,
       Value<DateTime?> doneAt,
@@ -538,6 +637,8 @@ typedef $$ReminderTableTableUpdateCompanionBuilder =
       Value<String> title,
       Value<String?> description,
       Value<String?> place,
+      Value<double?> latitude,
+      Value<double?> longitude,
       Value<DateTime> startAt,
       Value<DateTime?> endAt,
       Value<DateTime?> doneAt,
@@ -570,6 +671,16 @@ class $$ReminderTableTableFilterComposer
 
   ColumnFilters<String> get place => $composableBuilder(
     column: $table.place,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get latitude => $composableBuilder(
+    column: $table.latitude,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get longitude => $composableBuilder(
+    column: $table.longitude,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -623,6 +734,16 @@ class $$ReminderTableTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<double> get latitude => $composableBuilder(
+    column: $table.latitude,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get longitude => $composableBuilder(
+    column: $table.longitude,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<DateTime> get startAt => $composableBuilder(
     column: $table.startAt,
     builder: (column) => ColumnOrderings(column),
@@ -666,6 +787,12 @@ class $$ReminderTableTableAnnotationComposer
 
   GeneratedColumn<String> get place =>
       $composableBuilder(column: $table.place, builder: (column) => column);
+
+  GeneratedColumn<double> get latitude =>
+      $composableBuilder(column: $table.latitude, builder: (column) => column);
+
+  GeneratedColumn<double> get longitude =>
+      $composableBuilder(column: $table.longitude, builder: (column) => column);
 
   GeneratedColumn<DateTime> get startAt =>
       $composableBuilder(column: $table.startAt, builder: (column) => column);
@@ -719,6 +846,8 @@ class $$ReminderTableTableTableManager
                 Value<String> title = const Value.absent(),
                 Value<String?> description = const Value.absent(),
                 Value<String?> place = const Value.absent(),
+                Value<double?> latitude = const Value.absent(),
+                Value<double?> longitude = const Value.absent(),
                 Value<DateTime> startAt = const Value.absent(),
                 Value<DateTime?> endAt = const Value.absent(),
                 Value<DateTime?> doneAt = const Value.absent(),
@@ -728,6 +857,8 @@ class $$ReminderTableTableTableManager
                 title: title,
                 description: description,
                 place: place,
+                latitude: latitude,
+                longitude: longitude,
                 startAt: startAt,
                 endAt: endAt,
                 doneAt: doneAt,
@@ -739,6 +870,8 @@ class $$ReminderTableTableTableManager
                 required String title,
                 Value<String?> description = const Value.absent(),
                 Value<String?> place = const Value.absent(),
+                Value<double?> latitude = const Value.absent(),
+                Value<double?> longitude = const Value.absent(),
                 required DateTime startAt,
                 Value<DateTime?> endAt = const Value.absent(),
                 Value<DateTime?> doneAt = const Value.absent(),
@@ -748,6 +881,8 @@ class $$ReminderTableTableTableManager
                 title: title,
                 description: description,
                 place: place,
+                latitude: latitude,
+                longitude: longitude,
                 startAt: startAt,
                 endAt: endAt,
                 doneAt: doneAt,

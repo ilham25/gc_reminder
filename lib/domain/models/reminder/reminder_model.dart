@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:gc_reminder/infrastructure/database/database.dart';
+import 'package:latlong2/latlong.dart';
 
 part 'reminder_model.freezed.dart';
 part 'reminder_model.g.dart';
@@ -44,7 +45,7 @@ extension ReminderModelExt on ReminderModel {
   }
 
   Map<String, dynamic> toReminderUpdateForm() {
-    return {
+    Map<String, dynamic> initialValue = {
       'title': title,
       'description': description,
       'startDate': startAt,
@@ -52,6 +53,13 @@ extension ReminderModelExt on ReminderModel {
       'endAt': endAt,
       'place': place,
     };
+
+    if (place.isNotEmpty) {
+      initialValue['position'] = LatLng(lat, lng);
+      initialValue["isLocationReminder"] = true;
+    }
+
+    return initialValue;
   }
 }
 

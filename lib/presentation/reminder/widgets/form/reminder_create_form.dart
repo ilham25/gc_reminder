@@ -49,6 +49,8 @@ class ReminderCreateForm extends StatelessWidget {
         isLocationReminder.value =
             formKey.currentState?.fields["isLocationReminder"]?.value as bool?;
         place.value = formKey.currentState?.fields["place"]?.value as String?;
+        position.value =
+            formKey.currentState?.fields["position"]?.value as LatLng?;
       },
       child: Column(
         mainAxisSize: .min,
@@ -128,9 +130,6 @@ class ReminderCreateForm extends StatelessWidget {
                     value: field.value,
                     dateFormat: "HH:mm",
                   ),
-                  validator: FormBuilderValidators.compose([
-                    FormBuilderValidators.required(),
-                  ]),
                 ),
               ],
             ),
@@ -161,6 +160,16 @@ class ReminderCreateForm extends StatelessWidget {
               ),
             ],
           ),
+          FormBuilderField<String>(
+            name: "place",
+            initialValue: initialValue["place"],
+            builder: (field) => SizedBox.shrink(),
+          ),
+          FormBuilderField<LatLng>(
+            name: "position",
+            initialValue: initialValue["position"],
+            builder: (field) => SizedBox.shrink(),
+          ),
           ValueListenableBuilder(
             valueListenable: isLocationReminder,
             builder: (context, value, child) {
@@ -183,8 +192,8 @@ class ReminderCreateForm extends StatelessWidget {
                       children: [
                         ValueListenableBuilder(
                           valueListenable: place,
-                          builder: (context, value, child) {
-                            if (value == null) return SizedBox.shrink();
+                          builder: (context, placeValue, child) {
+                            if (placeValue == null) return SizedBox.shrink();
 
                             return Column(
                               crossAxisAlignment: .stretch,
@@ -194,10 +203,7 @@ class ReminderCreateForm extends StatelessWidget {
                                   style: MyTheme.style.heading.h5,
                                 ),
                                 Space.h(2),
-                                Text(
-                                  place.value ?? "-",
-                                  style: MyTheme.style.body.m,
-                                ),
+                                Text(placeValue, style: MyTheme.style.body.m),
                                 Space.h(8),
                                 Text(
                                   "Trigger",
@@ -245,20 +251,23 @@ class ReminderCreateForm extends StatelessWidget {
                                   ),
                                   child: ValueListenableBuilder(
                                     valueListenable: position,
-                                    builder: (context, value, child) {
+                                    builder: (context, positionValue, child) {
                                       return PrimaryMap(
-                                        markers: value == null
+                                        markers: positionValue == null
                                             ? []
                                             : [
                                                 MapMarkerModel(
-                                                  latitude: value.latitude,
-                                                  longitude: value.longitude,
+                                                  latitude:
+                                                      positionValue.latitude,
+                                                  longitude:
+                                                      positionValue.longitude,
                                                 ),
                                               ],
                                       );
                                     },
                                   ),
                                 ),
+
                                 Space.h(16),
                               ],
                             );
@@ -285,8 +294,10 @@ class ReminderCreateForm extends StatelessWidget {
                                     );
                                 if (result == null) return;
 
-                                place.value = result.placemark.fullAddress;
-                                position.value = result.position;
+                                formKey.currentState?.fields["place"]
+                                    ?.didChange(result.placemark.fullAddress);
+                                formKey.currentState?.fields["position"]
+                                    ?.didChange(result.position);
                               },
                             );
                           },
