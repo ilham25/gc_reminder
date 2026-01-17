@@ -1,6 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:gc_reminder/domain/cubit/safe_cubit.dart';
 import 'package:gc_reminder/domain/models/reminder/reminder_model.dart';
+import 'package:gc_reminder/domain/notification/usecases/delete_notifications_usecase.dart';
 import 'package:gc_reminder/domain/repositories/reminder/reminder_local_repository.dart';
 import 'package:gc_reminder/injection/injector.dart';
 
@@ -13,6 +14,8 @@ class ReminderListBloc extends SafeCubit<ReminderListBlocState> {
 
   final ReminderLocalRepository _localRepository =
       inject<ReminderLocalRepository>();
+  final DeleteNotificationsUseCase _deleteNotificationsUseCase =
+      inject<DeleteNotificationsUseCase>();
 
   Future getData() async {
     emit(const ReminderListBlocState.loading());
@@ -39,22 +42,36 @@ class ReminderListBloc extends SafeCubit<ReminderListBlocState> {
             action: ReminderListActionState.loading(),
           ),
         );
-        try {
-          await _localRepository.deleteReminders(ids);
-          emit(
+
+        final mutateDeleteReminders = await _localRepository.deleteReminders(
+          ids,
+        );
+
+        await mutateDeleteReminders.fold(
+          (left) async => emit(
             ReminderListBlocState.loaded(
               state: oldState,
-              action: ReminderListActionState.success(actionName: "delete"),
+              action: ReminderListActionState.error(left.message),
             ),
-          );
-        } catch (e) {
-          emit(
-            ReminderListBlocState.loaded(
-              state: oldState,
-              action: ReminderListActionState.error(e.toString()),
-            ),
-          );
-        }
+          ),
+          (right) async {
+            final mutateDeleteSchedules = await _deleteNotificationsUseCase
+                .call(ids);
+
+            return mutateDeleteSchedules.fold(
+              (left) => ReminderListBlocState.loaded(
+                state: oldState,
+                action: ReminderListActionState.error(left.message),
+              ),
+              (right) => emit(
+                ReminderListBlocState.loaded(
+                  state: oldState,
+                  action: ReminderListActionState.success(actionName: "delete"),
+                ),
+              ),
+            );
+          },
+        );
       },
     );
   }

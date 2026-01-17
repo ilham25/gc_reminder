@@ -10,13 +10,13 @@ abstract class ReminderModel with _$ReminderModel {
   const factory ReminderModel({
     @Default(0) int id,
     @Default("") String title,
-    @Default("") String description,
+    String? description,
     required DateTime startAt,
     DateTime? endAt,
     required DateTime createdAt,
-    @Default("") String place,
-    @Default(0) double lat,
-    @Default(0) double lng,
+    String? place,
+    double? lat,
+    double? lng,
 
     DateTime? doneAt,
   }) = _ReminderModel;
@@ -29,7 +29,7 @@ extension ReminderModelExt on ReminderModel {
   bool get isDone => doneAt != null;
 
   ReminderType get type =>
-      place.isEmpty ? ReminderType.time : ReminderType.location;
+      place == null ? ReminderType.time : ReminderType.location;
 
   ReminderTableData toReminderTableData() {
     return ReminderTableData(
@@ -54,8 +54,8 @@ extension ReminderModelExt on ReminderModel {
       'place': place,
     };
 
-    if (place.isNotEmpty) {
-      initialValue['position'] = LatLng(lat, lng);
+    if (place != null) {
+      initialValue['position'] = LatLng(lat!, lng!);
       initialValue["isLocationReminder"] = true;
     }
 

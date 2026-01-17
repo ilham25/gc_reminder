@@ -193,8 +193,8 @@ class _UIKitTextFieldState extends State<UIKitTextField> {
           focusNode: _focusNode,
           onTapOutside: (_) => FocusManager.instance.primaryFocus?.unfocus(),
           decoration: InputDecoration(
-            filled: widget.enabled ? false : true,
-            fillColor: MyTheme.color.palette.light.light,
+            filled: true,
+            fillColor: MyTheme.color.palette.light.lightest,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide: BorderSide(

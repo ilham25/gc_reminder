@@ -1,3 +1,4 @@
+import 'package:gc_reminder/domain/location/services/location_reminder_service.dart';
 import 'package:gc_reminder/domain/location/services/location_service.dart';
 import 'package:gc_reminder/domain/location/usecases/get_current_placemark_usecase.dart';
 import 'package:gc_reminder/domain/location/usecases/get_current_position_usecase.dart';
@@ -100,4 +101,13 @@ Future<void> setupInjector() async {
   inject.registerLazySingleton<ReminderLocalRepository>(
     () => ReminderLocalRepositoryImpl(inject<ReminderLocalDataSource>()),
   );
+
+  inject.registerLazySingleton<LocationReminderService>(
+    () => LocationReminderServiceImpl(
+      notificationService: inject<NotificationService>(),
+      reminderLocalRepository: inject<ReminderLocalRepository>(),
+    ),
+  );
+
+  await inject<LocationReminderService>().initialize();
 }

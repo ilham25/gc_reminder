@@ -24,6 +24,30 @@ class ReminderLocalDataSource {
     }
   }
 
+  Future<Either<Failure, ReminderModel>> getReminder(int id) async {
+    try {
+      final query = await (db.select(
+        db.reminderTable,
+      )..where((tbl) => tbl.id.equals(id))).getSingleOrNull();
+      if (query == null) {
+        return Left(
+          Failure(
+            message: "Reminder not found",
+            statusCode: ResponseCode.notFound,
+          ),
+        );
+      }
+
+      return Right(query.toReminderModel());
+    } catch (e, stacktrace) {
+      debugPrint(e.toString());
+      debugPrint(stacktrace.toString());
+      return Left(
+        Failure(message: e.toString(), statusCode: ResponseCode.badRequest),
+      );
+    }
+  }
+
   Future<Either<Failure, int>> createReminder({
     required CreateReminderDTO dto,
   }) async {

@@ -60,10 +60,10 @@ class _BottomSheet extends StatelessWidget {
               orElse: () {},
               error: (message) {
                 if (!context.mounted) return;
-                UIKitToast.danger(
-                  title: "Create Reminder Error",
-                  description: message,
-                );
+                // UIKitToast.danger(
+                //   title: "Create Reminder Error",
+                //   description: message,
+                // );
               },
               success: () {
                 if (!context.mounted) return;

@@ -5,6 +5,7 @@ import 'package:gc_reminder/bloc/reminder/reminder_list/reminder_list_bloc.dart'
 import 'package:gc_reminder/config/app_config.dart';
 import 'package:gc_reminder/core/widgets/app_bar/app_bar.dart';
 import 'package:gc_reminder/core/widgets/button/icon_button.dart';
+import 'package:gc_reminder/domain/location/services/location_reminder_service.dart';
 import 'package:gc_reminder/domain/permission/usecases/request_permission_usecase.dart';
 import 'package:gc_reminder/gen/assets.gen.dart';
 import 'package:gc_reminder/injection/injector.dart';
@@ -59,6 +60,17 @@ class _ReminderListBodyState extends State<ReminderListBody> {
     return true;
   }
 
+  Future _onInit() async {
+    final requestPermission = await _onRequestPermission();
+    if (requestPermission == null) return;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _onInit();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -83,9 +95,6 @@ class _ReminderListBodyState extends State<ReminderListBody> {
         Assets.icons.add,
         iconSize: 16,
         onTap: () async {
-          final requestPermission = await _onRequestPermission();
-          if (requestPermission == null) return;
-
           final result = await ReminderCreateBottomSheet.show();
           if (result != true) return;
 

@@ -80,85 +80,88 @@ class PrimaryDatePicker extends StatelessWidget {
     bool hasError = errorText.isNotEmpty;
     final String label = _getDisplay();
 
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        if (title.isNotEmpty) ...[
-          Text(title, style: MyTheme.style.heading.h5),
-          Space.h(8),
-        ],
-        Ink(
-          decoration: BoxDecoration(
-            color: MyTheme.color.white,
-            borderRadius: BorderRadius.circular(radius),
-          ),
-          child: InkWell(
-            onTap: () async {
-              _onPick(context);
-            },
-            borderRadius: BorderRadius.circular(radius),
-            child: Container(
-              height: height,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(radius),
-                border: Border.all(
-                  width: 1,
-                  color: !hasError
-                      ? MyTheme.color.palette.light.darkest
-                      : MyTheme.color.danger,
+    return Material(
+      type: .transparency,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (title.isNotEmpty) ...[
+            Text(title, style: MyTheme.style.heading.h5),
+            Space.h(8),
+          ],
+          Ink(
+            decoration: BoxDecoration(
+              color: MyTheme.color.white,
+              borderRadius: BorderRadius.circular(radius),
+            ),
+            child: InkWell(
+              onTap: () async {
+                _onPick(context);
+              },
+              borderRadius: BorderRadius.circular(radius),
+              child: Container(
+                height: height,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(radius),
+                  border: Border.all(
+                    width: 1,
+                    color: !hasError
+                        ? MyTheme.color.palette.light.darkest
+                        : MyTheme.color.danger,
+                  ),
+                ),
+                padding: EdgeInsets.symmetric(
+                  horizontal: AppSetting.setWidth(16),
+                ),
+                child: Row(
+                  children: [
+                    // Padding(
+                    //   padding: EdgeInsets.only(right: AppSetting.setWidth(10)),
+                    //   child: leadingIcon != null
+                    //       ? leadingIcon!.image(
+                    //           height: AppSetting.setHeight(20),
+                    //           width: AppSetting.setWidth(20),
+                    //           color: MyTheme.color.black,
+                    //         )
+                    //       : Assets.icons.iconDatePicker.image(
+                    //           height: AppSetting.setHeight(20),
+                    //           width: AppSetting.setWidth(20),
+                    //           color: MyTheme.color.black,
+                    //         ),
+                    // ),
+                    Expanded(
+                      child: label.isNotEmpty
+                          ? Text(label, style: MyTheme.style.body.m.copyWith())
+                          : Text(
+                              hintText,
+                              style: MyTheme.style.body.m.copyWith(
+                                color: MyTheme.color.palette.dark.lightest,
+                              ),
+                            ),
+                    ),
+                    Assets.icons.arrowDown.image(
+                      height: AppSetting.setHeight(10),
+                      width: AppSetting.setWidth(10),
+                      color: MyTheme.color.palette.dark.lightest,
+                    ),
+                  ],
                 ),
               ),
-              padding: EdgeInsets.symmetric(
-                horizontal: AppSetting.setWidth(16),
-              ),
-              child: Row(
-                children: [
-                  // Padding(
-                  //   padding: EdgeInsets.only(right: AppSetting.setWidth(10)),
-                  //   child: leadingIcon != null
-                  //       ? leadingIcon!.image(
-                  //           height: AppSetting.setHeight(20),
-                  //           width: AppSetting.setWidth(20),
-                  //           color: MyTheme.color.black,
-                  //         )
-                  //       : Assets.icons.iconDatePicker.image(
-                  //           height: AppSetting.setHeight(20),
-                  //           width: AppSetting.setWidth(20),
-                  //           color: MyTheme.color.black,
-                  //         ),
-                  // ),
-                  Expanded(
-                    child: label.isNotEmpty
-                        ? Text(label, style: MyTheme.style.body.m.copyWith())
-                        : Text(
-                            hintText,
-                            style: MyTheme.style.body.m.copyWith(
-                              color: MyTheme.color.palette.dark.lightest,
-                            ),
-                          ),
-                  ),
-                  Assets.icons.arrowDown.image(
-                    height: AppSetting.setHeight(10),
-                    width: AppSetting.setWidth(10),
-                    color: MyTheme.color.palette.dark.lightest,
-                  ),
-                ],
-              ),
             ),
           ),
-        ),
-        if (hasError)
-          Container(
-            margin: const EdgeInsets.only(top: 8),
-            child: Text(
-              errorText,
-              style: MyTheme.style.body.xs.copyWith(
-                color: MyTheme.color.danger,
+          if (hasError)
+            Container(
+              margin: const EdgeInsets.only(top: 8),
+              child: Text(
+                errorText,
+                style: MyTheme.style.body.xs.copyWith(
+                  color: MyTheme.color.danger,
+                ),
               ),
             ),
-          ),
-      ],
+        ],
+      ),
     );
   }
 }

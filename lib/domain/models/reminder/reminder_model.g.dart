@@ -10,15 +10,15 @@ _ReminderModel _$ReminderModelFromJson(Map<String, dynamic> json) =>
     _ReminderModel(
       id: (json['id'] as num?)?.toInt() ?? 0,
       title: json['title'] as String? ?? "",
-      description: json['description'] as String? ?? "",
+      description: json['description'] as String?,
       startAt: DateTime.parse(json['startAt'] as String),
       endAt: json['endAt'] == null
           ? null
           : DateTime.parse(json['endAt'] as String),
       createdAt: DateTime.parse(json['createdAt'] as String),
-      place: json['place'] as String? ?? "",
-      lat: (json['lat'] as num?)?.toDouble() ?? 0,
-      lng: (json['lng'] as num?)?.toDouble() ?? 0,
+      place: json['place'] as String?,
+      lat: (json['lat'] as num?)?.toDouble(),
+      lng: (json['lng'] as num?)?.toDouble(),
       doneAt: json['doneAt'] == null
           ? null
           : DateTime.parse(json['doneAt'] as String),
