@@ -5,7 +5,18 @@ import 'package:gc_reminder/theme/theme.dart';
 import 'package:gc_reminder/utils/date/date_format_utils.dart';
 
 class TodayReminderSummary extends StatelessWidget {
-  const TodayReminderSummary({super.key});
+  final DateTime date;
+  final int total;
+  final int completed;
+  final int ongoing;
+
+  const TodayReminderSummary({
+    super.key,
+    required this.date,
+    required this.total,
+    required this.completed,
+    required this.ongoing,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +54,7 @@ class TodayReminderSummary extends StatelessWidget {
                       borderRadius: .circular(8),
                     ),
                     child: Center(
-                      child: Assets.icons.timeOutlined.image(
+                      child: Assets.icons.calendar.image(
                         height: AppSetting.setHeight(20),
                         width: AppSetting.setWidth(20),
                         color: MyTheme.color.white,
@@ -56,22 +67,24 @@ class TodayReminderSummary extends StatelessWidget {
                   crossAxisAlignment: .stretch,
                   children: [
                     Text(
-                      formatFullSort.format(DateTime.now()),
+                      formatFullSort.format(date),
                       style: MyTheme.style.body.m.copyWith(
                         color: MyTheme.color.palette.highlight.lightest,
                       ),
                     ),
                     Text(
-                      "Today",
-                      style: MyTheme.style.heading.h1.copyWith(
+                      "Tomorrow",
+                      style: MyTheme.style.heading.h2.copyWith(
                         color: MyTheme.color.white,
                       ),
+                      maxLines: 1,
+                      overflow: .ellipsis,
                     ),
                   ],
                 ),
                 Space.h(16),
                 Text(
-                  "14 Reminders",
+                  "$total Reminders",
                   style: MyTheme.style.action.m.copyWith(
                     color: MyTheme.color.white,
                   ),
@@ -123,7 +136,10 @@ class TodayReminderSummary extends StatelessWidget {
                           child: Column(
                             crossAxisAlignment: .stretch,
                             children: [
-                              Text("40", style: MyTheme.style.heading.h4),
+                              Text(
+                                completed.toString(),
+                                style: MyTheme.style.heading.h4,
+                              ),
                               Text(
                                 "Completed",
                                 style: MyTheme.style.action.m.copyWith(
@@ -175,7 +191,10 @@ class TodayReminderSummary extends StatelessWidget {
                           child: Column(
                             crossAxisAlignment: .stretch,
                             children: [
-                              Text("40", style: MyTheme.style.heading.h4),
+                              Text(
+                                ongoing.toString(),
+                                style: MyTheme.style.heading.h4,
+                              ),
                               Text(
                                 "Ongoing",
                                 style: MyTheme.style.action.m.copyWith(

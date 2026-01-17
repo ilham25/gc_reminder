@@ -5,6 +5,7 @@ class ReminderTable extends Table {
   TextColumn get title => text()();
   TextColumn get description =>
       text().withDefault(const Constant('')).nullable()();
+  TextColumn get type => textEnum<ReminderType>()();
 
   TextColumn get place => text().nullable()();
   RealColumn get latitude => real().nullable()();
@@ -16,3 +17,5 @@ class ReminderTable extends Table {
   DateTimeColumn get doneAt => dateTime().nullable()();
   DateTimeColumn get createdAt => dateTime().nullable()();
 }
+
+enum ReminderType { time, location }

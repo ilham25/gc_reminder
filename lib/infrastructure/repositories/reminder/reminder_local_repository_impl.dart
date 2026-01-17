@@ -32,4 +32,8 @@ class ReminderLocalRepositoryImpl implements ReminderLocalRepository {
   @override
   Future<Either<Failure, void>> deleteReminders(List<int> ids) =>
       dataSource.deleteReminders(ids);
+
+  @override
+  Future<Either<Failure, ReminderSummaryModel>> getSummary({DateTime? date}) =>
+      dataSource.getSummary(date: date);
 }

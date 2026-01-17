@@ -17,7 +17,7 @@ abstract class ReminderModel with _$ReminderModel {
     String? place,
     double? lat,
     double? lng,
-
+    required ReminderType type,
     DateTime? doneAt,
   }) = _ReminderModel;
 
@@ -26,10 +26,11 @@ abstract class ReminderModel with _$ReminderModel {
 }
 
 extension ReminderModelExt on ReminderModel {
-  bool get isDone => doneAt != null;
+  bool get isDone {
+    if (type == .location) return doneAt != null;
 
-  ReminderType get type =>
-      place == null ? ReminderType.time : ReminderType.location;
+    return startAt.isBefore(DateTime.now());
+  }
 
   ReminderTableData toReminderTableData() {
     return ReminderTableData(
@@ -41,6 +42,7 @@ extension ReminderModelExt on ReminderModel {
       createdAt: createdAt,
       doneAt: doneAt,
       place: place,
+      type: type,
     );
   }
 
@@ -54,7 +56,7 @@ extension ReminderModelExt on ReminderModel {
       'place': place,
     };
 
-    if (place != null) {
+    if (type == .location) {
       initialValue['position'] = LatLng(lat!, lng!);
       initialValue["isLocationReminder"] = true;
     }
@@ -62,5 +64,3 @@ extension ReminderModelExt on ReminderModel {
     return initialValue;
   }
 }
-
-enum ReminderType { time, location }

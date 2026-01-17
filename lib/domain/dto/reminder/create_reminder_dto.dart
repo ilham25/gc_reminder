@@ -15,6 +15,7 @@ abstract class CreateReminderDTO with _$CreateReminderDTO {
     double? latitude,
     double? longitude,
     DateTime? endAt,
+    required ReminderType type,
   }) = _CreateReminderDTO;
 
   factory CreateReminderDTO.fromReminderCreateForm(
@@ -36,6 +37,11 @@ abstract class CreateReminderDTO with _$CreateReminderDTO {
 
     final position = formData["position"] as LatLng?;
 
+    ReminderType type = ReminderType.time;
+    if (formData["isLocationReminder"] == true) {
+      type = ReminderType.location;
+    }
+
     return CreateReminderDTO(
       title: formData["title"],
       description: formData["description"],
@@ -43,6 +49,7 @@ abstract class CreateReminderDTO with _$CreateReminderDTO {
       place: formData["place"],
       latitude: position?.latitude,
       longitude: position?.longitude,
+      type: type,
     );
   }
 }
@@ -57,6 +64,7 @@ extension CreateReminderDTOExt on CreateReminderDTO {
       place: drift.Value(place),
       latitude: drift.Value(latitude),
       longitude: drift.Value(longitude),
+      type: drift.Value(type),
     );
   }
 }

@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gc_reminder/bloc/reminder/reminder_list/reminder_list_bloc.dart';
+import 'package:gc_reminder/bloc/reminder/reminder_summary/reminder_summary_bloc.dart';
 import 'package:gc_reminder/config/app_config.dart';
 import 'package:gc_reminder/core/widgets/app_bar/app_bar.dart';
 import 'package:gc_reminder/core/widgets/button/icon_button.dart';
@@ -22,6 +23,7 @@ class ReminderListScreen extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (context) => ReminderListBloc()..getData()),
+        BlocProvider(create: (context) => ReminderSummaryBloc()..getData()),
       ],
       child: const ReminderListBody(),
     );
@@ -40,6 +42,8 @@ class _ReminderListBodyState extends State<ReminderListBody> {
       inject<LocationReminderService>();
 
   Future _onRefresh() async {
+    await context.read<ReminderSummaryBloc>().refresh();
+    if (!mounted) return;
     await context.read<ReminderListBloc>().refresh();
   }
 
@@ -81,18 +85,32 @@ class _ReminderListBodyState extends State<ReminderListBody> {
     return Scaffold(
       appBar: UIKitAppBar(title: "My Reminders"),
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: .symmetric(
-            horizontal: AppSetting.setWidth(16),
-            vertical: AppSetting.setHeight(16),
-          ),
-          child: Column(
-            crossAxisAlignment: .stretch,
-            children: [
-              TodayReminderSummary(),
-              Space.h(16),
-              RecentReminders(onRefresh: _onRefresh),
-            ],
+        child: RefreshIndicator(
+          onRefresh: _onRefresh,
+          child: SingleChildScrollView(
+            physics: AlwaysScrollableScrollPhysics(),
+            padding: .symmetric(
+              horizontal: AppSetting.setWidth(16),
+              vertical: AppSetting.setHeight(16),
+            ),
+            child: Column(
+              crossAxisAlignment: .stretch,
+              children: [
+                BlocBuilder<ReminderSummaryBloc, ReminderSummaryBlocState>(
+                  builder: (context, state) => state.maybeWhen(
+                    orElse: () => const SizedBox.shrink(),
+                    loaded: (state) => TodayReminderSummary(
+                      completed: state.summary.completed,
+                      ongoing: state.summary.ongoing,
+                      total: state.summary.total,
+                      date: DateTime.now(),
+                    ),
+                  ),
+                ),
+                Space.h(16),
+                RecentReminders(onRefresh: _onRefresh),
+              ],
+            ),
           ),
         ),
       ),

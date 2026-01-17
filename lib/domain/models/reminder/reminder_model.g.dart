@@ -19,6 +19,7 @@ _ReminderModel _$ReminderModelFromJson(Map<String, dynamic> json) =>
       place: json['place'] as String?,
       lat: (json['lat'] as num?)?.toDouble(),
       lng: (json['lng'] as num?)?.toDouble(),
+      type: $enumDecode(_$ReminderTypeEnumMap, json['type']),
       doneAt: json['doneAt'] == null
           ? null
           : DateTime.parse(json['doneAt'] as String),
@@ -35,5 +36,11 @@ Map<String, dynamic> _$ReminderModelToJson(_ReminderModel instance) =>
       'place': instance.place,
       'lat': instance.lat,
       'lng': instance.lng,
+      'type': _$ReminderTypeEnumMap[instance.type]!,
       'doneAt': instance.doneAt?.toIso8601String(),
     };
+
+const _$ReminderTypeEnumMap = {
+  ReminderType.time: 'time',
+  ReminderType.location: 'location',
+};

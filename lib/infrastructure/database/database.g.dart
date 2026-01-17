@@ -43,6 +43,15 @@ class $ReminderTableTable extends ReminderTable
     requiredDuringInsert: false,
     defaultValue: const Constant(''),
   );
+  @override
+  late final GeneratedColumnWithTypeConverter<ReminderType, String> type =
+      GeneratedColumn<String>(
+        'type',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: true,
+      ).withConverter<ReminderType>($ReminderTableTable.$convertertype);
   static const VerificationMeta _placeMeta = const VerificationMeta('place');
   @override
   late final GeneratedColumn<String> place = GeneratedColumn<String>(
@@ -119,6 +128,7 @@ class $ReminderTableTable extends ReminderTable
     id,
     title,
     description,
+    type,
     place,
     latitude,
     longitude,
@@ -224,6 +234,12 @@ class $ReminderTableTable extends ReminderTable
         DriftSqlType.string,
         data['${effectivePrefix}description'],
       ),
+      type: $ReminderTableTable.$convertertype.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}type'],
+        )!,
+      ),
       place: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}place'],
@@ -259,6 +275,9 @@ class $ReminderTableTable extends ReminderTable
   $ReminderTableTable createAlias(String alias) {
     return $ReminderTableTable(attachedDatabase, alias);
   }
+
+  static JsonTypeConverter2<ReminderType, String, String> $convertertype =
+      const EnumNameConverter<ReminderType>(ReminderType.values);
 }
 
 class ReminderTableData extends DataClass
@@ -266,6 +285,7 @@ class ReminderTableData extends DataClass
   final int id;
   final String title;
   final String? description;
+  final ReminderType type;
   final String? place;
   final double? latitude;
   final double? longitude;
@@ -277,6 +297,7 @@ class ReminderTableData extends DataClass
     required this.id,
     required this.title,
     this.description,
+    required this.type,
     this.place,
     this.latitude,
     this.longitude,
@@ -292,6 +313,11 @@ class ReminderTableData extends DataClass
     map['title'] = Variable<String>(title);
     if (!nullToAbsent || description != null) {
       map['description'] = Variable<String>(description);
+    }
+    {
+      map['type'] = Variable<String>(
+        $ReminderTableTable.$convertertype.toSql(type),
+      );
     }
     if (!nullToAbsent || place != null) {
       map['place'] = Variable<String>(place);
@@ -322,6 +348,7 @@ class ReminderTableData extends DataClass
       description: description == null && nullToAbsent
           ? const Value.absent()
           : Value(description),
+      type: Value(type),
       place: place == null && nullToAbsent
           ? const Value.absent()
           : Value(place),
@@ -353,6 +380,9 @@ class ReminderTableData extends DataClass
       id: serializer.fromJson<int>(json['id']),
       title: serializer.fromJson<String>(json['title']),
       description: serializer.fromJson<String?>(json['description']),
+      type: $ReminderTableTable.$convertertype.fromJson(
+        serializer.fromJson<String>(json['type']),
+      ),
       place: serializer.fromJson<String?>(json['place']),
       latitude: serializer.fromJson<double?>(json['latitude']),
       longitude: serializer.fromJson<double?>(json['longitude']),
@@ -369,6 +399,9 @@ class ReminderTableData extends DataClass
       'id': serializer.toJson<int>(id),
       'title': serializer.toJson<String>(title),
       'description': serializer.toJson<String?>(description),
+      'type': serializer.toJson<String>(
+        $ReminderTableTable.$convertertype.toJson(type),
+      ),
       'place': serializer.toJson<String?>(place),
       'latitude': serializer.toJson<double?>(latitude),
       'longitude': serializer.toJson<double?>(longitude),
@@ -383,6 +416,7 @@ class ReminderTableData extends DataClass
     int? id,
     String? title,
     Value<String?> description = const Value.absent(),
+    ReminderType? type,
     Value<String?> place = const Value.absent(),
     Value<double?> latitude = const Value.absent(),
     Value<double?> longitude = const Value.absent(),
@@ -394,6 +428,7 @@ class ReminderTableData extends DataClass
     id: id ?? this.id,
     title: title ?? this.title,
     description: description.present ? description.value : this.description,
+    type: type ?? this.type,
     place: place.present ? place.value : this.place,
     latitude: latitude.present ? latitude.value : this.latitude,
     longitude: longitude.present ? longitude.value : this.longitude,
@@ -409,6 +444,7 @@ class ReminderTableData extends DataClass
       description: data.description.present
           ? data.description.value
           : this.description,
+      type: data.type.present ? data.type.value : this.type,
       place: data.place.present ? data.place.value : this.place,
       latitude: data.latitude.present ? data.latitude.value : this.latitude,
       longitude: data.longitude.present ? data.longitude.value : this.longitude,
@@ -425,6 +461,7 @@ class ReminderTableData extends DataClass
           ..write('id: $id, ')
           ..write('title: $title, ')
           ..write('description: $description, ')
+          ..write('type: $type, ')
           ..write('place: $place, ')
           ..write('latitude: $latitude, ')
           ..write('longitude: $longitude, ')
@@ -441,6 +478,7 @@ class ReminderTableData extends DataClass
     id,
     title,
     description,
+    type,
     place,
     latitude,
     longitude,
@@ -456,6 +494,7 @@ class ReminderTableData extends DataClass
           other.id == this.id &&
           other.title == this.title &&
           other.description == this.description &&
+          other.type == this.type &&
           other.place == this.place &&
           other.latitude == this.latitude &&
           other.longitude == this.longitude &&
@@ -469,6 +508,7 @@ class ReminderTableCompanion extends UpdateCompanion<ReminderTableData> {
   final Value<int> id;
   final Value<String> title;
   final Value<String?> description;
+  final Value<ReminderType> type;
   final Value<String?> place;
   final Value<double?> latitude;
   final Value<double?> longitude;
@@ -480,6 +520,7 @@ class ReminderTableCompanion extends UpdateCompanion<ReminderTableData> {
     this.id = const Value.absent(),
     this.title = const Value.absent(),
     this.description = const Value.absent(),
+    this.type = const Value.absent(),
     this.place = const Value.absent(),
     this.latitude = const Value.absent(),
     this.longitude = const Value.absent(),
@@ -492,6 +533,7 @@ class ReminderTableCompanion extends UpdateCompanion<ReminderTableData> {
     this.id = const Value.absent(),
     required String title,
     this.description = const Value.absent(),
+    required ReminderType type,
     this.place = const Value.absent(),
     this.latitude = const Value.absent(),
     this.longitude = const Value.absent(),
@@ -500,11 +542,13 @@ class ReminderTableCompanion extends UpdateCompanion<ReminderTableData> {
     this.doneAt = const Value.absent(),
     this.createdAt = const Value.absent(),
   }) : title = Value(title),
+       type = Value(type),
        startAt = Value(startAt);
   static Insertable<ReminderTableData> custom({
     Expression<int>? id,
     Expression<String>? title,
     Expression<String>? description,
+    Expression<String>? type,
     Expression<String>? place,
     Expression<double>? latitude,
     Expression<double>? longitude,
@@ -517,6 +561,7 @@ class ReminderTableCompanion extends UpdateCompanion<ReminderTableData> {
       if (id != null) 'id': id,
       if (title != null) 'title': title,
       if (description != null) 'description': description,
+      if (type != null) 'type': type,
       if (place != null) 'place': place,
       if (latitude != null) 'latitude': latitude,
       if (longitude != null) 'longitude': longitude,
@@ -531,6 +576,7 @@ class ReminderTableCompanion extends UpdateCompanion<ReminderTableData> {
     Value<int>? id,
     Value<String>? title,
     Value<String?>? description,
+    Value<ReminderType>? type,
     Value<String?>? place,
     Value<double?>? latitude,
     Value<double?>? longitude,
@@ -543,6 +589,7 @@ class ReminderTableCompanion extends UpdateCompanion<ReminderTableData> {
       id: id ?? this.id,
       title: title ?? this.title,
       description: description ?? this.description,
+      type: type ?? this.type,
       place: place ?? this.place,
       latitude: latitude ?? this.latitude,
       longitude: longitude ?? this.longitude,
@@ -564,6 +611,11 @@ class ReminderTableCompanion extends UpdateCompanion<ReminderTableData> {
     }
     if (description.present) {
       map['description'] = Variable<String>(description.value);
+    }
+    if (type.present) {
+      map['type'] = Variable<String>(
+        $ReminderTableTable.$convertertype.toSql(type.value),
+      );
     }
     if (place.present) {
       map['place'] = Variable<String>(place.value);
@@ -595,6 +647,7 @@ class ReminderTableCompanion extends UpdateCompanion<ReminderTableData> {
           ..write('id: $id, ')
           ..write('title: $title, ')
           ..write('description: $description, ')
+          ..write('type: $type, ')
           ..write('place: $place, ')
           ..write('latitude: $latitude, ')
           ..write('longitude: $longitude, ')
@@ -623,6 +676,7 @@ typedef $$ReminderTableTableCreateCompanionBuilder =
       Value<int> id,
       required String title,
       Value<String?> description,
+      required ReminderType type,
       Value<String?> place,
       Value<double?> latitude,
       Value<double?> longitude,
@@ -636,6 +690,7 @@ typedef $$ReminderTableTableUpdateCompanionBuilder =
       Value<int> id,
       Value<String> title,
       Value<String?> description,
+      Value<ReminderType> type,
       Value<String?> place,
       Value<double?> latitude,
       Value<double?> longitude,
@@ -668,6 +723,12 @@ class $$ReminderTableTableFilterComposer
     column: $table.description,
     builder: (column) => ColumnFilters(column),
   );
+
+  ColumnWithTypeConverterFilters<ReminderType, ReminderType, String> get type =>
+      $composableBuilder(
+        column: $table.type,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
 
   ColumnFilters<String> get place => $composableBuilder(
     column: $table.place,
@@ -729,6 +790,11 @@ class $$ReminderTableTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get type => $composableBuilder(
+    column: $table.type,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<String> get place => $composableBuilder(
     column: $table.place,
     builder: (column) => ColumnOrderings(column),
@@ -784,6 +850,9 @@ class $$ReminderTableTableAnnotationComposer
     column: $table.description,
     builder: (column) => column,
   );
+
+  GeneratedColumnWithTypeConverter<ReminderType, String> get type =>
+      $composableBuilder(column: $table.type, builder: (column) => column);
 
   GeneratedColumn<String> get place =>
       $composableBuilder(column: $table.place, builder: (column) => column);
@@ -845,6 +914,7 @@ class $$ReminderTableTableTableManager
                 Value<int> id = const Value.absent(),
                 Value<String> title = const Value.absent(),
                 Value<String?> description = const Value.absent(),
+                Value<ReminderType> type = const Value.absent(),
                 Value<String?> place = const Value.absent(),
                 Value<double?> latitude = const Value.absent(),
                 Value<double?> longitude = const Value.absent(),
@@ -856,6 +926,7 @@ class $$ReminderTableTableTableManager
                 id: id,
                 title: title,
                 description: description,
+                type: type,
                 place: place,
                 latitude: latitude,
                 longitude: longitude,
@@ -869,6 +940,7 @@ class $$ReminderTableTableTableManager
                 Value<int> id = const Value.absent(),
                 required String title,
                 Value<String?> description = const Value.absent(),
+                required ReminderType type,
                 Value<String?> place = const Value.absent(),
                 Value<double?> latitude = const Value.absent(),
                 Value<double?> longitude = const Value.absent(),
@@ -880,6 +952,7 @@ class $$ReminderTableTableTableManager
                 id: id,
                 title: title,
                 description: description,
+                type: type,
                 place: place,
                 latitude: latitude,
                 longitude: longitude,

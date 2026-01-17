@@ -41,48 +41,51 @@ class ReminderListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return UIKitListItem(
-      title: reminder.title,
-      description:
-          "${formatterDate.format(reminder.startAt)}${reminder.endAt == null ? "" : " - ${formatterTimeMinute.format(reminder.endAt!)}"}",
-      decoration: UIKitListItemDecoration(
-        titleTextStyle: MyTheme.style.action.m,
-        descriptionTextStyle: MyTheme.style.body.xs.copyWith(
-          color: MyTheme.color.palette.dark.light,
+    return Opacity(
+      opacity: reminder.isDone ? .5 : 1,
+      child: UIKitListItem(
+        title: reminder.title,
+        description:
+            "${formatterDate.format(reminder.startAt)}${reminder.endAt == null ? "" : " - ${formatterTimeMinute.format(reminder.endAt!)}"}",
+        decoration: UIKitListItemDecoration(
+          titleTextStyle: MyTheme.style.action.m,
+          descriptionTextStyle: MyTheme.style.body.xs.copyWith(
+            color: MyTheme.color.palette.dark.light,
+          ),
+          leftSpacing: 8,
+          backgroundColor: selected ? MyTheme.color.palette.error.light : null,
         ),
-        leftSpacing: 8,
-        backgroundColor: selected ? MyTheme.color.palette.error.light : null,
-      ),
-      leftAlignment: .center,
-      onTap: onTap,
-      onLongPress: onLongPress,
-      left: Container(
-        height: AppSetting.setHeight(32),
-        width: AppSetting.setHeight(32),
-        decoration: BoxDecoration(
-          borderRadius: .circular(8),
-          color: MyTheme.color.palette.highlight.lightest,
+        leftAlignment: .center,
+        onTap: onTap,
+        onLongPress: onLongPress,
+        left: Container(
+          height: AppSetting.setHeight(32),
+          width: AppSetting.setHeight(32),
+          decoration: BoxDecoration(
+            borderRadius: .circular(8),
+            color: MyTheme.color.palette.highlight.lightest,
+          ),
+          child: Center(child: _buildLeadingIcon()),
         ),
-        child: Center(child: _buildLeadingIcon()),
+        padding: .symmetric(
+          horizontal: AppSetting.setWidth(8),
+          vertical: AppSetting.setHeight(8),
+        ),
+        right: SizedBox.shrink(),
+        // right: Column(
+        //   crossAxisAlignment: .end,
+        //   children: [
+        //     Text("\$32.16", style: MyTheme.style.action.m),
+        //     Space.h(4),
+        //     Text(
+        //       "Debit Card",
+        //       style: MyTheme.style.body.xs.copyWith(
+        //         color: MyTheme.color.palette.dark.light,
+        //       ),
+        //     ),
+        //   ],
+        // ),
       ),
-      padding: .symmetric(
-        horizontal: AppSetting.setWidth(8),
-        vertical: AppSetting.setHeight(8),
-      ),
-      right: SizedBox.shrink(),
-      // right: Column(
-      //   crossAxisAlignment: .end,
-      //   children: [
-      //     Text("\$32.16", style: MyTheme.style.action.m),
-      //     Space.h(4),
-      //     Text(
-      //       "Debit Card",
-      //       style: MyTheme.style.body.xs.copyWith(
-      //         color: MyTheme.color.palette.dark.light,
-      //       ),
-      //     ),
-      //   ],
-      // ),
     );
   }
 }

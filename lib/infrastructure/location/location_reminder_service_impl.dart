@@ -28,7 +28,7 @@ class LocationReminderServiceImpl implements LocationReminderService {
       geofenceStatus,
       location,
     ) async {
-      debugPrint("geofenceStatus: $geofenceStatus");
+      debugPrint("geofenceStatus: $geofenceStatus | $geofenceRegion");
       if (geofenceStatus == .enter) {
         _showNotification(geofenceRegion);
       }
@@ -43,6 +43,7 @@ class LocationReminderServiceImpl implements LocationReminderService {
     reminders.fold((l) {}, (r) {
       _geofence.addRegions(
         r
+            .where((reminder) => reminder.type == .location)
             .map(
               (reminder) => GeofenceRegion.circular(
                 id: id.toString(),
@@ -88,6 +89,10 @@ class LocationReminderServiceImpl implements LocationReminderService {
     await notificationService.showNotification(
       title: reminder.title,
       body: reminder.description,
+    );
+    await reminderLocalRepository.updateReminder(
+      reminder.id,
+      dto: UpdateReminderDTO(doneAt: DateTime.now()),
     );
   }
 }

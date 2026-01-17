@@ -14,6 +14,7 @@ extension ReminderTableExt on ReminderTableData {
       place: place,
       lat: latitude,
       lng: longitude,
+      type: type,
     );
   }
 }
