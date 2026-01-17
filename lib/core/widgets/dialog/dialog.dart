@@ -45,7 +45,7 @@ class UIKitDialog {
                         title,
                         style: MyTheme.style.heading.h3,
                         textAlign: .center,
-                        maxLines: 1,
+                        maxLines: 2,
                         overflow: .ellipsis,
                       ),
                       Space.h(8),

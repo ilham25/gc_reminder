@@ -2,6 +2,8 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gc_reminder/domain/notification/notification_service.dart';
+import 'package:gc_reminder/injection/injector.dart';
 import 'package:logger/logger.dart';
 
 Future<void> bootstrap(FutureOr<Widget> Function() builder) async {
@@ -16,11 +18,14 @@ Future<void> bootstrap(FutureOr<Widget> Function() builder) async {
     logger.e('Uncaught error: $error', stackTrace: stack);
     return true;
   };
+
+  // init notification service
+  await inject<NotificationService>().initialize();
+
   final appBuilder = await builder();
   Bloc.observer = MyBlocObserver();
   runApp(appBuilder);
 }
-
 
 class MyBlocObserver extends BlocObserver {
   @override

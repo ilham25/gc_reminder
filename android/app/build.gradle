@@ -34,7 +34,13 @@ android {
     compileSdk = 36
     ndkVersion = flutter.ndkVersion
 
+    defaultConfig {
+        multiDexEnabled true
+    }
+
     compileOptions {
+        coreLibraryDesugaringEnabled true
+
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
@@ -110,6 +116,10 @@ android {
             resValue "string", "app_names", "Flutter Template"
             applicationId "com.gc.reminder"
         }
+    }
+
+    dependencies {
+        coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.1.4'
     }
 }
 

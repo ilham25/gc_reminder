@@ -1,4 +1,8 @@
+import 'package:gc_reminder/domain/notification/notification_service.dart';
+import 'package:gc_reminder/domain/notification/usecases/schedule_notification_usecase.dart';
+import 'package:gc_reminder/domain/notification/usecases/show_notification_usecase.dart';
 import 'package:gc_reminder/domain/permission/permission_service.dart';
+import 'package:gc_reminder/domain/permission/usecases/request_permission_usecase.dart';
 import 'package:gc_reminder/domain/repositories/reminder/reminder_local_repository.dart';
 import 'package:gc_reminder/infrastructure/database/database.dart';
 import 'package:gc_reminder/infrastructure/datasource/reminder/reminder_local_datasource.dart';
@@ -45,8 +49,25 @@ Future<void> setupInjector() async {
   );
 
   /// Register services
+  inject.registerLazySingleton<NotificationService>(
+    () => NotificationServiceImpl(),
+  );
+
   inject.registerLazySingleton<PermissionService>(
     () => PermissionServiceImpl(),
+  );
+
+  // Register usecases
+  inject.registerLazySingleton<RequestPermissionUseCase>(
+    () => RequestPermissionUseCase(inject<PermissionService>()),
+  );
+
+  // Notification usecases
+  inject.registerLazySingleton<ShowNotificationUseCase>(
+    () => ShowNotificationUseCase(inject<NotificationService>()),
+  );
+  inject.registerLazySingleton<ScheduleNotificationUseCase>(
+    () => ScheduleNotificationUseCase(inject<NotificationService>()),
   );
 
   /// Register bloc

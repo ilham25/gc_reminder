@@ -25,7 +25,15 @@ class PermissionPrompt {
             context.router.maybePop();
           },
         ),
-        UIKitButton(title: actionTitle, onTap: onConfirm),
+        UIKitButton(
+          title: actionTitle,
+          onTap: () async {
+            final result = await onConfirm();
+            if (!context.mounted) return;
+
+            context.router.pop(result);
+          },
+        ),
       ],
     );
   }
@@ -48,7 +56,15 @@ class PermissionPrompt {
             context.router.maybePop();
           },
         ),
-        UIKitButton(title: actionTitle, onTap: onConfirm),
+        UIKitButton(
+          title: actionTitle,
+          onTap: () async {
+            final result = await onConfirm();
+            if (!context.mounted) return;
+
+            context.router.pop(result);
+          },
+        ),
       ],
     );
   }

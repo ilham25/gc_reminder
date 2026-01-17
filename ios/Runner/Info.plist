@@ -49,5 +49,12 @@
     <string>App butuh akses lokasi untuk jadwal shalat</string>
     <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
     <string>App butuh akses lokasi untuk jadwal shalat</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>fetch</string>
+		<string>remote-notification</string>
+	</array>
+	<key>NSUserNotificationsUsageDescription</key>
+	<string>We need notification permission to send you updates</string>
 </dict>
 </plist>

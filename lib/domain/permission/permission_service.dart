@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:gc_reminder/core/widgets/dialog/permission_prompt.dart';
 import 'package:gc_reminder/domain/models/permission/permission_label_model.dart';
+import 'package:gc_reminder/domain/notification/notification_service.dart';
+import 'package:gc_reminder/injection/injector.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 

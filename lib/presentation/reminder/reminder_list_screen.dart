@@ -10,7 +10,12 @@ import 'package:gc_reminder/core/widgets/button/button.dart';
 import 'package:gc_reminder/core/widgets/button/icon_button.dart';
 import 'package:gc_reminder/core/widgets/content/list_item.dart';
 import 'package:gc_reminder/core/widgets/image/image_caching.dart';
+import 'package:gc_reminder/domain/notification/usecases/schedule_notification_usecase.dart';
+import 'package:gc_reminder/domain/notification/usecases/show_notification_usecase.dart';
+import 'package:gc_reminder/domain/permission/permission_service.dart';
+import 'package:gc_reminder/domain/permission/usecases/request_permission_usecase.dart';
 import 'package:gc_reminder/gen/assets.gen.dart';
+import 'package:gc_reminder/injection/injector.dart';
 import 'package:gc_reminder/presentation/common/widgets/empty/empty_list.dart';
 import 'package:gc_reminder/presentation/reminder/widgets/bottom_sheet/reminder_create_bottom_sheet.dart';
 import 'package:gc_reminder/presentation/reminder/widgets/bottom_sheet/reminder_update_bottom_sheet.dart';
@@ -40,6 +45,23 @@ class ReminderListBody extends StatefulWidget {
 }
 
 class _ReminderListBodyState extends State<ReminderListBody> {
+  final ShowNotificationUseCase _showNotificationUseCase =
+      inject<ShowNotificationUseCase>();
+  final ScheduleNotificationUseCase _scheduleNotificationUseCase =
+      inject<ScheduleNotificationUseCase>();
+
+  Future _onShowNotification() async {
+    await _showNotificationUseCase.call(title: "Ini notifikasi");
+  }
+
+  Future _onScheduleNotification() async {
+    await _scheduleNotificationUseCase.call(
+      DateTime.now().millisecond,
+      title: "Ini notifikasi schedule",
+      date: DateTime.now().add(const Duration(seconds: 5)),
+    );
+  }
+
   Future _onRefresh() async {
     await context.read<ReminderListBloc>().refresh();
   }
@@ -113,7 +135,10 @@ class _ReminderListBodyState extends State<ReminderListBody> {
           child: Column(
             crossAxisAlignment: .stretch,
             children: [
-              _TotalBalanceCard(),
+              _TotalBalanceCard(
+                onSend: _onShowNotification,
+                onRequest: _onScheduleNotification,
+              ),
               Space.h(8),
               RecentReminders(onRefresh: _onRefresh),
             ],
@@ -144,8 +169,10 @@ class RecentReminders extends StatefulWidget {
 
 class _RecentRemindersState extends State<RecentReminders> {
   List<int> selectedIds = [];
-
   bool get isDeleteMode => selectedIds.isNotEmpty;
+
+  final RequestPermissionUseCase _permissionServiceUseCase =
+      inject<RequestPermissionUseCase>();
 
   Future _onDelete() {
     return context.read<ReminderListBloc>().delete(selectedIds);
@@ -163,6 +190,7 @@ class _RecentRemindersState extends State<RecentReminders> {
       ),
       onTap: () async {
         if (!isDeleteMode) {
+          _permissionServiceUseCase.call(.notification);
           return;
         }
 
@@ -304,7 +332,10 @@ class _RecentRemindersState extends State<RecentReminders> {
 }
 
 class _TotalBalanceCard extends StatelessWidget {
-  const _TotalBalanceCard();
+  final VoidCallback? onSend;
+  final VoidCallback? onRequest;
+
+  const _TotalBalanceCard({this.onSend, this.onRequest});
 
   @override
   Widget build(BuildContext context) {
@@ -388,7 +419,7 @@ class _TotalBalanceCard extends StatelessWidget {
                                   textColor: MyTheme.color.white,
                                   borderColor: MyTheme.color.white,
                                 ),
-                                onTap: () {},
+                                onTap: onSend,
                               ),
                             ),
                             Space.w(8),
@@ -401,7 +432,7 @@ class _TotalBalanceCard extends StatelessWidget {
                                   textColor: MyTheme.color.white,
                                   borderColor: MyTheme.color.white,
                                 ),
-                                onTap: () {},
+                                onTap: onRequest,
                               ),
                             ),
                           ],
