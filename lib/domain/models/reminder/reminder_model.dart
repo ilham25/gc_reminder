@@ -27,6 +27,9 @@ abstract class ReminderModel with _$ReminderModel {
 extension ReminderModelExt on ReminderModel {
   bool get isDone => doneAt != null;
 
+  ReminderType get type =>
+      place.isEmpty ? ReminderType.time : ReminderType.location;
+
   ReminderTableData toReminderTableData() {
     return ReminderTableData(
       id: id,
@@ -50,3 +53,5 @@ extension ReminderModelExt on ReminderModel {
     };
   }
 }
+
+enum ReminderType { time, location }

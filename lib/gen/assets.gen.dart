@@ -120,6 +120,10 @@ class $AssetsIconsGen {
   AssetGenImage get linkedIn =>
       const AssetGenImage('assets/icons/linked_in.png');
 
+  /// File path: assets/icons/location_outlined.png
+  AssetGenImage get locationOutlined =>
+      const AssetGenImage('assets/icons/location_outlined.png');
+
   /// File path: assets/icons/minus.png
   AssetGenImage get minus => const AssetGenImage('assets/icons/minus.png');
 
@@ -179,6 +183,10 @@ class $AssetsIconsGen {
   /// File path: assets/icons/success.png
   AssetGenImage get success => const AssetGenImage('assets/icons/success.png');
 
+  /// File path: assets/icons/time_outlined.png
+  AssetGenImage get timeOutlined =>
+      const AssetGenImage('assets/icons/time_outlined.png');
+
   /// File path: assets/icons/trash_outlined.png
   AssetGenImage get trashOutlined =>
       const AssetGenImage('assets/icons/trash_outlined.png');
@@ -223,6 +231,7 @@ class $AssetsIconsGen {
     inbox,
     info,
     linkedIn,
+    locationOutlined,
     minus,
     notification,
     notificationOutlined,
@@ -240,6 +249,7 @@ class $AssetsIconsGen {
     starOutlined,
     store,
     success,
+    timeOutlined,
     trashOutlined,
     verticalDots,
     warning,

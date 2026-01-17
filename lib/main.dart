@@ -14,16 +14,16 @@ class MyHttpOverrides extends HttpOverrides {
   }
 }
 
-
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await setupInjector();
+
   /// Setting up date formatting for Indonesia
-  await initializeDateFormatting("id", null);
+  await initializeDateFormatting("en", null);
+
   /// Fixing  CERTIFICATE_VERIFY_FAILED on android 11\1
   HttpOverrides.global = MyHttpOverrides();
+
   /// Run the app
-  bootstrap(
-    () => const App(),
-  );
+  bootstrap(() => const App());
 }

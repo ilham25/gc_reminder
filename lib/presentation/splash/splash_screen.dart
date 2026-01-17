@@ -51,11 +51,12 @@ class _SplashBodyState extends State<SplashBody> {
           Future.delayed(const Duration(seconds: 2)).then((value) {
             if (!context.mounted) return;
 
-            if (state.sessions) {
-              context.router.replaceAll([const HomeRoute()]);
-            } else {
-              context.router.replaceAll([const HomeRoute()]);
-            }
+            // if (state.sessions) {
+            //   context.router.replaceAll([const HomeRoute()]);
+            // } else {
+            //   context.router.replaceAll([const HomeRoute()]);
+            // }
+            context.router.replaceAll([const ReminderListRoute()]);
           });
         }
       },
