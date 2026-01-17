@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:gc_reminder/config/app_config.dart';
+import 'package:gc_reminder/core/widgets/button/button.dart';
 import 'package:gc_reminder/core/widgets/content/divider.dart';
 import 'package:gc_reminder/core/widgets/form/base_form.dart';
 import 'package:gc_reminder/core/widgets/input/primary_date_picker.dart';
+import 'package:gc_reminder/core/widgets/input/radio_button.dart';
 import 'package:gc_reminder/core/widgets/input/text_field.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:gc_reminder/core/widgets/input/toggle.dart';
+import 'package:gc_reminder/domain/models/map/map_model.dart';
+import 'package:gc_reminder/presentation/common/widgets/map/primary_map.dart';
 import 'package:gc_reminder/theme/theme.dart';
 
 class ReminderCreateForm extends StatelessWidget {
@@ -66,7 +70,7 @@ class ReminderCreateForm extends StatelessWidget {
               color: MyTheme.color.palette.dark.light,
             ),
           ),
-          Space.h(8),
+          Space.h(16),
           Container(
             decoration: BoxDecoration(
               color: MyTheme.color.palette.light.light,
@@ -114,7 +118,7 @@ class ReminderCreateForm extends StatelessWidget {
           ),
           Space.h(16),
           UIKitDivider(),
-          Space.h(16),
+          Space.h(10),
           Row(
             mainAxisAlignment: .spaceBetween,
             children: [
@@ -130,7 +134,7 @@ class ReminderCreateForm extends StatelessWidget {
               UIKitToggle(value: true),
             ],
           ),
-          Space.h(8),
+          Space.h(10),
           Container(
             decoration: BoxDecoration(
               color: MyTheme.color.palette.light.light,
@@ -139,6 +143,62 @@ class ReminderCreateForm extends StatelessWidget {
             padding: .symmetric(
               horizontal: AppSetting.setWidth(12),
               vertical: AppSetting.setHeight(12),
+            ),
+            child: Column(
+              crossAxisAlignment: .stretch,
+              children: [
+                ...[
+                  Text("Location Name", style: MyTheme.style.heading.h5),
+                  Space.h(2),
+                  Text("Coba test alamat", style: MyTheme.style.body.m),
+                  Space.h(8),
+                  Text("Trigger", style: MyTheme.style.heading.h5),
+                  Space.h(8),
+                  Row(
+                    children: [
+                      Row(
+                        children: [
+                          UIKitRadioButton(onTap: () {}, selected: true),
+                          Space.w(4),
+                          Text("Arriving", style: MyTheme.style.action.m),
+                        ],
+                      ),
+                      Space.w(16),
+                      Row(
+                        children: [
+                          UIKitRadioButton(onTap: () {}, selected: false),
+                          Space.w(4),
+                          Text("Leaving", style: MyTheme.style.action.m),
+                        ],
+                      ),
+                    ],
+                  ),
+                  Space.h(16),
+                  Container(
+                    clipBehavior: .antiAlias,
+                    height: AppSetting.setHeight(180),
+                    decoration: BoxDecoration(
+                      color: MyTheme.color.palette.light.dark,
+                      borderRadius: .circular(12),
+                    ),
+                    child: PrimaryMap(
+                      markers: [
+                        MapMarkerModel(
+                          latitude: -6.175392,
+                          longitude: 106.827153,
+                        ),
+                      ],
+                    ),
+                  ),
+                  Space.h(16),
+                ],
+                UIKitButton.secondary(
+                  title: "Pick Location",
+                  onTap: () {
+                    //
+                  },
+                ),
+              ],
             ),
           ),
         ],

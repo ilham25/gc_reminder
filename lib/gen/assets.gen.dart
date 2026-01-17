@@ -120,6 +120,10 @@ class $AssetsIconsGen {
   AssetGenImage get linkedIn =>
       const AssetGenImage('assets/icons/linked_in.png');
 
+  /// File path: assets/icons/location_marker.png
+  AssetGenImage get locationMarker =>
+      const AssetGenImage('assets/icons/location_marker.png');
+
   /// File path: assets/icons/location_outlined.png
   AssetGenImage get locationOutlined =>
       const AssetGenImage('assets/icons/location_outlined.png');
@@ -231,6 +235,7 @@ class $AssetsIconsGen {
     inbox,
     info,
     linkedIn,
+    locationMarker,
     locationOutlined,
     minus,
     notification,

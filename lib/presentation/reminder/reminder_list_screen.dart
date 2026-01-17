@@ -5,8 +5,7 @@ import 'package:gc_reminder/bloc/reminder/reminder_list/reminder_list_bloc.dart'
 import 'package:gc_reminder/config/app_config.dart';
 import 'package:gc_reminder/core/widgets/app_bar/app_bar.dart';
 import 'package:gc_reminder/core/widgets/button/icon_button.dart';
-import 'package:gc_reminder/domain/notification/usecases/schedule_notification_usecase.dart';
-import 'package:gc_reminder/domain/notification/usecases/show_notification_usecase.dart';
+import 'package:gc_reminder/domain/permission/usecases/request_permission_usecase.dart';
 import 'package:gc_reminder/gen/assets.gen.dart';
 import 'package:gc_reminder/injection/injector.dart';
 import 'package:gc_reminder/presentation/reminder/widgets/bottom_sheet/reminder_create_bottom_sheet.dart';
@@ -40,6 +39,26 @@ class _ReminderListBodyState extends State<ReminderListBody> {
     await context.read<ReminderListBloc>().refresh();
   }
 
+  Future<bool?> _onRequestPermission() async {
+    final RequestPermissionUseCase requestPermissionUseCase =
+        inject<RequestPermissionUseCase>();
+
+    final getNotificationPermission = await requestPermissionUseCase.call(
+      .notification,
+    );
+    if (!getNotificationPermission) {
+      return null;
+    }
+    final getLocationPermission = await requestPermissionUseCase.call(
+      .location,
+    );
+    if (!getLocationPermission) {
+      return null;
+    }
+
+    return true;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,6 +83,9 @@ class _ReminderListBodyState extends State<ReminderListBody> {
         Assets.icons.add,
         iconSize: 16,
         onTap: () async {
+          final requestPermission = await _onRequestPermission();
+          if (requestPermission == null) return;
+
           await ReminderCreateBottomSheet.show();
           _onRefresh();
         },
