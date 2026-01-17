@@ -14,6 +14,10 @@ class UIKitAccordion extends StatefulWidget {
 
   final UIKitAccordionVariant variant;
 
+  final Widget? trailing;
+
+  final EdgeInsets? padding;
+
   const UIKitAccordion({
     super.key,
     this.defaultOpen = false,
@@ -22,6 +26,8 @@ class UIKitAccordion extends StatefulWidget {
     this.content,
     this.count = 0,
     this.variant = .base,
+    this.trailing,
+    this.padding,
   }) : assert(
          textContent == null || content == null,
          "You can not use either textContent or content at the same time",
@@ -56,6 +62,8 @@ class _UIKitAccordionState extends State<UIKitAccordion> {
   }
 
   Widget _buildRight() {
+    if (widget.trailing != null) return widget.trailing!;
+
     final AssetGenImage arrowIcon = isOpen
         ? Assets.icons.arrowUp
         : Assets.icons.arrowDown;
@@ -78,6 +86,13 @@ class _UIKitAccordionState extends State<UIKitAccordion> {
     return SizedBox.shrink();
   }
 
+  EdgeInsets get _padding =>
+      widget.padding ??
+      EdgeInsets.symmetric(
+        horizontal: AppSetting.setWidth(16),
+        vertical: AppSetting.setHeight(16),
+      );
+
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -90,10 +105,7 @@ class _UIKitAccordionState extends State<UIKitAccordion> {
             });
           },
           child: Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: AppSetting.setWidth(16),
-              vertical: AppSetting.setHeight(16),
-            ),
+            padding: _padding,
             child: Column(
               crossAxisAlignment: .stretch,
               children: [

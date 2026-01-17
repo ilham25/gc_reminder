@@ -47,7 +47,8 @@ extension ReminderModelExt on ReminderModel {
     return {
       'title': title,
       'description': description,
-      'startAt': startAt,
+      'startDate': startAt,
+      'startTime': startAt,
       'endAt': endAt,
       'place': place,
     };

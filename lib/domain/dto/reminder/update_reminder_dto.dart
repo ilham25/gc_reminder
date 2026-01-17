@@ -17,11 +17,24 @@ abstract class UpdateReminderDTO with _$UpdateReminderDTO {
   factory UpdateReminderDTO.fromReminderUpdateForm(
     Map<String, dynamic> formData,
   ) {
+    DateTime startAt = formData["startDate"];
+
+    final startTime = formData["startTime"] as DateTime?;
+    if (startTime != null) {
+      startAt = DateTime(
+        startAt.year,
+        startAt.month,
+        startAt.day,
+        startTime.hour,
+        startTime.minute,
+        startTime.second,
+      );
+    }
+
     return UpdateReminderDTO(
       title: formData["title"],
       description: formData["description"],
-      startAt: formData["startAt"],
-      endAt: formData["endAt"],
+      startAt: startAt,
       place: formData["place"],
     );
   }

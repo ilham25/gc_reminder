@@ -151,7 +151,6 @@ class PrimaryDatePicker extends StatelessWidget {
         if (hasError)
           Container(
             margin: const EdgeInsets.only(top: 8),
-            padding: const EdgeInsets.only(left: 14),
             child: Text(
               errorText,
               style: MyTheme.style.body.xs.copyWith(

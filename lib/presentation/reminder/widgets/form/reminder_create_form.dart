@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:gc_reminder/config/app_config.dart';
+import 'package:gc_reminder/core/widgets/content/divider.dart';
 import 'package:gc_reminder/core/widgets/form/base_form.dart';
 import 'package:gc_reminder/core/widgets/input/primary_date_picker.dart';
 import 'package:gc_reminder/core/widgets/input/text_field.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:gc_reminder/core/widgets/input/toggle.dart';
+import 'package:gc_reminder/theme/theme.dart';
 
 class ReminderCreateForm extends StatelessWidget {
   final GlobalKey<FormBuilderState> formKey;
@@ -54,33 +57,88 @@ class ReminderCreateForm extends StatelessWidget {
               initialValue: field.value,
             ),
           ),
-          Space.h(8),
-          FormBuilderField<DateTime>(
-            name: "startAt",
-            initialValue: initialValue["startAt"],
-            builder: (field) => PrimaryDatePicker(
-              title: "Start",
-              hintText: "Pick Time",
-              mode: .dateAndTime,
-              onChanged: field.didChange,
-              value: field.value,
-              dateFormat: "dd MMM yyyy, HH:mm",
+          Space.h(16),
+          UIKitDivider(),
+          Space.h(16),
+          Text(
+            "Date & Time",
+            style: MyTheme.style.heading.h5.copyWith(
+              color: MyTheme.color.palette.dark.light,
             ),
-            validator: FormBuilderValidators.compose([
-              FormBuilderValidators.required(),
-            ]),
           ),
           Space.h(8),
-          FormBuilderField<DateTime>(
-            name: "endAt",
-            initialValue: initialValue["endAt"],
-            builder: (field) => PrimaryDatePicker(
-              title: "End",
-              hintText: "Pick Time",
-              mode: .dateAndTime,
-              onChanged: field.didChange,
-              value: field.value,
-              dateFormat: "dd MMM yyyy, HH:mm",
+          Container(
+            decoration: BoxDecoration(
+              color: MyTheme.color.palette.light.light,
+              borderRadius: .circular(12),
+            ),
+            padding: .symmetric(
+              horizontal: AppSetting.setWidth(12),
+              vertical: AppSetting.setHeight(12),
+            ),
+            child: Column(
+              crossAxisAlignment: .stretch,
+              children: [
+                FormBuilderField<DateTime>(
+                  name: "startDate",
+                  initialValue: initialValue["startDate"],
+                  builder: (field) => PrimaryDatePicker(
+                    title: "Date",
+                    hintText: "Pick Date",
+                    onChanged: field.didChange,
+                    value: field.value,
+                    errorText: field.errorText ?? "",
+                  ),
+                  validator: FormBuilderValidators.compose([
+                    FormBuilderValidators.required(),
+                  ]),
+                ),
+                Space.h(8),
+                FormBuilderField<DateTime>(
+                  name: "startTime",
+                  initialValue: initialValue["startTime"],
+                  builder: (field) => PrimaryDatePicker(
+                    title: "Time",
+                    hintText: "Pick Time",
+                    mode: .time,
+                    onChanged: field.didChange,
+                    value: field.value,
+                    dateFormat: "HH:mm",
+                  ),
+                  validator: FormBuilderValidators.compose([
+                    FormBuilderValidators.required(),
+                  ]),
+                ),
+              ],
+            ),
+          ),
+          Space.h(16),
+          UIKitDivider(),
+          Space.h(16),
+          Row(
+            mainAxisAlignment: .spaceBetween,
+            children: [
+              Flexible(
+                fit: .tight,
+                child: Text(
+                  "Place",
+                  style: MyTheme.style.heading.h5.copyWith(
+                    color: MyTheme.color.palette.dark.light,
+                  ),
+                ),
+              ),
+              UIKitToggle(value: true),
+            ],
+          ),
+          Space.h(8),
+          Container(
+            decoration: BoxDecoration(
+              color: MyTheme.color.palette.light.light,
+              borderRadius: .circular(12),
+            ),
+            padding: .symmetric(
+              horizontal: AppSetting.setWidth(12),
+              vertical: AppSetting.setHeight(12),
             ),
           ),
         ],
