@@ -1,6 +1,8 @@
 import 'dart:io';
 
+import 'package:dartz/dartz.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:gc_reminder/core/models/base_error.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest.dart' as tz;
 
@@ -10,10 +12,12 @@ abstract class NotificationService {
   Future<void> initialize();
   Future<bool?> requestPermission();
   Future<void> showNotification({required String title, String? body});
-  Future<void> scheduleNotification(
+  Future<Either<BaseError, void>> scheduleNotification(
     int id, {
     required String title,
     String? body,
     required DateTime date,
   });
+  Future<Either<BaseError, void>> deleteNotification(int id);
+  Future<Either<BaseError, void>> deleteNotifications(List<int> ids);
 }

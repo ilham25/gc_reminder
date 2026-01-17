@@ -1,4 +1,5 @@
 import 'package:gc_reminder/domain/notification/notification_service.dart';
+import 'package:gc_reminder/domain/notification/usecases/delete_notifications_usecase.dart';
 import 'package:gc_reminder/domain/notification/usecases/schedule_notification_usecase.dart';
 import 'package:gc_reminder/domain/notification/usecases/show_notification_usecase.dart';
 import 'package:gc_reminder/domain/permission/permission_service.dart';
@@ -68,6 +69,9 @@ Future<void> setupInjector() async {
   );
   inject.registerLazySingleton<ScheduleNotificationUseCase>(
     () => ScheduleNotificationUseCase(inject<NotificationService>()),
+  );
+  inject.registerLazySingleton<DeleteNotificationsUseCase>(
+    () => DeleteNotificationsUseCase(inject<NotificationService>()),
   );
 
   /// Register bloc

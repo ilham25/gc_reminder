@@ -24,7 +24,7 @@ enum ResponseCode {
 
   static ResponseCode fromCode(int statusCode) {
     return ResponseCode.values.firstWhere(
-          (e) => e.code == statusCode,
+      (e) => e.code == statusCode,
       orElse: () => ResponseCode.defaultError,
     );
   }
@@ -35,9 +35,5 @@ class Failure {
   final ResponseCode statusCode;
   final List<Map<String, dynamic>>? errors;
 
-  Failure({
-    required this.statusCode,
-    required this.message,
-    this.errors,
-  });
+  Failure({required this.statusCode, required this.message, this.errors});
 }

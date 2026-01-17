@@ -84,29 +84,67 @@ class NotificationServiceImpl implements NotificationService {
   }
 
   @override
-  Future<void> scheduleNotification(
+  Future<Either<BaseError, void>> scheduleNotification(
     int id, {
     required String title,
     String? body,
     required DateTime date,
   }) async {
-    await _notificationsPlugin.zonedSchedule(
-      id, // Notification ID
-      title,
-      body,
-      tz.TZDateTime.from(date, tz.local), // When to show
-      const NotificationDetails(
-        android: AndroidNotificationDetails(
-          'scheduled_channel',
-          'Scheduled Notifications',
-          channelDescription: 'Notifications that are scheduled',
-        ),
-        iOS: DarwinNotificationDetails(),
-      ),
-      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+    try {
+      const AndroidNotificationDetails androidDetails =
+          AndroidNotificationDetails(
+            'time_reminder_channel_id', // Must be unique
+            'Time Schedule Channel',
+            channelDescription: 'Channel for time reminders',
+            importance: Importance.max,
+            priority: Priority.high,
+            showWhen: true,
+          );
 
-      // uiLocalNotificationDateInterpretation:
-      //     UILocalNotificationDateInterpretation.absoluteTime,
-    );
+      const DarwinNotificationDetails iosDetails = DarwinNotificationDetails(
+        presentAlert: true,
+        presentBadge: true,
+        presentSound: true,
+      );
+
+      const NotificationDetails platformDetails = NotificationDetails(
+        android: androidDetails,
+        iOS: iosDetails,
+      );
+
+      await _notificationsPlugin.zonedSchedule(
+        id, // Notification ID
+        title,
+        body,
+        tz.TZDateTime.from(date, tz.local), // When to show
+        platformDetails,
+        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+      );
+      return Right(null);
+    } catch (e) {
+      return Left(BaseError(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<BaseError, void>> deleteNotification(int id) async {
+    try {
+      await _notificationsPlugin.cancel(id);
+      return Right(null);
+    } catch (e) {
+      return Left(BaseError(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<BaseError, void>> deleteNotifications(List<int> ids) async {
+    try {
+      for (int id in ids) {
+        await _notificationsPlugin.cancel(id);
+      }
+      return Right(null);
+    } catch (e) {
+      return Left(BaseError(message: e.toString()));
+    }
   }
 }

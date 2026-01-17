@@ -30,7 +30,7 @@ class ReminderListBloc extends SafeCubit<ReminderListBlocState> {
   }
 
   Future delete(List<int> ids) async {
-    state.maybeWhen(
+    await state.maybeWhen(
       orElse: () {},
       loaded: (oldState, action) async {
         emit(

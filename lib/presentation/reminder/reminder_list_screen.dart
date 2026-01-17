@@ -12,7 +12,6 @@ import 'package:gc_reminder/core/widgets/content/list_item.dart';
 import 'package:gc_reminder/core/widgets/image/image_caching.dart';
 import 'package:gc_reminder/domain/notification/usecases/schedule_notification_usecase.dart';
 import 'package:gc_reminder/domain/notification/usecases/show_notification_usecase.dart';
-import 'package:gc_reminder/domain/permission/permission_service.dart';
 import 'package:gc_reminder/domain/permission/usecases/request_permission_usecase.dart';
 import 'package:gc_reminder/gen/assets.gen.dart';
 import 'package:gc_reminder/injection/injector.dart';
@@ -174,8 +173,8 @@ class _RecentRemindersState extends State<RecentReminders> {
   final RequestPermissionUseCase _permissionServiceUseCase =
       inject<RequestPermissionUseCase>();
 
-  Future _onDelete() {
-    return context.read<ReminderListBloc>().delete(selectedIds);
+  Future _onDelete() async {
+    await context.read<ReminderListBloc>().delete(selectedIds);
   }
 
   Widget _buildActionIcon() {

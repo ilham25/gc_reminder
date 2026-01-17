@@ -24,12 +24,14 @@ class ReminderLocalDataSource {
     }
   }
 
-  Future<Either<Failure, void>> createReminder({
+  Future<Either<Failure, int>> createReminder({
     required CreateReminderDTO dto,
   }) async {
     try {
-      await db.into(db.reminderTable).insert(dto.toReminderTableCompanion());
-      return const Right(null);
+      final result = await db
+          .into(db.reminderTable)
+          .insert(dto.toReminderTableCompanion());
+      return Right(result);
     } catch (e) {
       return Left(
         Failure(message: e.toString(), statusCode: ResponseCode.badRequest),
