@@ -2,25 +2,21 @@
 
 part of 'auth_session_bloc.dart';
 
-sealed class AuthSessionState extends Equatable {
-  const AuthSessionState();
+// Created on 18 13:18 by USER
 
-  @override
-  List<Object> get props => [];
+@freezed
+class AuthSessionBlocState with _$AuthSessionBlocState {
+  const factory AuthSessionBlocState.initial() = _AuthSessionBlocInitialState;
+  const factory AuthSessionBlocState.loading() =
+      _GetAuthSessionBlocLoadingState;
+  const factory AuthSessionBlocState.error(String message) =
+      _GetAuthSessionBlocErrorState;
+  const factory AuthSessionBlocState.loaded({required AuthSessionState state}) =
+      _GetAuthSessionBlocLoadedState;
 }
 
-final class AuthSessionInitialState extends AuthSessionState {}
-final class AuthSessionLoadingState extends AuthSessionState {}
-final class AuthSessionErrorState extends AuthSessionState {
-  final String message;
-  const AuthSessionErrorState(this.message);
+class AuthSessionState {
+  final bool isOnboardingCompleted;
 
-  @override
-  List<Object> get props => [message];
-}
-final class AuthSessionsLoadedState extends AuthSessionState {
-  final bool sessions;
-  const AuthSessionsLoadedState(this.sessions);
-  @override
-  List<Object> get props => [sessions];
+  AuthSessionState({this.isOnboardingCompleted = false});
 }

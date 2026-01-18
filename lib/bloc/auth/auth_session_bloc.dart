@@ -1,23 +1,44 @@
-// Created on 29-08-2024 10:33 by mac
-import 'package:equatable/equatable.dart';
+import 'package:flutter/rendering.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:gc_reminder/domain/cubit/safe_cubit.dart';
 import 'package:gc_reminder/injection/injector.dart';
-import 'package:gc_reminder/infrastructure/repositories/auth/auth_repository_impl.dart';
 import 'package:gc_reminder/domain/repositories/auth/auth_repository.dart';
 
 part 'auth_session_state.dart';
 
-class AuthSessionBloc extends SafeCubit<AuthSessionState> {
-  AuthSessionBloc() : super(AuthSessionInitialState());
-  final AuthRepository authRepository = inject<AuthRepositoryImpl>();
+part 'auth_session_bloc.freezed.dart';
+
+class AuthSessionBloc extends SafeCubit<AuthSessionBlocState> {
+  AuthSessionBloc() : super(AuthSessionBlocState.initial());
+  final AuthRepository authRepository = inject<AuthRepository>();
 
   Future<void> checkSession() async {
-    emit(AuthSessionLoadingState());
+    debugPrint("checkSession");
+    emit(AuthSessionBlocState.loading());
     try {
-      final sessions = await authRepository.getSession();
-      emit(AuthSessionsLoadedState(sessions));
+      final isOnboardingCompleted = await authRepository
+          .getIsOnboardingCompleted();
+      emit(
+        AuthSessionBlocState.loaded(
+          state: AuthSessionState(isOnboardingCompleted: isOnboardingCompleted),
+        ),
+      );
     } catch (e) {
-      emit(AuthSessionErrorState(e.toString()));
+      emit(AuthSessionBlocState.error(e.toString()));
     }
+  }
+
+  Future<void> setOnboardingCompleted() async {
+    await state.maybeWhen(
+      orElse: () {},
+      loaded: (state) async {
+        await authRepository.setIsOnboardingCompleted();
+        emit(
+          AuthSessionBlocState.loaded(
+            state: AuthSessionState(isOnboardingCompleted: true),
+          ),
+        );
+      },
+    );
   }
 }

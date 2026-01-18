@@ -1,4 +1,3 @@
-
 import 'package:dartz/dartz.dart';
 import 'package:gc_reminder/core/networks/error_handler.dart';
 import 'package:gc_reminder/infrastructure/datasource/auth/auth_local_datasource.dart';
@@ -15,30 +14,34 @@ class AuthRepositoryImpl implements AuthRepository {
   });
 
   @override
-  Future<Either<Failure, AuthEntity>> login(String username, String password) async {
+  Future<Either<Failure, AuthEntity>> login(
+    String username,
+    String password,
+  ) async {
     final auth = await remoteDataSource.login(username, password);
-    auth.fold((left) {
-    }, (right) async {
+    auth.fold((left) {}, (right) async {
       saveAuth(right);
     });
     return auth;
   }
 
   @override
-  Future<void> saveAuth(AuthEntity auth)
-    => localDataSource.saveAuth(auth);
+  Future<void> saveAuth(AuthEntity auth) => localDataSource.saveAuth(auth);
 
   @override
-  Future<String?> getToken()
-    => localDataSource.getAuth();
+  Future<String?> getToken() => localDataSource.getAuth();
 
   @override
-  Future<bool> isAuth()
-    => localDataSource.isAuth();
+  Future<bool> isAuth() => localDataSource.isAuth();
 
   @override
-  Future<bool> getSession()
-    => localDataSource.getSession();
+  Future<bool> getSession() => localDataSource.getSession();
 
+  @override
+  Future<bool> getIsOnboardingCompleted() =>
+      localDataSource.getIsOnboardingCompleted();
 
+  @override
+  Future<void> setIsOnboardingCompleted() =>
+      localDataSource.setIsOnboardingCompleted();
 }

@@ -10,6 +10,9 @@ class UIKitIconButton extends StatelessWidget {
   final double size;
   final double? iconSize;
 
+  final bool isLoading;
+  final bool enable;
+
   final UIKitIconButtonDecoration? decoration;
 
   final ButtonVariant variant = .primary;
@@ -21,6 +24,8 @@ class UIKitIconButton extends StatelessWidget {
     this.decoration,
     this.size = 40,
     this.iconSize,
+    this.isLoading = false,
+    this.enable = true,
   });
 
   factory UIKitIconButton.secondary(
@@ -77,6 +82,8 @@ class UIKitIconButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isEnabled = enable && !isLoading;
+
     return Material(
       type: MaterialType.transparency,
       color: _color,
@@ -90,16 +97,22 @@ class UIKitIconButton extends StatelessWidget {
         ),
         child: InkWell(
           borderRadius: _borderRadius,
-          onTap: () {
-            if (onTap == null) return;
-            onTap!();
-          },
+          onTap: isEnabled ? onTap : null,
           child: Center(
-            child: icon.image(
-              height: AppSetting.setHeight(iconSize ?? (size / 2)),
-              width: AppSetting.setHeight(iconSize ?? (size / 2)),
-              color: _iconColor,
-            ),
+            child: isLoading
+                ? SizedBox(
+                    height: AppSetting.setWidth(14),
+                    width: AppSetting.setWidth(14),
+                    child: CircularProgressIndicator(
+                      color: _iconColor,
+                      strokeWidth: 2,
+                    ),
+                  )
+                : icon.image(
+                    height: AppSetting.setHeight(iconSize ?? (size / 2)),
+                    width: AppSetting.setHeight(iconSize ?? (size / 2)),
+                    color: _iconColor,
+                  ),
           ),
         ),
       ),

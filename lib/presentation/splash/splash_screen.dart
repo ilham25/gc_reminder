@@ -25,9 +25,7 @@ class SplashScreen extends StatelessWidget {
     return Scaffold(
       body: MultiBlocProvider(
         providers: [
-          BlocProvider<AuthSessionBloc>(
-            create: (context) => AuthSessionBloc()..checkSession(),
-          ),
+          BlocProvider(create: (context) => AuthSessionBloc()..checkSession()),
         ],
         child: const SplashBody(),
       ),
@@ -45,20 +43,23 @@ class SplashBody extends StatefulWidget {
 class _SplashBodyState extends State<SplashBody> {
   @override
   Widget build(BuildContext context) {
-    return BlocListener<AuthSessionBloc, AuthSessionState>(
+    return BlocListener<AuthSessionBloc, AuthSessionBlocState>(
       listener: (context, state) {
-        if (state is AuthSessionsLoadedState) {
-          Future.delayed(const Duration(seconds: 2)).then((value) {
-            if (!context.mounted) return;
+        state.maybeWhen(
+          orElse: () {},
+          loaded: (state) {
+            Future.delayed(const Duration(seconds: 2)).then((value) {
+              if (!context.mounted) return;
 
-            // if (state.sessions) {
-            //   context.router.replaceAll([const HomeRoute()]);
-            // } else {
-            //   context.router.replaceAll([const HomeRoute()]);
-            // }
-            context.router.replaceAll([const OnboardingRoute()]);
-          });
-        }
+              if (state.isOnboardingCompleted) {
+                context.router.replaceAll([const ReminderListRoute()]);
+                return;
+              }
+
+              context.router.replaceAll([const OnboardingRoute()]);
+            });
+          },
+        );
       },
       child: Stack(
         children: [

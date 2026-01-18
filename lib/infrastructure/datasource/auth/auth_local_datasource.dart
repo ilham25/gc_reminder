@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 
 import 'package:gc_reminder/utils/manager/shared_manager.dart';
@@ -18,7 +17,7 @@ class AuthLocalDataSource {
   }
 
   Future<String?> getAuth() async {
-    final shared =  SharedManager<String>();
+    final shared = SharedManager<String>();
     String? token = await shared.read("token_gc_reminder");
     return token;
   }
@@ -42,4 +41,15 @@ class AuthLocalDataSource {
     setSession(false);
   }
 
+  Future<bool> getIsOnboardingCompleted() async {
+    final shared = SharedManager<bool>();
+    final result = await shared.read("is_onboarding_completed");
+
+    return result == true;
+  }
+
+  Future<void> setIsOnboardingCompleted() async {
+    final shared = SharedManager<bool>();
+    await shared.store("is_onboarding_completed", true);
+  }
 }
