@@ -3,22 +3,20 @@ import 'package:gc_reminder/config/app_config.dart';
 import 'package:gc_reminder/theme/theme.dart';
 
 class UIKitProgressBar extends StatelessWidget {
-  final double value;
+  final double? value;
   final UIKitProgressBarVariant variant;
 
   final int steps;
 
   const UIKitProgressBar({
     super.key,
-    required this.value,
+    this.value,
     this.variant = UIKitProgressBarVariant.base,
     this.steps = 1,
   });
 
-  factory UIKitProgressBar.stepped({
-    required double value,
-    required int steps,
-  }) => UIKitProgressBar(value: value, variant: .stepped, steps: steps);
+  factory UIKitProgressBar.stepped({double? value, required int steps}) =>
+      UIKitProgressBar(value: value, variant: .stepped, steps: steps);
 
   Widget _build() {
     if (variant == .base) {
@@ -46,11 +44,12 @@ class UIKitProgressBar extends StatelessWidget {
 
 class _SteppedProgressBar extends StatelessWidget {
   final int steps;
-  final double value;
+  final double? value;
 
-  const _SteppedProgressBar({required this.steps, required this.value});
+  const _SteppedProgressBar({required this.steps, this.value});
 
   List<double> get _values {
+    if (value == null) return [];
     final List<double> values = [];
     final double baseStepValue = 1 / steps;
 
@@ -59,9 +58,9 @@ class _SteppedProgressBar extends StatelessWidget {
       double min = max - baseStepValue;
       double result = 0;
 
-      if (value < max && value > min) {
-        result = (value - min) / (max - min);
-      } else if (value >= max) {
+      if (value! < max && value! > min) {
+        result = (value! - min) / (max - min);
+      } else if (value! >= max) {
         result = 1;
       }
 
