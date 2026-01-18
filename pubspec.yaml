@@ -93,6 +93,7 @@ dependencies:
   flutter_map_location_marker: ^10.2.0
   geofencing_api: ^2.0.0
   table_calendar: ^3.2.0
+  easy_date_timeline: ^2.0.9
 
 dev_dependencies:
   flutter_test:

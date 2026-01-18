@@ -1,3 +1,4 @@
+import 'package:flutter/rendering.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:gc_reminder/domain/cubit/safe_cubit.dart';
 import 'package:gc_reminder/domain/models/reminder/reminder_filter_model.dart';
@@ -5,6 +6,7 @@ import 'package:gc_reminder/domain/models/reminder/reminder_model.dart';
 import 'package:gc_reminder/domain/models/reminder/reminder_summary_model.dart';
 import 'package:gc_reminder/domain/notification/usecases/delete_notifications_usecase.dart';
 import 'package:gc_reminder/domain/repositories/reminder/reminder_local_repository.dart';
+import 'package:gc_reminder/infrastructure/database/database.dart';
 import 'package:gc_reminder/injection/injector.dart';
 
 part 'reminder_dashboard_bloc_state.dart';
@@ -20,7 +22,14 @@ class ReminderDashboardBloc extends SafeCubit<ReminderDashboardBlocState> {
       inject<DeleteNotificationsUseCase>();
 
   Future getData({ReminderFilterModel? filter}) async {
-    emit(const ReminderDashboardBlocState.loading());
+    state.maybeWhen(
+      orElse: () {},
+      initial: () {
+        emit(const ReminderDashboardBlocState.loading());
+      },
+    );
+
+    debugPrint("filter ${filter?.date} ${filter?.type} ${filter?.status}");
 
     final getSummary = await _localRepository.getSummary(date: DateTime.now());
     final summaryResult = getSummary.fold((left) {
@@ -106,7 +115,34 @@ class ReminderDashboardBloc extends SafeCubit<ReminderDashboardBlocState> {
         if (state.filter == null) {
           getData(filter: ReminderFilterModel(date: date));
         } else {
-          getData(filter: state.filter?.copyWith(date: date));
+          getData(
+            filter: ReminderFilterModel(
+              date: date,
+              type: state.filter?.type,
+              status: state.filter?.status,
+            ),
+          );
+        }
+      },
+    );
+  }
+
+  void setFilter({ReminderType? type, ReminderStatus? status}) {
+    state.maybeWhen(
+      orElse: () {},
+      loaded: (state, action) {
+        if (state.filter == null) {
+          getData(
+            filter: ReminderFilterModel(type: type, status: status),
+          );
+        } else {
+          getData(
+            filter: ReminderFilterModel(
+              date: state.filter?.date,
+              type: type,
+              status: status,
+            ),
+          );
         }
       },
     );

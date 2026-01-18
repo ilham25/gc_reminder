@@ -25,47 +25,27 @@ class ReminderDao extends DatabaseAccessor<AppDatabase>
       return query.get();
     }
 
-    if (filter.date != null) {
-      query.where((t) {
-        final d = filter.date!;
-        return t.startAt.isBetweenValues(
-          DateTime(d.year, d.month, d.day),
-          DateTime(d.year, d.month, d.day, 23, 59, 59),
-        );
-      });
-    }
+    query.where((tbl) {
+      final List<Expression<bool>> predicates = [];
 
-    if (filter.type != null) {
-      query.where((t) => t.type.equalsValue(filter.type!));
-    }
-
-    if (filter.status != null) {
-      if (filter.status == ReminderStatus.completed) {
-        query.where(
-          (t) => t.type
-              .equalsValue(ReminderType.location)
-              .caseMatch(
-                when: {const Constant(true): db.reminderTable.doneAt.isNull()},
-                orElse: db.reminderTable.startAt.isBiggerThanValue(
-                  filter.date ?? DateTime.now(),
-                ),
-              ),
+      // 1. Specific Date Filter (if provided)
+      if (filter.date != null) {
+        final startOfDay = DateTime(
+          filter.date!.year,
+          filter.date!.month,
+          filter.date!.day,
         );
-      } else {
-        query.where(
-          (t) => t.type
-              .equalsValue(ReminderType.location)
-              .caseMatch(
-                when: {
-                  const Constant(true): db.reminderTable.doneAt.isNotNull(),
-                },
-                orElse: db.reminderTable.startAt.isSmallerThanValue(
-                  filter.date ?? DateTime.now(),
-                ),
-              ),
-        );
+        final endOfDay = startOfDay.add(const Duration(days: 1));
+        predicates.add(tbl.startAt.isBetweenValues(startOfDay, endOfDay));
       }
-    }
+
+      // 2. Basic Type Filter (if user selected a specific type in the UI)
+      if (filter.type != null) {
+        predicates.add(tbl.type.equalsValue(filter.type!));
+      }
+
+      return Expression.and(predicates);
+    });
 
     return query.get();
   }

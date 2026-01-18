@@ -161,7 +161,7 @@ class UIKitDropdown<T> extends StatelessWidget {
                       Ink(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
-                          color: MyTheme.color.palette.dark.lightest,
+                          color: MyTheme.color.palette.light.medium,
                         ),
                         child: InkWell(
                           onTap: onClear,
@@ -174,7 +174,7 @@ class UIKitDropdown<T> extends StatelessWidget {
                             child: Assets.icons.close.image(
                               height: AppSetting.setHeight(8),
                               width: AppSetting.setWidth(8),
-                              color: MyTheme.color.palette.dark.lightest,
+                              color: MyTheme.color.palette.dark.darkest,
                             ),
                           ),
                         ),
@@ -294,7 +294,6 @@ class _DropdownSheet<T> extends StatelessWidget {
               vertical: AppSetting.setHeight(12),
             ),
             shrinkWrap: true,
-            // children: _buildList(context),
             itemCount: items.length,
             separatorBuilder: (context, index) => Space.h(8),
             itemBuilder: (context, index) {

@@ -19,3 +19,14 @@ class ReminderTable extends Table {
 }
 
 enum ReminderType { time, location }
+
+extension ReminderStatusExt on ReminderType {
+  String get label {
+    switch (this) {
+      case ReminderType.location:
+        return "Location";
+      case ReminderType.time:
+        return "Time";
+    }
+  }
+}

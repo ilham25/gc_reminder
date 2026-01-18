@@ -7,8 +7,8 @@ import 'package:gc_reminder/core/widgets/button/icon_button.dart';
 import 'package:gc_reminder/core/widgets/dialog/action_dialog.dart';
 import 'package:gc_reminder/domain/models/reminder/reminder_model.dart';
 import 'package:gc_reminder/gen/assets.gen.dart';
-import 'package:gc_reminder/presentation/common/widgets/bottom_sheet/calendar_bottom_sheet.dart';
 import 'package:gc_reminder/presentation/common/widgets/empty/empty_list.dart';
+import 'package:gc_reminder/presentation/reminder/widgets/bottom_sheet/reminder_filter_bottom_sheet.dart';
 import 'package:gc_reminder/presentation/reminder/widgets/bottom_sheet/reminder_update_bottom_sheet.dart';
 import 'package:gc_reminder/presentation/reminder/widgets/list_item/reminder_list_item.dart';
 import 'package:gc_reminder/theme/theme.dart';
@@ -50,7 +50,10 @@ class _RecentRemindersState extends State<RecentReminders> {
             if (state.filter != null) ...[
               UIKitButton.tertiary(
                 title: "Clear Filter",
-                padding: .symmetric(horizontal: AppSetting.setWidth(4)),
+                padding: .symmetric(
+                  horizontal: AppSetting.setWidth(4),
+                  vertical: AppSetting.setHeight(2),
+                ),
                 decoration: UIKitButtonDecoration(borderRadius: .circular(4)),
                 onTap: () {
                   context.read<ReminderDashboardBloc>().clearFilter();
@@ -69,12 +72,14 @@ class _RecentRemindersState extends State<RecentReminders> {
               ),
               onTap: () async {
                 if (!isDeleteMode) {
-                  final newDate = await CalendarBottomSheet.show(
-                    title: "Select Date",
-                    initialValue: state.filter?.date,
+                  final newFilter = await ReminderFilterBottomSheet.show(
+                    initialValue: state.filter?.toReminderFilterForm() ?? {},
                   );
-                  if (newDate == null || !context.mounted) return;
-                  context.read<ReminderDashboardBloc>().setDate(newDate);
+                  if (newFilter == null || !context.mounted) return;
+                  context.read<ReminderDashboardBloc>().setFilter(
+                    status: newFilter.status,
+                    type: newFilter.type,
+                  );
 
                   return;
                 }

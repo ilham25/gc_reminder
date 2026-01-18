@@ -28,6 +28,7 @@ final DateFormat formatMonthDate = DateFormat('MMM dd', locale);
 
 final DateFormat formatDayName = DateFormat('EEEE', locale);
 final DateFormat formatDayNameSort = DateFormat('EEE', locale);
+final DateFormat formatDayNameShortest = DateFormat('EE', locale);
 final DateFormat formatFull = DateFormat('EEEE, dd MMMM yyyy', locale);
 final DateFormat formatFullSort = DateFormat('EEE, dd MMM yyyy', locale);
 final DateFormat formatFullTime = DateFormat('dd MMMM yyyy HH:mm', locale);

@@ -5,6 +5,7 @@ import 'package:gc_reminder/bloc/reminder/reminder_dashboard/reminder_dashboard_
 import 'package:gc_reminder/config/app_config.dart';
 import 'package:gc_reminder/core/widgets/app_bar/app_bar.dart';
 import 'package:gc_reminder/core/widgets/button/icon_button.dart';
+import 'package:gc_reminder/core/widgets/content/calendar_timeline.dart';
 import 'package:gc_reminder/domain/location/services/location_reminder_service.dart';
 import 'package:gc_reminder/domain/permission/usecases/request_permission_usecase.dart';
 import 'package:gc_reminder/gen/assets.gen.dart';
@@ -107,6 +108,19 @@ class _ReminderListBodyState extends State<ReminderListBody> {
                       loaded: (state, action) => state.summary.total,
                     ),
                     date: DateTime.now(),
+                  ),
+                ),
+                Space.h(16),
+                BlocBuilder<ReminderDashboardBloc, ReminderDashboardBlocState>(
+                  builder: (context, state) => CalendarTimeline(
+                    value: state.maybeWhen(
+                      orElse: () => DateTime.now(),
+                      loaded: (state, action) =>
+                          state.filter?.date ?? DateTime.now(),
+                    ),
+                    onChanged: (value) {
+                      context.read<ReminderDashboardBloc>().setDate(value);
+                    },
                   ),
                 ),
                 Space.h(16),
