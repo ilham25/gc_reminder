@@ -84,7 +84,7 @@ class ReminderListItem extends StatelessWidget {
                   leftIcon: Assets.icons.locationMarker,
                   onTap: () {
                     context.router.push(
-                      SelectLocationRoute(
+                      ViewLocationRoute(
                         markers: [
                           MapMarkerModel(
                             latitude: reminder.lat!,
@@ -97,19 +97,6 @@ class ReminderListItem extends StatelessWidget {
                 ),
               )
             : SizedBox.shrink(),
-        // right: Column(
-        //   crossAxisAlignment: .end,
-        //   children: [
-        //     Text("\$32.16", style: MyTheme.style.action.m),
-        //     Space.h(4),
-        //     Text(
-        //       "Debit Card",
-        //       style: MyTheme.style.body.xs.copyWith(
-        //         color: MyTheme.color.palette.dark.light,
-        //       ),
-        //     ),
-        //   ],
-        // ),
       ),
     );
   }

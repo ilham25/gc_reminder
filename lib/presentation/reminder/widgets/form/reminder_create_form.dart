@@ -7,7 +7,6 @@ import 'package:gc_reminder/core/widgets/content/divider.dart';
 import 'package:gc_reminder/core/widgets/form/base_form.dart';
 import 'package:gc_reminder/core/widgets/input/calendar_input.dart';
 import 'package:gc_reminder/core/widgets/input/primary_date_picker.dart';
-import 'package:gc_reminder/core/widgets/input/radio_button.dart';
 import 'package:gc_reminder/core/widgets/input/text_field.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:gc_reminder/core/widgets/input/toggle.dart';
@@ -210,38 +209,6 @@ class ReminderCreateForm extends StatelessWidget {
                                 Text(
                                   "Trigger",
                                   style: MyTheme.style.heading.h5,
-                                ),
-                                Space.h(8),
-                                Row(
-                                  children: [
-                                    Row(
-                                      children: [
-                                        UIKitRadioButton(
-                                          onTap: () {},
-                                          selected: true,
-                                        ),
-                                        Space.w(4),
-                                        Text(
-                                          "Arriving",
-                                          style: MyTheme.style.action.m,
-                                        ),
-                                      ],
-                                    ),
-                                    Space.w(16),
-                                    Row(
-                                      children: [
-                                        UIKitRadioButton(
-                                          onTap: () {},
-                                          selected: false,
-                                        ),
-                                        Space.w(4),
-                                        Text(
-                                          "Leaving",
-                                          style: MyTheme.style.action.m,
-                                        ),
-                                      ],
-                                    ),
-                                  ],
                                 ),
                                 Space.h(16),
                                 Container(

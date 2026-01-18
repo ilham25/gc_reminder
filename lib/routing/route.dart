@@ -18,6 +18,7 @@ class AppRouter extends RootStackRouter {
 
     // Common
     AutoRoute(page: SelectLocationRoute.page),
+    AutoRoute(page: ViewLocationRoute.page),
 
     // Templates
     // -- Chat

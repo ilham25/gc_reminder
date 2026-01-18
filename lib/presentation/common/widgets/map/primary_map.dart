@@ -75,24 +75,6 @@ class _PrimaryMapState extends State<PrimaryMap> {
   }
 
   @override
-  void didUpdateWidget(PrimaryMap oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (oldWidget.markers != widget.markers) {
-      // Special case: if there's 1 marker and isMoveCameraToMarker=false,
-      // don't move camera after initial load (for tap-to-place marker scenario)
-      // final isSingleMarkerNoMove =
-      //     widget.markers.length == 1 && !widget.isMoveCameraToMarker;
-      // final shouldMove = isSingleMarkerNoMove ? _isInitialLoad : true;
-
-      _onMarkersUpdate();
-
-      // if (_isInitialLoad) {
-      //   _isInitialLoad = false;
-      // }
-    }
-  }
-
-  @override
   void dispose() {
     _mapController.dispose();
     super.dispose();
@@ -110,6 +92,7 @@ class _PrimaryMapState extends State<PrimaryMap> {
         initialZoom: widget.initialPosition?.zoom ?? 13,
         onMapReady: () async {
           await _onMarkersUpdate();
+          _mapController.move(_mapController.camera.center, 16);
         },
       ),
       children: [
