@@ -52,11 +52,16 @@ class _SelectLocationBodyState extends State<SelectLocationBody> {
     );
     placemarks.fold(
       (l) {
-        UIKitToast.warning(title: "Select Location", description: "No places");
+        UIKitToast.warning(
+          context: context,
+          title: "Select Location",
+          description: "No places",
+        );
       },
       (r) async {
         if (r.isEmpty) {
           UIKitToast.warning(
+            context: context,
             title: "Select Location",
             description: "No places",
           );
@@ -79,7 +84,6 @@ class _SelectLocationBodyState extends State<SelectLocationBody> {
   @override
   void initState() {
     super.initState();
-    UIKitToast.init(context);
   }
 
   @override

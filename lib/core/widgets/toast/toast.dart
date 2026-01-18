@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:gc_reminder/config/app_config.dart';
 import 'package:gc_reminder/core/widgets/button/icon_button.dart';
 import 'package:gc_reminder/gen/assets.gen.dart';
+import 'package:gc_reminder/injection/injector.dart';
+import 'package:gc_reminder/routing/route.dart';
 import 'package:gc_reminder/theme/theme.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -10,18 +12,14 @@ class UIKitToast {
   factory UIKitToast() => _instance;
   UIKitToast._internal();
 
-  static late FToast fToast;
-
-  static void init(BuildContext context) {
-    fToast = FToast();
-    fToast.init(context);
-  }
-
   static void info({
+    required BuildContext context,
     required String title,
     required String description,
     Duration? duration,
   }) {
+    final fToast = FToast()..init(context);
+
     Widget toast = _build(
       icon: Assets.icons.info,
       title: title,
@@ -40,10 +38,13 @@ class UIKitToast {
   }
 
   static void success({
+    required BuildContext context,
     required String title,
     required String description,
     Duration? duration,
   }) {
+    final fToast = FToast()..init(context);
+
     Widget toast = _build(
       icon: Assets.icons.success,
       title: title,
@@ -62,10 +63,13 @@ class UIKitToast {
   }
 
   static void warning({
+    required BuildContext context,
     required String title,
     required String description,
     Duration? duration,
   }) {
+    final fToast = FToast()..init(context);
+
     Widget toast = _build(
       icon: Assets.icons.warning,
       title: title,
@@ -84,10 +88,13 @@ class UIKitToast {
   }
 
   static void danger({
+    required BuildContext context,
     required String title,
     required String description,
     Duration? duration,
   }) {
+    final fToast = FToast()..init(context);
+
     Widget toast = _build(
       icon: Assets.icons.danger,
       title: title,

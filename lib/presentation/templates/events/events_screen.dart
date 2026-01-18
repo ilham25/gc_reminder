@@ -132,6 +132,7 @@ class _EventsBodyState extends State<EventsBody> {
                             title: "Buy tickets",
                             onTap: () {
                               UIKitToast.info(
+                                context: context,
                                 title: "Ticket Bought!",
                                 description:
                                     "You have successfully bought a ticket for ${item.title}",
@@ -205,6 +206,7 @@ class _EventsBodyState extends State<EventsBody> {
 
                             onTap: () {
                               UIKitToast.info(
+                                context: context,
                                 title: "Ticket Bought!",
                                 description:
                                     "You have successfully bought a ticket for ${item.title}",

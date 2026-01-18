@@ -49,8 +49,6 @@ class _BottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    UIKitToast.init(context);
-
     final formKey = GlobalKey<FormBuilderState>();
     final isFormValid = ValueNotifier<bool>(false);
 
@@ -62,12 +60,14 @@ class _BottomSheet extends StatelessWidget {
               orElse: () {},
               error: (message) {
                 UIKitToast.danger(
+                  context: context,
                   title: "Update Reminder Error",
                   description: message,
                 );
               },
               success: () {
                 UIKitToast.success(
+                  context: context,
                   title: "Update Reminder Success",
                   description: "Reminder has been updated",
                 );

@@ -66,6 +66,7 @@ class LoginBody extends StatelessWidget {
                         GestureDetector(
                           onTap: () {
                             UIKitToast.warning(
+                              context: context,
                               title: "Forgot Password?",
                               description: "Please contact admin.",
                             );

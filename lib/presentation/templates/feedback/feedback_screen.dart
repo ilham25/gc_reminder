@@ -167,6 +167,7 @@ class FeedbackBody extends StatelessWidget {
                 leftIcon: Assets.icons.placeholder,
                 onTap: () {
                   UIKitToast.success(
+                    context: context,
                     title: "Feedback Submitted",
                     description: "Thank you for your feedback.",
                   );

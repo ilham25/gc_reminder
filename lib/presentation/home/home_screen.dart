@@ -6,7 +6,6 @@ import 'package:gc_reminder/core/widgets/banner/banner.dart';
 import 'package:gc_reminder/core/widgets/button/icon_button.dart';
 import 'package:gc_reminder/core/widgets/navigation/tab_bar.dart';
 import 'package:gc_reminder/core/widgets/navigation/tab_bar_item.dart';
-import 'package:gc_reminder/core/widgets/toast/toast.dart';
 import 'package:gc_reminder/gen/assets.gen.dart';
 import 'package:gc_reminder/routing/route.gr.dart';
 import 'package:gc_reminder/theme/theme.dart';
@@ -70,8 +69,6 @@ class _HomeBodyState extends State<HomeBody> {
 
   @override
   Widget build(BuildContext context) {
-    UIKitToast.init(context);
-
     return ListView(
       padding: EdgeInsets.symmetric(
         horizontal: AppSetting.setWidth(MyTheme.defaultPadding),

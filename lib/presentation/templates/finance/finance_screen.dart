@@ -159,6 +159,7 @@ class FinanceBody extends StatelessWidget {
                         title: "Subscriptions",
                         onTap: () {
                           UIKitToast.info(
+                            context: context,
                             title: "Subscriptions",
                             description: "Subscriptions tapped!",
                           );

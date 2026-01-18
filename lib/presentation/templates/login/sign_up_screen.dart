@@ -99,6 +99,7 @@ class SignUpBody extends StatelessWidget {
                                 recognizer: TapGestureRecognizer()
                                   ..onTap = () {
                                     UIKitToast.info(
+                                      context: context,
                                       title: "Terms & Conditions",
                                       description: "Terms & Conditions Tapped!",
                                     );
@@ -113,6 +114,7 @@ class SignUpBody extends StatelessWidget {
                                 recognizer: TapGestureRecognizer()
                                   ..onTap = () {
                                     UIKitToast.info(
+                                      context: context,
                                       title: "Privacy Policy",
                                       description: "Privacy Policy Tapped!",
                                     );

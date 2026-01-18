@@ -43,7 +43,6 @@ class _OnboardingBodyState extends State<OnboardingBody> {
   @override
   void initState() {
     super.initState();
-    UIKitToast.init(context);
   }
 
   Future _onNextPressed() async {
@@ -67,7 +66,11 @@ class _OnboardingBodyState extends State<OnboardingBody> {
           state.maybeWhen(
             orElse: () {},
             error: (message) {
-              UIKitToast.danger(title: "Onboarding", description: message);
+              UIKitToast.danger(
+                context: context,
+                title: "Onboarding",
+                description: message,
+              );
             },
             success: () {
               context.router.replaceAll([const ReminderListRoute()]);

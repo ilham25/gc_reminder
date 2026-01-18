@@ -27,67 +27,14 @@ class SettingsBody extends StatelessWidget {
   SettingsBody({super.key});
 
   final List<UIKitListItem> _tiles = [
-    UIKitListItem(
-      title: "Saved Messages",
-      description: "",
-      onTap: () {
-        UIKitToast.info(
-          title: "Saved Messages",
-          description: "Saved Messages Tapped!",
-        );
-      },
-    ),
-    UIKitListItem(
-      title: "Recent Calls",
-      onTap: () {
-        UIKitToast.info(
-          title: "Recent Calls",
-          description: "Recent Calls Tapped!",
-        );
-      },
-    ),
-    UIKitListItem(
-      title: "Devices",
-      onTap: () {
-        UIKitToast.info(title: "Devices", description: "Devices Tapped!");
-      },
-    ),
-    UIKitListItem(
-      title: "Notifications",
-      onTap: () {
-        UIKitToast.info(
-          title: "Notifications",
-          description: "Notifications Tapped!",
-        );
-      },
-    ),
-    UIKitListItem(
-      title: "Appearance",
-      onTap: () {
-        UIKitToast.info(title: "Appearance", description: "Appearance Tapped!");
-      },
-    ),
-    UIKitListItem(
-      title: "Language",
-      onTap: () {
-        UIKitToast.info(title: "Language", description: "Language Tapped!");
-      },
-    ),
-    UIKitListItem(
-      title: "Privacy & Security",
-      onTap: () {
-        UIKitToast.info(
-          title: "Privacy & Security",
-          description: "Privacy & Security Tapped!",
-        );
-      },
-    ),
-    UIKitListItem(
-      title: "Storage",
-      onTap: () {
-        UIKitToast.info(title: "Storage", description: "Storage Tapped!");
-      },
-    ),
+    UIKitListItem(title: "Saved Messages", description: "", onTap: () {}),
+    UIKitListItem(title: "Recent Calls", onTap: () {}),
+    UIKitListItem(title: "Devices", onTap: () {}),
+    UIKitListItem(title: "Notifications", onTap: () {}),
+    UIKitListItem(title: "Appearance", onTap: () {}),
+    UIKitListItem(title: "Language", onTap: () {}),
+    UIKitListItem(title: "Privacy & Security", onTap: () {}),
+    UIKitListItem(title: "Storage", onTap: () {}),
     UIKitListItem(
       title: "Log Out",
       onTap: () {
@@ -137,6 +84,7 @@ class SettingsBody extends StatelessWidget {
                             ),
                             onTap: () {
                               UIKitToast.info(
+                                context: context,
                                 title: "Edit Profile",
                                 description: "Edit Profile Tapped!",
                               );
