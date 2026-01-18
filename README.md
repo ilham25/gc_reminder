@@ -1,41 +1,122 @@
-# Flutter Boilerplate
+# NextUp
 
-<!--
-<p align="center">
-  <img src="https://i.imghippo.com/files/lxvb2047dRg.png" width="300" height="700">
-  <img src="https://i.imghippo.com/files/nu6826IW.png" width="300" height="700">
-</p> -->
+A Flutter application built with clean architecture principles, featuring location-based reminders and geofencing capabilities.
 
-This is a template for creating a new Flutter project with a well-structured architecture and best practices.
+## 📋 Table of Contents
 
-:man_mechanic: Cloned from [flutter_template](https://github.com/yusriltakeuchi/flutter_template) repository created by [Yusril Rapsanjani](https://github.com/yusriltakeuchi) and modified to include UI Kit and also use updated dependencies.
+- [Overview](#overview)
+- [Tech Stack](#tech-stack)
+- [Prerequisites](#prerequisites)
+- [Getting Started](#getting-started)
+- [Project Structure](#project-structure)
+- [Development Guide](#development-guide)
+- [Build & Deployment](#build--deployment)
+- [Contributing](#contributing)
 
-## Features:
+## 🎯 Overview
 
-- **Domain-Driven Design (DDD)**: Organizes code into logical layers for maintainability and scalability.
-- **Freezed**: Utilized for immutable data classes and sealed classes, reducing boilerplate code.
-- **BLoC / Cubit**: Implements state management using the BLoC pattern for a clear separation of concerns.
-- **AutoRoute**: Provides automatic route generation and navigation management.
-- **Multiple Variants**: Supports multiple environments (`dev`, `staging`, `prod`) to facilitate testing and deployment.
-- **Dependency Injection**: Ensures modular and testable code structure.
-- **Error Handling**: Centralized error handling using `Failure` and `ResponseCode` for better debugging and UX.
+NextUp is a location-aware reminder application that leverages geofencing to notify users when they enter specific areas. Built with Domain-Driven Design principles and clean architecture, it provides a scalable and maintainable codebase.
 
-This template serves as a solid foundation for developing scalable and maintainable Flutter applications. 🚀
+## 🚀 Tech Stack
 
-## :rocket: Tested On Framework
+### Architecture & Design Patterns
 
-:arrow_right: Flutter 3.38.3
+- **Domain-Driven Design (DDD)**: Organizes code into logical layers for maintainability and scalability
+- **BLoC / Cubit**: State management with clear separation of concerns
+- **Dependency Injection**: Modular and testable code structure
 
-:arrow_right: Dart 3.10.1
+### Core Dependencies
 
-## :hammer: Project Structure
+- **Freezed**: Immutable data classes and sealed classes with reduced boilerplate
+- **AutoRoute**: Automatic route generation and navigation management
+- **Drift**: Type-safe local database (SQLite wrapper)
+- **SharedPreferences**: Simple key-value storage
+
+### Features
+
+- **Multiple Flavors**: Environment support (`dev`, `staging`, `prod`)
+- **Error Handling**: Centralized error management with `BaseError`, `Failure`, and `ResponseCode`
+- **Local Notifications**: Push notifications using `flutter_local_notifications`
+- **Geolocation & Geofencing**: Location detection and area-based reminders
+- **FlutterGen**: Code generation for assets, eliminating string-based APIs
+
+## 📦 Prerequisites
+
+Ensure you have the following installed:
+
+| Tool     | Version |
+| -------- | ------- |
+| Flutter  | 3.38.5  |
+| Dart     | 3.10.4  |
+| Java JDK | 17      |
+
+## 🎬 Getting Started
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/ilham25/gc_reminder.git
+cd gc_reminder
+```
+
+### 2. Install Dependencies
+
+```bash
+flutter pub get
+```
+
+### 3. Configure Keystore (Android)
+
+Create a `key.properties` file in the `android` directory:
+
+```properties
+storePassword=password-sent-in-email
+keyPassword=password-sent-in-email
+keyAlias=alias-sent-in-email
+storeFile=gc-reminder-keystore.jks
+```
+
+Place your keystore file (`gc-reminder-keystore.jks`) in the `android/app` directory.
+
+> **Note**: Replace the placeholder values with your actual keystore credentials (check your email for details).
+
+### 4. Generate Code
+
+Run the build runner to generate necessary code:
+
+```bash
+dart run build_runner build --delete-conflicting-outputs
+```
+
+For continuous generation during development:
+
+```bash
+dart run build_runner watch --delete-conflicting-outputs
+```
+
+### 5. Run the Application
+
+Choose your target flavor:
+
+```bash
+# Development
+flutter run --flavor dev
+
+# Staging
+flutter run --flavor staging
+
+# Production
+flutter run --flavor prod
+```
+
+## 📁 Project Structure
 
 ```
 lib
 │── bloc
 │── config
 │── core
-│   │── widgets
+│   │── components
 │   │── constant
 │   │── models
 │   │── networks
@@ -45,6 +126,7 @@ lib
 │   │── repositories
 │── gen
 │── infrastructure
+│   ├── database
 │   │── datasource
 │   │── repositories
 │── injection
@@ -57,126 +139,164 @@ lib
 │── main.dart
 ```
 
-## :computer: Install Template
+## 👨‍💻 Development Guide
 
-1. First you need to install copy_template to generate project based on name
+### Accessing Flavor Configuration
 
-```
-dart pub global activate copy_template
-```
-
-2. Install to specific directory on your pc with your project name
-
-```
-copy_template <project_name> https://github.com/ilham25/flutter_boilerplate.git <path>
-```
-
-For example:
-
-```
-copy_template my_app https://github.com/ilham25/flutter_boilerplate.git /path/to/project
-```
-
-## :package: Change Package Name
-
-You can change the package name by running the command below
-
-```
-dart run change_app_package_name:main com.package.name
-```
-
-1. Change name in `android/app/build.gradle` -> `productFlavors`
-2. Then change package name in `utils/flavor/flavor_utils.dart`
-
-## :key: Keystore
-
-1. Create `key.properties` file in `android` directory with the following content:
-
-```
-storePassword=yourpassword
-keyPassword=yourpassword
-keyAlias=youralias
-storeFile=yourfilelocation.jks
-```
-
-2. Place your keystore .jks file in storeFile setting location
-
-## :rocket: Run The Project
-
-You can choose to run your project with various variant, currently available is `dev`, `staging`, and `prod`.
-
-```
-flutter run --flavor dev
-```
-
-## :first_quarter_moon: Access Flavor Variant
-
-You can access the flavor variant by using `FlavorUtils` class
+Use the `FlavorUtils` class to access the current flavor:
 
 ```dart
-flavor.current
+final currentFlavor = flavor.current;
 ```
 
-## :open_book: Create New Page
+### Creating a New Page
 
-1. You need to create a page on `presentation` directory
-2. Add the `@RoutePage()` annotation in your screen class, example:
+1. **Create the screen** in `lib/presentation/`
 
 ```dart
+import 'package:auto_route/auto_route.dart';
+import 'package:flutter/material.dart';
+
 @RoutePage()
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+class NewScreen extends StatelessWidget {
+  const NewScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'Home Screen',
-          style: MyTheme.style.title.copyWith(
-              color: MyTheme.color.white,
-              fontSize: AppSetting.setFontSize(45)
-          ),
-        ),
-        automaticallyImplyLeading: false,
-        backgroundColor: MyTheme.color.primary,
+        title: const Text('New Screen'),
       ),
-      body: BlocProvider(
-        create: (context) => UserBloc()..getUsers(params: {'page': 1}),
-        child: const HomeBody(),
+      body: const Center(
+        child: Text('Hello, World!'),
       ),
     );
   }
 }
 ```
 
-3. Run the make file to generate the code
+2. **Generate routing code**
 
-```
-dart run build_runner build
+```bash
+dart run build_runner build --delete-conflicting-outputs
 ```
 
-4. open `route.dart` file and add your page into routes variables.
+3. **Register the route** in `lib/routing/route.dart`
 
 ```dart
-  @override
+@override
 List<AutoRoute> get routes => [
   AutoRoute(page: SplashRoute.page, initial: true),
   AutoRoute(page: HomeRoute.page),
+  AutoRoute(page: NewRoute.page), // Add your new route
 ];
 ```
 
-## :first_quarter_moon: Support Theme Mode
+### Fetching API Data
 
-You can listen to the mode by using BlocBuilder into ThemeBloc. There are three modes available, `light`, `dark`, and `system`.
+Follow these steps to implement API data fetching:
 
-## :information_source: Step to Fetch Data
+1. **Create Entity** in `lib/domain/entities/`
 
-1. Create Entity class in `domain/entities`
-2. Create APIExtension in `infrastructure/datasource/base/api_datasource_ext.dart`
-3. Create DataSource in `infrastructure/datasource`
-4. Create Abstract Class Repository in `domain/repositories`
-5. Create Repository Implementation in `infrastructure/repositories`
-6. Inject DataSource & Repository in `injection`
-7. Create Bloc Cubit in `bloc`
-8. Create Pages in `presentation`
+   ```dart
+   import 'package:freezed_annotation/freezed_annotation.dart';
+
+   part 'user_entity.freezed.dart';
+
+   part 'user_entity.g.dart';
+
+   @freezed
+   class UserEntity with _$UserEntity {
+     const factory UserEntity({
+       @JsonKey(name: 'id') int? id,
+       @JsonKey(name: 'email') String? email,
+       @JsonKey(name: 'first_name') String? firstName,
+       @JsonKey(name: 'last_name') String? lastName,
+       @JsonKey(name: 'avatar') String? avatar,
+     }) = _UserEntity;
+
+     factory UserEntity.fromJson(Map<String, dynamic> json) =>
+        _$UserEntityFromJson(json);
+
+   }
+   ```
+
+2. **Create DataSource** in `lib/infrastructure/datasource/`
+
+   ```dart
+   abstract class UserRemoteDataSource {
+     Future<Either<Failure, UserEntity>> getUser(String id);
+   }
+   ```
+
+3. **Create Repository Interface** in `lib/domain/repositories/`
+
+   ```dart
+   abstract class UserRepository {
+     Future<Either<Failure, UserEntity>> getUser(String id);
+   }
+   ```
+
+4. **Implement Repository** in `lib/infrastructure/repositories/`
+
+5. **Register Dependencies** in `lib/injector.dart`
+
+6. **Create BLoC/Cubit** in `lib/bloc`
+
+7. **Build UI** in `lib/presentation/pages/`
+
+> **Tip**: While waiting for backend schema, create models in `lib/domain/models/` and add adapter methods in entities for easy conversion.
+
+### Working with Local Data (Drift)
+
+For local database operations:
+
+1. **Define Table** in `lib/infrastructure/database/tables/`
+
+   ```dart
+   class Reminders extends Table {
+     IntColumn get id => integer().autoIncrement()();
+     TextColumn get title => text()();
+     DateTimeColumn get createdAt => dateTime()();
+   }
+   ```
+
+2. **Register Table** in `lib/infrastructure/database/database.dart`
+
+   ```dart
+   const List<Type> tables = [ReminderTable];
+
+   @DriftDatabase(tables: tables)
+   class AppDatabase extends _$AppDatabase {
+     // ...
+   }
+   ```
+
+3. **Create Local DataSource** in `lib/infrastructure/datasource/`
+
+4. **Follow steps 4-8** from "Fetching API Data" section
+
+## 🏗️ Build & Deployment
+
+### Building for Release
+
+**Android:**
+
+```bash
+flutter build apk --release --flavor prod
+flutter build appbundle --release --flavor prod
+```
+
+**iOS:**
+
+```bash
+flutter build ios --release --flavor prod
+```
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
