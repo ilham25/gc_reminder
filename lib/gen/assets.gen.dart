@@ -332,12 +332,29 @@ class $AssetsImagesGen {
 class $AssetsImagesIllustrationsGen {
   const $AssetsImagesIllustrationsGen();
 
+  /// File path: assets/images/illustrations/never_forget.png
+  AssetGenImage get neverForget =>
+      const AssetGenImage('assets/images/illustrations/never_forget.png');
+
+  /// File path: assets/images/illustrations/push_notification.png
+  AssetGenImage get pushNotification =>
+      const AssetGenImage('assets/images/illustrations/push_notification.png');
+
+  /// File path: assets/images/illustrations/second_brain.png
+  AssetGenImage get secondBrain =>
+      const AssetGenImage('assets/images/illustrations/second_brain.png');
+
   /// File path: assets/images/illustrations/task_completed.png
   AssetGenImage get taskCompleted =>
       const AssetGenImage('assets/images/illustrations/task_completed.png');
 
   /// List of all assets
-  List<AssetGenImage> get values => [taskCompleted];
+  List<AssetGenImage> get values => [
+    neverForget,
+    pushNotification,
+    secondBrain,
+    taskCompleted,
+  ];
 }
 
 class Assets {

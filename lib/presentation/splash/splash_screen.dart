@@ -56,7 +56,7 @@ class _SplashBodyState extends State<SplashBody> {
             // } else {
             //   context.router.replaceAll([const HomeRoute()]);
             // }
-            context.router.replaceAll([const ReminderListRoute()]);
+            context.router.replaceAll([const OnboardingRoute()]);
           });
         }
       },
