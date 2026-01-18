@@ -66,7 +66,7 @@ extension UpdateReminderDTOExt on UpdateReminderDTO {
       latitude: drift.Value.absentIfNull(latitude),
       longitude: drift.Value.absentIfNull(longitude),
       type: drift.Value.absentIfNull(type),
-      doneAt: drift.Value(null),
+      doneAt: drift.Value(doneAt),
     );
   }
 }

@@ -38,7 +38,9 @@ class LocationReminderServiceImpl implements LocationReminderService {
   @override
   Future<void> start() async {
     await _geofence.start();
-    final reminders = await reminderLocalRepository.getReminders();
+    final reminders = await reminderLocalRepository.getReminders(
+      filter: ReminderFilterModel(type: .location, date: DateTime.now()),
+    );
 
     reminders.fold((l) {}, (r) {
       _geofence.addRegions(
@@ -59,13 +61,16 @@ class LocationReminderServiceImpl implements LocationReminderService {
 
   @override
   Future<Either<BaseError, void>> createGeofence(int id) async {
-    debugPrint("createGeofence: $id");
     final result = await reminderLocalRepository.getReminder(id);
     return result.fold(
       (l) {
         return Left(BaseError(message: l.message));
       },
       (row) async {
+        if (!row.startAt.isToday) {
+          return Right(null);
+        }
+
         final region = GeofenceRegion.circular(
           id: id.toString(),
           center: LatLng(row.lat!, row.lng!),
@@ -74,6 +79,7 @@ class LocationReminderServiceImpl implements LocationReminderService {
         );
 
         if (_geofence.isRunningService) {
+          _geofence.removeRegionById(region.id);
           _geofence.addRegion(region);
         } else {
           await _geofence.start(regions: {region});

@@ -22,31 +22,30 @@ class ReminderDao extends DatabaseAccessor<AppDatabase>
         final d = DateTime.now();
         return t.startAt.isBiggerOrEqualValue(DateTime(d.year, d.month, d.day));
       });
-      return query.get();
+    } else {
+      query.where((tbl) {
+        final List<Expression<bool>> predicates = [];
+
+        // 1. Specific Date Filter (if provided)
+        if (filter.date != null) {
+          final startOfDay = DateTime(
+            filter.date!.year,
+            filter.date!.month,
+            filter.date!.day,
+          );
+          final endOfDay = startOfDay.add(const Duration(days: 1));
+          predicates.add(tbl.startAt.isBetweenValues(startOfDay, endOfDay));
+        }
+
+        // 2. Basic Type Filter (if user selected a specific type in the UI)
+        if (filter.type != null) {
+          predicates.add(tbl.type.equalsValue(filter.type!));
+        }
+
+        return Expression.and(predicates);
+      });
     }
 
-    query.where((tbl) {
-      final List<Expression<bool>> predicates = [];
-
-      // 1. Specific Date Filter (if provided)
-      if (filter.date != null) {
-        final startOfDay = DateTime(
-          filter.date!.year,
-          filter.date!.month,
-          filter.date!.day,
-        );
-        final endOfDay = startOfDay.add(const Duration(days: 1));
-        predicates.add(tbl.startAt.isBetweenValues(startOfDay, endOfDay));
-      }
-
-      // 2. Basic Type Filter (if user selected a specific type in the UI)
-      if (filter.type != null) {
-        predicates.add(tbl.type.equalsValue(filter.type!));
-      }
-
-      return Expression.and(predicates);
-    });
-
-    return query.get();
+    return (query..orderBy([(t) => OrderingTerm.asc(t.startAt)])).get();
   }
 }

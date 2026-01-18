@@ -29,7 +29,7 @@ class ReminderCreateBloc extends SafeCubit<ReminderCreateBlocState> {
     await result.fold(
       (left) async => emit(ReminderCreateBlocState.error(left.message)),
       (id) async {
-        if (dto.place == null) {
+        if (dto.type == .time) {
           final mutateScheduleNotification = await _scheduleNotificationUseCase
               .call(
                 id,
