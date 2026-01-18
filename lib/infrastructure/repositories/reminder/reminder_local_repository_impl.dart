@@ -5,8 +5,9 @@ class ReminderLocalRepositoryImpl implements ReminderLocalRepository {
   ReminderLocalRepositoryImpl(this.dataSource);
 
   @override
-  Future<Either<Failure, List<ReminderModel>>> getReminders() =>
-      dataSource.getReminders();
+  Future<Either<Failure, List<ReminderModel>>> getReminders({
+    ReminderFilterModel? filter,
+  }) => dataSource.getReminders(filter: filter);
 
   @override
   Future<Either<Failure, ReminderModel>> getReminder(int id) =>

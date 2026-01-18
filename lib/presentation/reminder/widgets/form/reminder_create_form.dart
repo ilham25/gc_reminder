@@ -52,6 +52,8 @@ class ReminderCreateForm extends StatelessWidget {
         place.value = formKey.currentState?.fields["place"]?.value as String?;
         position.value =
             formKey.currentState?.fields["position"]?.value as LatLng?;
+
+        debugPrint(isLocationReminder.value.toString());
       },
       child: Column(
         mainAxisSize: .min,
@@ -107,7 +109,7 @@ class ReminderCreateForm extends StatelessWidget {
               children: [
                 FormBuilderField<DateTime>(
                   name: "startDate",
-                  initialValue: initialValue["startDate"],
+                  initialValue: initialValue["startDate"] ?? DateTime.now(),
                   builder: (field) => UIKitCalendarInput(
                     title: "Date",
                     onChanged: field.didChange,

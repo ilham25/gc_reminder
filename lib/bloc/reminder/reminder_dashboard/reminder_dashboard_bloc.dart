@@ -2,16 +2,17 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:gc_reminder/domain/cubit/safe_cubit.dart';
 import 'package:gc_reminder/domain/models/reminder/reminder_filter_model.dart';
 import 'package:gc_reminder/domain/models/reminder/reminder_model.dart';
+import 'package:gc_reminder/domain/models/reminder/reminder_summary_model.dart';
 import 'package:gc_reminder/domain/notification/usecases/delete_notifications_usecase.dart';
 import 'package:gc_reminder/domain/repositories/reminder/reminder_local_repository.dart';
 import 'package:gc_reminder/injection/injector.dart';
 
-part 'reminder_list_bloc_state.dart';
+part 'reminder_dashboard_bloc_state.dart';
 
-part 'reminder_list_bloc.freezed.dart';
+part 'reminder_dashboard_bloc.freezed.dart';
 
-class ReminderListBloc extends SafeCubit<ReminderListBlocState> {
-  ReminderListBloc() : super(const ReminderListBlocState.initial());
+class ReminderDashboardBloc extends SafeCubit<ReminderDashboardBlocState> {
+  ReminderDashboardBloc() : super(const ReminderDashboardBlocState.initial());
 
   final ReminderLocalRepository _localRepository =
       inject<ReminderLocalRepository>();
@@ -19,13 +20,25 @@ class ReminderListBloc extends SafeCubit<ReminderListBlocState> {
       inject<DeleteNotificationsUseCase>();
 
   Future getData({ReminderFilterModel? filter}) async {
-    emit(const ReminderListBlocState.loading());
+    emit(const ReminderDashboardBlocState.loading());
+
+    final getSummary = await _localRepository.getSummary(date: DateTime.now());
+    final summaryResult = getSummary.fold((left) {
+      emit(ReminderDashboardBlocState.error(left.message));
+      return null;
+    }, (r) => r);
+    if (summaryResult == null) return;
+
     final result = await _localRepository.getReminders(filter: filter);
     result.fold(
-      (left) => emit(ReminderListBlocState.error(left.message)),
+      (left) => emit(ReminderDashboardBlocState.error(left.message)),
       (items) => emit(
-        ReminderListBlocState.loaded(
-          state: ReminderListState(items: items, filter: filter),
+        ReminderDashboardBlocState.loaded(
+          state: ReminderDashboardState(
+            items: items,
+            filter: filter,
+            summary: summaryResult,
+          ),
         ),
       ),
     );
@@ -45,9 +58,9 @@ class ReminderListBloc extends SafeCubit<ReminderListBlocState> {
       orElse: () {},
       loaded: (oldState, action) async {
         emit(
-          ReminderListBlocState.loaded(
+          ReminderDashboardBlocState.loaded(
             state: oldState,
-            action: ReminderListActionState.loading(),
+            action: ReminderDashboardActionState.loading(),
           ),
         );
 
@@ -57,9 +70,9 @@ class ReminderListBloc extends SafeCubit<ReminderListBlocState> {
 
         await mutateDeleteReminders.fold(
           (left) async => emit(
-            ReminderListBlocState.loaded(
+            ReminderDashboardBlocState.loaded(
               state: oldState,
-              action: ReminderListActionState.error(left.message),
+              action: ReminderDashboardActionState.error(left.message),
             ),
           ),
           (right) async {
@@ -67,19 +80,43 @@ class ReminderListBloc extends SafeCubit<ReminderListBlocState> {
                 .call(ids);
 
             return mutateDeleteSchedules.fold(
-              (left) => ReminderListBlocState.loaded(
+              (left) => ReminderDashboardBlocState.loaded(
                 state: oldState,
-                action: ReminderListActionState.error(left.message),
+                action: ReminderDashboardActionState.error(left.message),
               ),
               (right) => emit(
-                ReminderListBlocState.loaded(
+                ReminderDashboardBlocState.loaded(
                   state: oldState,
-                  action: ReminderListActionState.success(actionName: "delete"),
+                  action: ReminderDashboardActionState.success(
+                    actionName: "delete",
+                  ),
                 ),
               ),
             );
           },
         );
+      },
+    );
+  }
+
+  void setDate(DateTime? date) {
+    state.maybeWhen(
+      orElse: () {},
+      loaded: (state, action) {
+        if (state.filter == null) {
+          getData(filter: ReminderFilterModel(date: date));
+        } else {
+          getData(filter: state.filter?.copyWith(date: date));
+        }
+      },
+    );
+  }
+
+  void clearFilter() {
+    state.maybeWhen(
+      orElse: () {},
+      loaded: (state, action) {
+        getData(filter: null);
       },
     );
   }

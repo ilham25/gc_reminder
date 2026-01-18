@@ -19,12 +19,14 @@ class ReminderListState {
   final bool hasReachedMax;
   final bool onLoadMore;
   final List<ReminderModel> items;
+  ReminderFilterModel? filter;
 
   ReminderListState({
     this.page = 1,
     this.hasReachedMax = false,
     this.onLoadMore = false,
     required this.items,
+    this.filter,
   });
 }
 

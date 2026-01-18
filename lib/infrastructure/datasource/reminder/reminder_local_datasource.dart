@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:gc_reminder/core/networks/error_handler.dart';
 import 'package:gc_reminder/domain/dto/reminder/create_reminder_dto.dart';
 import 'package:gc_reminder/domain/dto/reminder/update_reminder_dto.dart';
+import 'package:gc_reminder/domain/models/reminder/reminder_filter_model.dart';
 import 'package:gc_reminder/domain/models/reminder/reminder_model.dart';
 import 'package:gc_reminder/domain/models/reminder/reminder_summary_model.dart';
+import 'package:gc_reminder/infrastructure/database/daos/reminder_dao.dart';
 import 'package:gc_reminder/infrastructure/database/database.dart';
 import 'package:gc_reminder/infrastructure/database/extensions/reminder_table_ext.dart';
 
@@ -13,10 +15,14 @@ class ReminderLocalDataSource {
   final AppDatabase db;
   ReminderLocalDataSource(this.db);
 
-  Future<Either<Failure, List<ReminderModel>>> getReminders() async {
+  Future<Either<Failure, List<ReminderModel>>> getReminders({
+    ReminderFilterModel? filter,
+  }) async {
     try {
-      final query = await db.select(db.reminderTable).get();
-      return Right(query.map((row) => row.toReminderModel()).toList());
+      final query = ReminderDao(db);
+
+      final result = await query.getReminders(filter: filter);
+      return Right(result.map((row) => row.toReminderModel()).toList());
     } catch (e, stacktrace) {
       debugPrint(e.toString());
       debugPrint(stacktrace.toString());
@@ -109,7 +115,6 @@ class ReminderLocalDataSource {
   Future<Either<Failure, ReminderSummaryModel>> getSummary({
     DateTime? date,
   }) async {
-    date ??= DateTime.now();
     try {
       final completed = await _getCompletedRemindersCount(date);
       final ongoing = await _getOngoingRemindersCount(date);
@@ -129,7 +134,7 @@ class ReminderLocalDataSource {
   }
 
   // Count completed reminders
-  Future<int> _getCompletedRemindersCount(DateTime date) async {
+  Future<int> _getCompletedRemindersCount(DateTime? date) async {
     final query = db.selectOnly(db.reminderTable)
       ..addColumns([db.reminderTable.id.count()])
       ..where(
@@ -137,16 +142,26 @@ class ReminderLocalDataSource {
             .equalsValue(ReminderType.location)
             .caseMatch(
               when: {const Constant(true): db.reminderTable.doneAt.isNotNull()},
-              orElse: db.reminderTable.startAt.isSmallerThanValue(date),
+              orElse: db.reminderTable.startAt.isSmallerThanValue(
+                DateTime.now(),
+              ),
             ),
       );
+    if (date != null) {
+      query.where(
+        db.reminderTable.startAt.isBetweenValues(
+          DateTime(date.year, date.month, date.day),
+          DateTime(date.year, date.month, date.day, 23, 59, 59),
+        ),
+      );
+    }
 
     final result = await query.getSingle();
     return result.read(db.reminderTable.id.count()) ?? 0;
   }
 
   // Count ongoing reminders
-  Future<int> _getOngoingRemindersCount(DateTime date) async {
+  Future<int> _getOngoingRemindersCount(DateTime? date) async {
     final query = db.selectOnly(db.reminderTable)
       ..addColumns([db.reminderTable.id.count()])
       ..where(
@@ -154,9 +169,19 @@ class ReminderLocalDataSource {
             .equalsValue(ReminderType.location)
             .caseMatch(
               when: {const Constant(true): db.reminderTable.doneAt.isNull()},
-              orElse: db.reminderTable.startAt.isBiggerThanValue(date),
+              orElse: db.reminderTable.startAt.isBiggerThanValue(
+                DateTime.now(),
+              ),
             ),
       );
+    if (date != null) {
+      query.where(
+        db.reminderTable.startAt.isBetweenValues(
+          DateTime(date.year, date.month, date.day),
+          DateTime(date.year, date.month, date.day, 23, 59, 59),
+        ),
+      );
+    }
 
     final result = await query.getSingle();
     return result.read(db.reminderTable.id.count()) ?? 0;

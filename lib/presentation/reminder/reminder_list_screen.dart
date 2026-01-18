@@ -1,8 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gc_reminder/bloc/reminder/reminder_list/reminder_list_bloc.dart';
-import 'package:gc_reminder/bloc/reminder/reminder_summary/reminder_summary_bloc.dart';
+import 'package:gc_reminder/bloc/reminder/reminder_dashboard/reminder_dashboard_bloc.dart';
 import 'package:gc_reminder/config/app_config.dart';
 import 'package:gc_reminder/core/widgets/app_bar/app_bar.dart';
 import 'package:gc_reminder/core/widgets/button/icon_button.dart';
@@ -22,8 +21,7 @@ class ReminderListScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (context) => ReminderListBloc()..getData()),
-        BlocProvider(create: (context) => ReminderSummaryBloc()..getData()),
+        BlocProvider(create: (context) => ReminderDashboardBloc()..getData()),
       ],
       child: const ReminderListBody(),
     );
@@ -42,9 +40,7 @@ class _ReminderListBodyState extends State<ReminderListBody> {
       inject<LocationReminderService>();
 
   Future _onRefresh() async {
-    await context.read<ReminderSummaryBloc>().refresh();
-    if (!mounted) return;
-    await context.read<ReminderListBloc>().refresh();
+    await context.read<ReminderDashboardBloc>().refresh();
   }
 
   Future<bool?> _onRequestPermission() async {
@@ -96,10 +92,10 @@ class _ReminderListBodyState extends State<ReminderListBody> {
             child: Column(
               crossAxisAlignment: .stretch,
               children: [
-                BlocBuilder<ReminderSummaryBloc, ReminderSummaryBlocState>(
+                BlocBuilder<ReminderDashboardBloc, ReminderDashboardBlocState>(
                   builder: (context, state) => state.maybeWhen(
                     orElse: () => const SizedBox.shrink(),
-                    loaded: (state) => TodayReminderSummary(
+                    loaded: (state, action) => TodayReminderSummary(
                       completed: state.summary.completed,
                       ongoing: state.summary.ongoing,
                       total: state.summary.total,
@@ -109,6 +105,7 @@ class _ReminderListBodyState extends State<ReminderListBody> {
                 ),
                 Space.h(16),
                 RecentReminders(onRefresh: _onRefresh),
+                Space.h(48),
               ],
             ),
           ),

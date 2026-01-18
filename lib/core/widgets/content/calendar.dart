@@ -6,9 +6,19 @@ class UIKitCalendar extends StatelessWidget {
   final DateTime? value;
   final ValueChanged<DateTime>? onChanged;
 
+  final DateTime? firstDay;
+  final DateTime? lastDay;
+
   final BoxDecoration? decoration;
 
-  const UIKitCalendar({super.key, this.value, this.onChanged, this.decoration});
+  const UIKitCalendar({
+    super.key,
+    this.value,
+    this.onChanged,
+    this.decoration,
+    this.firstDay,
+    this.lastDay,
+  });
 
   DateTime get selectedDate => value ?? DateTime.now();
 
@@ -21,8 +31,8 @@ class UIKitCalendar extends StatelessWidget {
       ).copyWith(border: decoration?.border),
       child: TableCalendar(
         focusedDay: selectedDate,
-        firstDay: DateTime.now(),
-        lastDay: DateTime.now().add(Duration(days: 365 * 100)),
+        firstDay: firstDay ?? DateTime.now(),
+        lastDay: lastDay ?? DateTime.now().add(Duration(days: 365 * 100)),
         calendarFormat: .month,
         onDaySelected: (selectedDay, focusedDay) {
           if (onChanged != null) {
@@ -31,7 +41,7 @@ class UIKitCalendar extends StatelessWidget {
         },
         selectedDayPredicate: (day) {
           // Return true if 'day' is the same as '_selectedDay'
-          return isSameDay(selectedDate, day);
+          return value != null && isSameDay(selectedDate, day);
         },
         headerStyle: HeaderStyle(
           titleTextStyle: MyTheme.style.heading.h4,

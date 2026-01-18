@@ -38,7 +38,7 @@ class UIKitBottomSheet extends StatelessWidget {
                 border: Border(
                   bottom: BorderSide(
                     width: 1,
-                    color: MyTheme.color.palette.light.darkest,
+                    color: MyTheme.color.palette.light.dark,
                   ),
                 ),
                 color: headerBackgroundColor ?? MyTheme.color.white,

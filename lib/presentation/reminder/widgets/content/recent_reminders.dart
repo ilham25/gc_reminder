@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gc_reminder/bloc/reminder/reminder_list/reminder_list_bloc.dart';
+import 'package:gc_reminder/bloc/reminder/reminder_dashboard/reminder_dashboard_bloc.dart';
 import 'package:gc_reminder/config/app_config.dart';
+import 'package:gc_reminder/core/widgets/button/button.dart';
 import 'package:gc_reminder/core/widgets/button/icon_button.dart';
-import 'package:gc_reminder/domain/permission/usecases/request_permission_usecase.dart';
 import 'package:gc_reminder/gen/assets.gen.dart';
-import 'package:gc_reminder/injection/injector.dart';
+import 'package:gc_reminder/presentation/common/widgets/bottom_sheet/calendar_bottom_sheet.dart';
 import 'package:gc_reminder/presentation/common/widgets/empty/empty_list.dart';
 import 'package:gc_reminder/presentation/reminder/widgets/bottom_sheet/reminder_update_bottom_sheet.dart';
 import 'package:gc_reminder/presentation/reminder/widgets/list_item/reminder_list_item.dart';
@@ -24,35 +24,59 @@ class _RecentRemindersState extends State<RecentReminders> {
   List<int> selectedIds = [];
   bool get isDeleteMode => selectedIds.isNotEmpty;
 
-  final RequestPermissionUseCase _permissionServiceUseCase =
-      inject<RequestPermissionUseCase>();
-
   Future _onDelete() async {
-    await context.read<ReminderListBloc>().delete(selectedIds);
+    await context.read<ReminderDashboardBloc>().delete(selectedIds);
     setState(() {
       selectedIds = [];
     });
   }
 
   Widget _buildActionIcon() {
-    return UIKitIconButton.secondary(
-      !isDeleteMode ? Assets.icons.filter : Assets.icons.trashOutlined,
-      iconSize: !isDeleteMode ? 14 : 16,
-      size: 20,
-      decoration: UIKitIconButtonDecoration(
-        iconColor: !isDeleteMode
-            ? MyTheme.color.palette.dark.darkest
-            : MyTheme.color.danger,
-      ),
-      onTap: () async {
-        if (!isDeleteMode) {
-          _permissionServiceUseCase.call(.notification);
-          return;
-        }
+    return BlocBuilder<ReminderDashboardBloc, ReminderDashboardBlocState>(
+      builder: (context, state) => state.maybeWhen(
+        orElse: () => const SizedBox.shrink(),
+        loaded: (state, action) => Row(
+          mainAxisSize: .min,
+          children: [
+            if (state.filter != null) ...[
+              UIKitButton.tertiary(
+                title: "Clear Filter",
+                padding: .symmetric(horizontal: AppSetting.setWidth(4)),
+                decoration: UIKitButtonDecoration(borderRadius: .circular(4)),
+                onTap: () {
+                  context.read<ReminderDashboardBloc>().clearFilter();
+                },
+              ),
+              Space.w(4),
+            ],
+            UIKitIconButton.secondary(
+              !isDeleteMode ? Assets.icons.filter : Assets.icons.trashOutlined,
+              iconSize: !isDeleteMode ? 14 : 16,
+              size: 20,
+              decoration: UIKitIconButtonDecoration(
+                iconColor: !isDeleteMode
+                    ? MyTheme.color.palette.dark.darkest
+                    : MyTheme.color.danger,
+              ),
+              onTap: () async {
+                if (!isDeleteMode) {
+                  final newDate = await CalendarBottomSheet.show(
+                    title: "Select Date",
+                    initialValue: state.filter?.date,
+                  );
+                  if (newDate == null || !context.mounted) return;
+                  context.read<ReminderDashboardBloc>().setDate(newDate);
 
-        await _onDelete();
-        widget.onRefresh();
-      },
+                  return;
+                }
+
+                await _onDelete();
+                widget.onRefresh();
+              },
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -92,7 +116,7 @@ class _RecentRemindersState extends State<RecentReminders> {
               ],
             ),
           ),
-          BlocBuilder<ReminderListBloc, ReminderListBlocState>(
+          BlocBuilder<ReminderDashboardBloc, ReminderDashboardBlocState>(
             builder: (context, state) => state.maybeWhen(
               orElse: () => Center(child: CircularProgressIndicator()),
               loaded: (state, action) {
