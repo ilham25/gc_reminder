@@ -31,27 +31,29 @@ class ReminderUpdateBottomSheet {
   }
 }
 
-class _BottomSheet extends StatelessWidget {
+class _BottomSheet extends StatefulWidget {
   final ReminderModel reminder;
   const _BottomSheet({required this.reminder});
 
-  Future _onSubmit({
-    required BuildContext context,
-    required GlobalKey<FormBuilderState> formKey,
-  }) async {
+  @override
+  State<_BottomSheet> createState() => _BottomSheetState();
+}
+
+class _BottomSheetState extends State<_BottomSheet> {
+  final formKey = GlobalKey<FormBuilderState>();
+  final isFormValid = ValueNotifier<bool>(false);
+
+  Future _onSubmit() async {
     final bool isValid = formKey.currentState?.saveAndValidate() ?? false;
     if (!isValid) return;
 
     final formData = formKey.currentState!.value;
 
-    context.read<ReminderUpdateBloc>().submit(reminder.id, formData);
+    context.read<ReminderUpdateBloc>().submit(widget.reminder.id, formData);
   }
 
   @override
   Widget build(BuildContext context) {
-    final formKey = GlobalKey<FormBuilderState>();
-    final isFormValid = ValueNotifier<bool>(false);
-
     return MultiBlocListener(
       listeners: [
         BlocListener<ReminderUpdateBloc, ReminderUpdateBlocState>(
@@ -90,9 +92,7 @@ class _BottomSheet extends StatelessWidget {
                     orElse: () => false,
                     loading: () => true,
                   ),
-                  onTap: () {
-                    _onSubmit(context: context, formKey: formKey);
-                  },
+                  onTap: _onSubmit,
                 ),
               ),
         ),
@@ -101,7 +101,7 @@ class _BottomSheet extends StatelessWidget {
           onValidate: (isValid) {
             isFormValid.value = isValid;
           },
-          initialValue: reminder.toReminderUpdateForm(),
+          initialValue: widget.reminder.toReminderUpdateForm(),
         ),
       ),
     );

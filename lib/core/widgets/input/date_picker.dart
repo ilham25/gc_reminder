@@ -84,7 +84,7 @@ class _DatePickerState extends State<DatePicker> {
               children: [
                 Expanded(
                   child: UIKitButton(
-                    title: "Pilih",
+                    title: "Select",
                     onTap: () {
                       widget.onChanged(
                         selectedDate ??

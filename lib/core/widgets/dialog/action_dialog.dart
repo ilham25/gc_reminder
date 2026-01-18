@@ -22,20 +22,13 @@ class UIKitConfirmDialog {
       actions: [
         UIKitButton.secondary(
           title: "Cancel",
-          decoration: UIKitButtonDecoration(
-            borderColor: MyTheme.color.danger,
-            textColor: MyTheme.color.danger,
-          ),
           onTap: () {
             context.router.maybePop();
           },
         ),
         UIKitButton(
           title: confirmText,
-          decoration: UIKitButtonDecoration(
-            color: MyTheme.color.danger,
-            borderColor: MyTheme.color.danger,
-          ),
+
           onTap:
               onConfirm ??
               () {

@@ -30,13 +30,18 @@ class ReminderCreateBottomSheet {
   }
 }
 
-class _BottomSheet extends StatelessWidget {
+class _BottomSheet extends StatefulWidget {
   const _BottomSheet();
 
-  Future _onSubmit({
-    required BuildContext context,
-    required GlobalKey<FormBuilderState> formKey,
-  }) async {
+  @override
+  State<_BottomSheet> createState() => _BottomSheetState();
+}
+
+class _BottomSheetState extends State<_BottomSheet> {
+  final formKey = GlobalKey<FormBuilderState>();
+  final isFormValid = ValueNotifier<bool>(false);
+
+  Future _onSubmit() async {
     final bool isValid = formKey.currentState?.saveAndValidate() ?? false;
     if (!isValid) return;
 
@@ -47,9 +52,6 @@ class _BottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final formKey = GlobalKey<FormBuilderState>();
-    final isFormValid = ValueNotifier<bool>(false);
-
     return MultiBlocListener(
       listeners: [
         BlocListener<ReminderCreateBloc, ReminderCreateBlocState>(
@@ -90,9 +92,7 @@ class _BottomSheet extends StatelessWidget {
                     orElse: () => false,
                     loading: () => true,
                   ),
-                  onTap: () {
-                    _onSubmit(context: context, formKey: formKey);
-                  },
+                  onTap: _onSubmit,
                 ),
               ),
         ),

@@ -4,6 +4,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:gc_reminder/config/app_config.dart';
 import 'package:gc_reminder/core/widgets/button/button.dart';
 import 'package:gc_reminder/core/widgets/content/divider.dart';
+import 'package:gc_reminder/core/widgets/dialog/action_dialog.dart';
 import 'package:gc_reminder/core/widgets/form/base_form.dart';
 import 'package:gc_reminder/core/widgets/input/calendar_input.dart';
 import 'package:gc_reminder/core/widgets/input/primary_date_picker.dart';
@@ -17,9 +18,10 @@ import 'package:gc_reminder/routing/route.gr.dart';
 import 'package:gc_reminder/theme/theme.dart';
 import 'package:latlong2/latlong.dart';
 
-class ReminderCreateForm extends StatelessWidget {
+class ReminderCreateForm extends StatefulWidget {
   final GlobalKey<FormBuilderState> formKey;
   final Function(bool isValid)? onValidate;
+  final Function()? onChanged;
   final Map<String, dynamic> initialValue;
 
   const ReminderCreateForm({
@@ -27,32 +29,67 @@ class ReminderCreateForm extends StatelessWidget {
     required this.formKey,
     this.onValidate,
     this.initialValue = const {},
+    this.onChanged,
   });
 
   @override
-  Widget build(BuildContext context) {
-    final ValueNotifier<bool?> isLocationReminder = ValueNotifier<bool?>(
-      initialValue["isLocationReminder"],
-    );
-    final ValueNotifier<String?> place = ValueNotifier<String?>(
-      initialValue["place"],
-    );
-    final ValueNotifier<LatLng?> position = ValueNotifier<LatLng?>(
-      initialValue["position"],
-    );
+  State<ReminderCreateForm> createState() => _ReminderCreateFormState();
+}
 
+class _ReminderCreateFormState extends State<ReminderCreateForm> {
+  final ValueNotifier<bool?> isLocationReminder = ValueNotifier<bool?>(null);
+  final ValueNotifier<String?> place = ValueNotifier<String?>(null);
+  final ValueNotifier<LatLng?> position = ValueNotifier<LatLng?>(null);
+  final isFormChanged = ValueNotifier<bool>(false);
+
+  @override
+  void initState() {
+    super.initState();
+    isLocationReminder.value = widget.initialValue["isLocationReminder"];
+    place.value = widget.initialValue["place"];
+    position.value = widget.initialValue["position"];
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return UIKitBaseForm(
-      formKey: formKey,
-      onValidate: onValidate,
-      initialValue: initialValue,
+      formKey: widget.formKey,
+      onValidate: widget.onValidate,
+      initialValue: widget.initialValue,
       onChanged: () {
         isLocationReminder.value =
-            formKey.currentState?.fields["isLocationReminder"]?.value as bool?;
-        place.value = formKey.currentState?.fields["place"]?.value as String?;
+            widget.formKey.currentState?.fields["isLocationReminder"]?.value
+                as bool?;
+        place.value =
+            widget.formKey.currentState?.fields["place"]?.value as String?;
         position.value =
-            formKey.currentState?.fields["position"]?.value as LatLng?;
+            widget.formKey.currentState?.fields["position"]?.value as LatLng?;
 
-        debugPrint(isLocationReminder.value.toString());
+        if (widget.onChanged != null) {
+          widget.onChanged!();
+        }
+        isFormChanged.value = true;
+      },
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) async {
+        if (didPop) {
+          return;
+        }
+
+        final bool shouldPop = !isFormChanged.value;
+        if (context.mounted && shouldPop) {
+          Navigator.pop(context);
+          return;
+        }
+
+        final confirmResult = await UIKitConfirmDialog.positive(
+          title: "Discard Changes",
+          description: "Are you sure you want to discard changes?",
+          confirmText: "Discard",
+        );
+        if (confirmResult != true || !context.mounted) return;
+
+        Navigator.pop(context);
       },
       child: Column(
         mainAxisSize: .min,
@@ -60,7 +97,7 @@ class ReminderCreateForm extends StatelessWidget {
         children: [
           FormBuilderField<String>(
             name: "title",
-            initialValue: initialValue["title"],
+            initialValue: widget.initialValue["title"],
             builder: (field) => UIKitTextField(
               title: "Title",
               placeholder: "Enter Title",
@@ -75,7 +112,7 @@ class ReminderCreateForm extends StatelessWidget {
           Space.h(8),
           FormBuilderField<String>(
             name: "description",
-            initialValue: initialValue["description"],
+            initialValue: widget.initialValue["description"],
             builder: (field) => UIKitTextField.textArea(
               title: "Description",
               placeholder: "Enter Description",
@@ -108,7 +145,8 @@ class ReminderCreateForm extends StatelessWidget {
               children: [
                 FormBuilderField<DateTime>(
                   name: "startDate",
-                  initialValue: initialValue["startDate"] ?? DateTime.now(),
+                  initialValue:
+                      widget.initialValue["startDate"] ?? DateTime.now(),
                   builder: (field) => UIKitCalendarInput(
                     title: "Date",
                     onChanged: field.didChange,
@@ -122,7 +160,7 @@ class ReminderCreateForm extends StatelessWidget {
                 Space.h(8),
                 FormBuilderField<DateTime>(
                   name: "startTime",
-                  initialValue: initialValue["startTime"],
+                  initialValue: widget.initialValue["startTime"],
                   builder: (field) => PrimaryDatePicker(
                     title: "Time",
                     hintText: "Pick Time",
@@ -163,12 +201,12 @@ class ReminderCreateForm extends StatelessWidget {
           ),
           FormBuilderField<String>(
             name: "place",
-            initialValue: initialValue["place"],
+            initialValue: widget.initialValue["place"],
             builder: (field) => SizedBox.shrink(),
           ),
           FormBuilderField<LatLng>(
             name: "position",
-            initialValue: initialValue["position"],
+            initialValue: widget.initialValue["position"],
             builder: (field) => SizedBox.shrink(),
           ),
           ValueListenableBuilder(
@@ -263,9 +301,9 @@ class ReminderCreateForm extends StatelessWidget {
                                     );
                                 if (result == null) return;
 
-                                formKey.currentState?.fields["place"]
+                                widget.formKey.currentState?.fields["place"]
                                     ?.didChange(result.placemark.fullAddress);
-                                formKey.currentState?.fields["position"]
+                                widget.formKey.currentState?.fields["position"]
                                     ?.didChange(result.position);
                               },
                             );

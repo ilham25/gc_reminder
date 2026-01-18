@@ -7,6 +7,8 @@ class UIKitBaseForm extends StatelessWidget {
   final Map<String, dynamic> initialValue;
   final Function(bool isValid)? onValidate;
   final Widget child;
+  final bool canPop;
+  final Function(bool didPop, Object? result)? onPopInvokedWithResult;
 
   const UIKitBaseForm({
     super.key,
@@ -15,6 +17,8 @@ class UIKitBaseForm extends StatelessWidget {
     this.initialValue = const {},
     this.onValidate,
     required this.child,
+    this.canPop = true,
+    this.onPopInvokedWithResult,
   });
 
   void _onValidate() {
@@ -33,6 +37,8 @@ class UIKitBaseForm extends StatelessWidget {
       key: formKey,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       initialValue: initialValue,
+      canPop: canPop,
+      onPopInvokedWithResult: onPopInvokedWithResult,
       onChanged: () {
         _onValidate();
 
