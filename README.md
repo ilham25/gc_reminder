@@ -4,18 +4,50 @@ A Flutter application built with clean architecture principles, featuring locati
 
 ## 📋 Table of Contents
 
-- [Overview](#overview)
-- [Tech Stack](#tech-stack)
-- [Prerequisites](#prerequisites)
-- [Getting Started](#getting-started)
-- [Project Structure](#project-structure)
-- [Development Guide](#development-guide)
-- [Build & Deployment](#build--deployment)
-- [Contributing](#contributing)
+- [Overview](#-overview)
+- [Overview](#-app-features)
+- [Tech Stack](#-tech-stack)
+- [Prerequisites](#-prerequisites)
+- [Getting Started](#-getting-started)
+- [Project Structure](#-project-structure)
+- [Development Guide](#-development-guide)
+- [Build & Deployment](#-build--deployment)
+- [Contributing](#-contributing)
 
 ## 🎯 Overview
 
 NextUp is a location-aware reminder application that leverages geofencing to notify users when they enter specific areas. Built with Domain-Driven Design principles and clean architecture, it provides a scalable and maintainable codebase.
+
+## 🍰 App Features
+
+1. **Time-based Reminders** ✅
+
+   Users can create multiple reminders throughout the day (e.g., 09:00,
+   10:00, 12:00).
+
+   Users can view, edit, and delete reminders.
+
+   > User can view today reminder summary, filter reminder by date also filter by type (time or location based reminder).
+
+2. Local Storage (Persistent) ✅
+
+   Store reminders locally using `drift`
+
+3. Local Notifications ✅
+
+   Trigger local notifications at the scheduled reminder times.
+
+4. UI/UX Focus ✅
+   - Build a clean, user-friendly UI for adding, managing, and viewing
+     reminders.
+
+   - Prioritize clarity, usability, and good visual hierarchy.
+     Bonus (Optional)
+   - Best User Interface and User Experience
+
+5. Location-based reminders (e.g., remind user when arriving at a
+   specific location). ✅
+   > Currently this feature only works when the user opening the app / can't work on background (app closed)
 
 ## 🚀 Tech Stack
 
