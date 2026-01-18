@@ -5,7 +5,7 @@ A Flutter application built with clean architecture principles, featuring locati
 ## 📋 Table of Contents
 
 - [Overview](#-overview)
-- [Overview](#-app-features)
+- [App Features](#-app-features)
 - [Tech Stack](#-tech-stack)
 - [Prerequisites](#-prerequisites)
 - [Getting Started](#-getting-started)
