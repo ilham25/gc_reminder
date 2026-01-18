@@ -1,7 +1,7 @@
 # NextUp
 
 <div align="center">
-  <img src="/assets/images/logo_full.png" alt="Description" width="400">
+  <img src="/assets/images/logo_full.png" alt="Description" width="200">
 </div>
 
 A Flutter application built with clean architecture principles, featuring location-based reminders and geofencing capabilities.
