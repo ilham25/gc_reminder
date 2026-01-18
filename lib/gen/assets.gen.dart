@@ -284,6 +284,10 @@ class $AssetsImagesGen {
   AssetGenImage get feedbackTemplatePreview =>
       const AssetGenImage('assets/images/feedback_template_preview.png');
 
+  /// Directory path: assets/images/illustrations
+  $AssetsImagesIllustrationsGen get illustrations =>
+      const $AssetsImagesIllustrationsGen();
+
   /// File path: assets/images/login_template_preview.png
   AssetGenImage get loginTemplatePreview =>
       const AssetGenImage('assets/images/login_template_preview.png');
@@ -323,6 +327,17 @@ class $AssetsImagesGen {
     settingsTemplatePreview,
     subscriptionPlansTemplatePreview,
   ];
+}
+
+class $AssetsImagesIllustrationsGen {
+  const $AssetsImagesIllustrationsGen();
+
+  /// File path: assets/images/illustrations/task_completed.png
+  AssetGenImage get taskCompleted =>
+      const AssetGenImage('assets/images/illustrations/task_completed.png');
+
+  /// List of all assets
+  List<AssetGenImage> get values => [taskCompleted];
 }
 
 class Assets {

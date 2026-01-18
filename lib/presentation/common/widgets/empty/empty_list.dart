@@ -5,12 +5,14 @@ import 'package:gc_reminder/gen/assets.gen.dart';
 import 'package:gc_reminder/theme/theme.dart';
 
 class EmptyList extends StatelessWidget {
-  final VoidCallback onRefresh;
+  final VoidCallback? onRefresh;
+  final String title;
   final String message;
 
   const EmptyList({
     super.key,
-    required this.onRefresh,
+    this.onRefresh,
+    this.title = "",
     this.message = "Tidak ada data",
   });
 
@@ -22,25 +24,29 @@ class EmptyList extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Space.h(MyTheme.defaultPadding),
-          // Assets.images.logoIcon.image(
-          //   height: AppSetting.setHeight(100),
-          //   width: AppSetting.setWidth(100),
-          //   color: MyTheme.color.palette.neutral.c300,
-          // ),
-          Space.h(32),
+          Assets.images.illustrations.taskCompleted.image(
+            height: AppSetting.setHeight(180),
+          ),
+          if (title.isNotEmpty) ...[
+            Space.h(16),
+            Text(title, style: MyTheme.style.heading.h2.copyWith()),
+          ],
+          Space.h(8),
           Text(
-            "Tidak ada data",
-            style: MyTheme.style.action.l.copyWith(
+            message,
+            style: MyTheme.style.body.m.copyWith(
               color: MyTheme.color.palette.dark.light,
             ),
+            textAlign: .center,
           ),
-          Space.h(8),
-          UIKitButton(
-            title: "Refresh",
-            onTap: onRefresh,
-            // size: ButtonSize.base,
-            width: AppSetting.setWidth(120),
-          ),
+          if (onRefresh != null) ...[
+            Space.h(8),
+            UIKitButton(
+              title: "Refresh",
+              onTap: onRefresh,
+              width: AppSetting.setWidth(120),
+            ),
+          ],
           Space.h(MyTheme.defaultPadding),
         ],
       ),

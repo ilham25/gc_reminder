@@ -18,7 +18,7 @@ class AppDatabase extends _$AppDatabase {
 
   static QueryExecutor _openConnection() {
     return driftDatabase(
-      name: 'gc_reminder_database_3',
+      name: 'gc_reminder_database_4',
       native: const DriftNativeOptions(
         databaseDirectory: getApplicationSupportDirectory,
       ),

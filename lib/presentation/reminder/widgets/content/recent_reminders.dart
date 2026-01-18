@@ -87,7 +87,6 @@ class _RecentRemindersState extends State<RecentReminders> {
     final tomorrowList = items
         .where((item) => item.startAt.isTomorrow)
         .toList();
-    debugPrint("${tomorrowList} | ${items}");
     final daysAfterTomorrowList = items
         .where((item) => item.startAt.isDaysAfterTomorrow)
         .toList();
@@ -202,7 +201,10 @@ class _RecentRemindersState extends State<RecentReminders> {
               orElse: () => Center(child: CircularProgressIndicator()),
               loaded: (state, action) {
                 if (state.items.isEmpty) {
-                  return EmptyList(onRefresh: widget.onRefresh);
+                  return EmptyList(
+                    title: "All caught up!",
+                    message: "Looks like you don't have any reminders.",
+                  );
                 }
 
                 return ListView(
