@@ -1,5 +1,9 @@
 # NextUp
 
+<div align="center">
+  <img src="/assets/images/logo_full.png" alt="Description" width="400">
+</div>
+
 A Flutter application built with clean architecture principles, featuring location-based reminders and geofencing capabilities.
 
 ## 📋 Table of Contents
@@ -16,7 +20,7 @@ A Flutter application built with clean architecture principles, featuring locati
 
 ## 🎯 Overview
 
-NextUp is a location-aware reminder application that leverages geofencing to notify users when they enter specific areas. Built with Domain-Driven Design principles and clean architecture, it provides a scalable and maintainable codebase.
+NextUp is a smart reminder application that supports both time-based and location-based notifications to help users stay organized. Built with Domain-Driven Design principles and clean architecture principles, it provides a scalable and maintainable codebase for managing reminders triggered by time schedules or geographic locations.
 
 ## 🍰 App Features
 
