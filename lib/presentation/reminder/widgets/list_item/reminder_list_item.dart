@@ -1,8 +1,12 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:gc_reminder/config/app_config.dart';
 import 'package:gc_reminder/core/widgets/content/list_item.dart';
+import 'package:gc_reminder/core/widgets/content/tag.dart';
+import 'package:gc_reminder/domain/models/map/map_model.dart';
 import 'package:gc_reminder/domain/models/reminder/reminder_model.dart';
 import 'package:gc_reminder/gen/assets.gen.dart';
+import 'package:gc_reminder/routing/route.gr.dart';
 import 'package:gc_reminder/theme/theme.dart';
 import 'package:gc_reminder/utils/date/date_format_utils.dart';
 
@@ -71,7 +75,28 @@ class ReminderListItem extends StatelessWidget {
           horizontal: AppSetting.setWidth(8),
           vertical: AppSetting.setHeight(8),
         ),
-        right: SizedBox.shrink(),
+        right: reminder.type == .location
+            ? ConstrainedBox(
+                constraints: BoxConstraints(maxWidth: AppSetting.setWidth(100)),
+                child: UIKitTag(
+                  text: reminder.place ?? "",
+                  focused: true,
+                  leftIcon: Assets.icons.locationMarker,
+                  onTap: () {
+                    context.router.push(
+                      SelectLocationRoute(
+                        markers: [
+                          MapMarkerModel(
+                            latitude: reminder.lat!,
+                            longitude: reminder.lng!,
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+              )
+            : SizedBox.shrink(),
         // right: Column(
         //   crossAxisAlignment: .end,
         //   children: [

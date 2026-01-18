@@ -93,14 +93,20 @@ class _ReminderListBodyState extends State<ReminderListBody> {
               crossAxisAlignment: .stretch,
               children: [
                 BlocBuilder<ReminderDashboardBloc, ReminderDashboardBlocState>(
-                  builder: (context, state) => state.maybeWhen(
-                    orElse: () => const SizedBox.shrink(),
-                    loaded: (state, action) => TodayReminderSummary(
-                      completed: state.summary.completed,
-                      ongoing: state.summary.ongoing,
-                      total: state.summary.total,
-                      date: DateTime.now(),
+                  builder: (context, state) => TodayReminderSummary(
+                    completed: state.maybeWhen(
+                      orElse: () => 0,
+                      loaded: (state, action) => state.summary.completed,
                     ),
+                    ongoing: state.maybeWhen(
+                      orElse: () => 0,
+                      loaded: (state, action) => state.summary.ongoing,
+                    ),
+                    total: state.maybeWhen(
+                      orElse: () => 0,
+                      loaded: (state, action) => state.summary.total,
+                    ),
+                    date: DateTime.now(),
                   ),
                 ),
                 Space.h(16),

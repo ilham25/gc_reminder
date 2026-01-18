@@ -20,7 +20,9 @@ Future<void> bootstrap(FutureOr<Widget> Function() builder) async {
   };
 
   // init notification service
-  await inject<NotificationService>().initialize();
+  inject<NotificationService>().initialize().catchError((e) {
+    debugPrint("Notification Error: $e");
+  });
 
   final appBuilder = await builder();
   Bloc.observer = MyBlocObserver();

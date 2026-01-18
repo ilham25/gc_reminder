@@ -4,6 +4,7 @@ import 'package:gc_reminder/bloc/reminder/reminder_dashboard/reminder_dashboard_
 import 'package:gc_reminder/config/app_config.dart';
 import 'package:gc_reminder/core/widgets/button/button.dart';
 import 'package:gc_reminder/core/widgets/button/icon_button.dart';
+import 'package:gc_reminder/core/widgets/dialog/action_dialog.dart';
 import 'package:gc_reminder/domain/models/reminder/reminder_model.dart';
 import 'package:gc_reminder/gen/assets.gen.dart';
 import 'package:gc_reminder/presentation/common/widgets/bottom_sheet/calendar_bottom_sheet.dart';
@@ -27,6 +28,12 @@ class _RecentRemindersState extends State<RecentReminders> {
   bool get isDeleteMode => selectedIds.isNotEmpty;
 
   Future _onDelete() async {
+    final result = await UIKitConfirmDialog.negative(
+      title: "Are you sure?",
+      description: "You are about to delete ${selectedIds.length} reminder(s)",
+    );
+    if (result != true || !mounted) return;
+
     await context.read<ReminderDashboardBloc>().delete(selectedIds);
     setState(() {
       selectedIds = [];
@@ -112,7 +119,10 @@ class _RecentRemindersState extends State<RecentReminders> {
       crossAxisAlignment: .stretch,
       children: [
         Padding(
-          padding: .symmetric(horizontal: AppSetting.setWidth(8)),
+          padding: .symmetric(
+            horizontal: AppSetting.setWidth(8),
+            vertical: AppSetting.setHeight(4),
+          ),
           child: Row(
             children: [
               Text(
@@ -159,8 +169,6 @@ class _RecentRemindersState extends State<RecentReminders> {
             },
           );
         }),
-
-        Space.h(4),
       ],
     );
   }

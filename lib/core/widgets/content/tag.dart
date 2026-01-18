@@ -85,13 +85,15 @@ class UIKitTag extends StatelessWidget {
                       ),
                       Space.w(4),
                     ],
-                    Text(
-                      text.toUpperCase(),
-                      style: MyTheme.style.caption.m.copyWith(
-                        color: _textColor,
+                    Flexible(
+                      child: Text(
+                        text.toUpperCase(),
+                        style: MyTheme.style.caption.m.copyWith(
+                          color: _textColor,
+                        ),
+                        maxLines: 1,
+                        overflow: .ellipsis,
                       ),
-                      maxLines: 1,
-                      overflow: .ellipsis,
                     ),
                     if (rightIcon != null) ...[
                       Space.w(4),
