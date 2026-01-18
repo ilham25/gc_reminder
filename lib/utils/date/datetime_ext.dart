@@ -18,6 +18,13 @@ extension DateHelpers on DateTime {
         tomorrow.year == year;
   }
 
+  bool get isDaysAfterTomorrow {
+    final tomorrow = DateTime.now().add(const Duration(days: 1));
+    return tomorrow.day < day &&
+        tomorrow.month <= month &&
+        tomorrow.year <= year;
+  }
+
   bool isSameDayAs(DateTime other) {
     return day == other.day && month == other.month && year == other.year;
   }

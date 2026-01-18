@@ -18,6 +18,10 @@ class ReminderDao extends DatabaseAccessor<AppDatabase>
     final query = select(db.reminderTable);
 
     if (filter == null) {
+      query.where((t) {
+        final d = DateTime.now();
+        return t.startAt.isBiggerOrEqualValue(DateTime(d.year, d.month, d.day));
+      });
       return query.get();
     }
 

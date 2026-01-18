@@ -4,12 +4,14 @@ import 'package:gc_reminder/bloc/reminder/reminder_dashboard/reminder_dashboard_
 import 'package:gc_reminder/config/app_config.dart';
 import 'package:gc_reminder/core/widgets/button/button.dart';
 import 'package:gc_reminder/core/widgets/button/icon_button.dart';
+import 'package:gc_reminder/domain/models/reminder/reminder_model.dart';
 import 'package:gc_reminder/gen/assets.gen.dart';
 import 'package:gc_reminder/presentation/common/widgets/bottom_sheet/calendar_bottom_sheet.dart';
 import 'package:gc_reminder/presentation/common/widgets/empty/empty_list.dart';
 import 'package:gc_reminder/presentation/reminder/widgets/bottom_sheet/reminder_update_bottom_sheet.dart';
 import 'package:gc_reminder/presentation/reminder/widgets/list_item/reminder_list_item.dart';
 import 'package:gc_reminder/theme/theme.dart';
+import 'package:gc_reminder/utils/date/datetime_ext.dart';
 
 class RecentReminders extends StatefulWidget {
   final VoidCallback onRefresh;
@@ -80,6 +82,90 @@ class _RecentRemindersState extends State<RecentReminders> {
     );
   }
 
+  List<Widget> _buildList(List<ReminderModel> items) {
+    final todayList = items.where((item) => item.startAt.isToday).toList();
+    final tomorrowList = items
+        .where((item) => item.startAt.isTomorrow)
+        .toList();
+    debugPrint("${tomorrowList} | ${items}");
+    final daysAfterTomorrowList = items
+        .where((item) => item.startAt.isDaysAfterTomorrow)
+        .toList();
+
+    return [
+      if (todayList.isNotEmpty)
+        _buildListSection(title: "Today", list: todayList),
+      if (tomorrowList.isNotEmpty)
+        _buildListSection(title: "Tomorrow", list: tomorrowList),
+      if (daysAfterTomorrowList.isNotEmpty)
+        _buildListSection(
+          title: "Later this week",
+          list: daysAfterTomorrowList,
+        ),
+    ];
+  }
+
+  Widget _buildListSection({
+    required String title,
+    required List<ReminderModel> list,
+  }) {
+    return Column(
+      crossAxisAlignment: .stretch,
+      children: [
+        Padding(
+          padding: .symmetric(horizontal: AppSetting.setWidth(8)),
+          child: Row(
+            children: [
+              Text(
+                title,
+                style: MyTheme.style.action.s.copyWith(
+                  color: MyTheme.color.palette.dark.light,
+                ),
+              ),
+            ],
+          ),
+        ),
+        ...list.map((item) {
+          final selected = selectedIds.contains(item.id);
+
+          return ReminderListItem(
+            reminder: item,
+            deleteMode: isDeleteMode,
+            onRefresh: widget.onRefresh,
+            selected: selected,
+            onTap: () async {
+              if (isDeleteMode) {
+                setState(() {
+                  if (selected) {
+                    selectedIds.remove(item.id);
+                  } else {
+                    selectedIds.add(item.id);
+                  }
+                });
+
+                return;
+              }
+
+              await ReminderUpdateBottomSheet.show(reminder: item);
+              widget.onRefresh();
+            },
+            onLongPress: () {
+              setState(() {
+                if (selected) {
+                  selectedIds.remove(item.id);
+                } else {
+                  selectedIds.add(item.id);
+                }
+              });
+            },
+          );
+        }),
+
+        Space.h(4),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -108,11 +194,6 @@ class _RecentRemindersState extends State<RecentReminders> {
                 ),
                 Space.w(4),
                 _buildActionIcon(),
-                // Assets.icons.filter.image(
-                //   height: AppSetting.setHeight(14),
-                //   width: AppSetting.setWidth(14),
-                //   color: MyTheme.color.palette.dark.darkest,
-                // ),
               ],
             ),
           ),
@@ -124,48 +205,10 @@ class _RecentRemindersState extends State<RecentReminders> {
                   return EmptyList(onRefresh: widget.onRefresh);
                 }
 
-                return ListView.builder(
+                return ListView(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
-                  // padding: .symmetric(vertical: AppSetting.setHeight(8)),
-                  // separatorBuilder: (context, index) => Space.h(2),
-                  itemCount: state.items.length,
-                  itemBuilder: (context, index) {
-                    final item = state.items[index];
-                    final selected = selectedIds.contains(item.id);
-
-                    return ReminderListItem(
-                      reminder: item,
-                      deleteMode: isDeleteMode,
-                      onRefresh: widget.onRefresh,
-                      selected: selected,
-                      onTap: () async {
-                        if (isDeleteMode) {
-                          setState(() {
-                            if (selected) {
-                              selectedIds.remove(item.id);
-                            } else {
-                              selectedIds.add(item.id);
-                            }
-                          });
-
-                          return;
-                        }
-
-                        await ReminderUpdateBottomSheet.show(reminder: item);
-                        widget.onRefresh();
-                      },
-                      onLongPress: () {
-                        setState(() {
-                          if (selected) {
-                            selectedIds.remove(item.id);
-                          } else {
-                            selectedIds.add(item.id);
-                          }
-                        });
-                      },
-                    );
-                  },
+                  children: _buildList(state.items),
                 );
               },
             ),
