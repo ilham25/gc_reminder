@@ -45,7 +45,10 @@ class LocationReminderServiceImpl implements LocationReminderService {
     reminders.fold((l) {}, (r) {
       _geofence.addRegions(
         r
-            .where((reminder) => reminder.type == .location)
+            .where(
+              (reminder) =>
+                  reminder.type == .location && reminder.doneAt == null,
+            )
             .map(
               (reminder) => GeofenceRegion.circular(
                 id: id.toString(),
