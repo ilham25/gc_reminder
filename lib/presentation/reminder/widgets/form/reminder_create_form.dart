@@ -5,6 +5,7 @@ import 'package:gc_reminder/config/app_config.dart';
 import 'package:gc_reminder/core/widgets/button/button.dart';
 import 'package:gc_reminder/core/widgets/content/divider.dart';
 import 'package:gc_reminder/core/widgets/form/base_form.dart';
+import 'package:gc_reminder/core/widgets/input/calendar_input.dart';
 import 'package:gc_reminder/core/widgets/input/primary_date_picker.dart';
 import 'package:gc_reminder/core/widgets/input/radio_button.dart';
 import 'package:gc_reminder/core/widgets/input/text_field.dart';
@@ -107,12 +108,11 @@ class ReminderCreateForm extends StatelessWidget {
                 FormBuilderField<DateTime>(
                   name: "startDate",
                   initialValue: initialValue["startDate"],
-                  builder: (field) => PrimaryDatePicker(
+                  builder: (field) => UIKitCalendarInput(
                     title: "Date",
-                    hintText: "Pick Date",
                     onChanged: field.didChange,
                     value: field.value,
-                    errorText: field.errorText ?? "",
+                    errorText: field.errorText,
                   ),
                   validator: FormBuilderValidators.compose([
                     FormBuilderValidators.required(),
