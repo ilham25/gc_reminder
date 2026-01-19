@@ -1,4 +1,3 @@
-import 'package:flutter/rendering.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:gc_reminder/domain/cubit/safe_cubit.dart';
 import 'package:gc_reminder/injection/injector.dart';
@@ -13,7 +12,6 @@ class AuthSessionBloc extends SafeCubit<AuthSessionBlocState> {
   final AuthRepository authRepository = inject<AuthRepository>();
 
   Future<void> checkSession() async {
-    debugPrint("checkSession");
     emit(AuthSessionBlocState.loading());
     try {
       final isOnboardingCompleted = await authRepository

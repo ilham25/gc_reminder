@@ -22,18 +22,11 @@ class LocationReminderServiceImpl implements LocationReminderService {
       accuracy: 100, // Accuracy in meters
     );
 
-    // _geofence.onGeofenceStatusChanged.listen((GeofenceStatusChanged event) {
-    //   if (event.status == GeofenceStatus.enter) {
-    //     _showNotification(event.region.id, "You have arrived at your destination!");
-    //   }
-    // });
-
     _geofence.addGeofenceStatusChangedListener((
       geofenceRegion,
       geofenceStatus,
       location,
     ) async {
-      debugPrint("geofenceStatus: $geofenceStatus | $geofenceRegion");
       if (geofenceStatus == .enter) {
         _showNotification(geofenceRegion);
       }

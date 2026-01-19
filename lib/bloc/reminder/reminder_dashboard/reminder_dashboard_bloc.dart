@@ -1,4 +1,3 @@
-import 'package:flutter/rendering.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:gc_reminder/application/reminder/usecases/delete_reminders_usecase.dart';
 import 'package:gc_reminder/domain/cubit/safe_cubit.dart';
@@ -28,8 +27,6 @@ class ReminderDashboardBloc extends SafeCubit<ReminderDashboardBlocState> {
         emit(const ReminderDashboardBlocState.loading());
       },
     );
-
-    debugPrint("filter ${filter?.date} ${filter?.type} ${filter?.status}");
 
     final getSummary = await _localRepository.getSummary(date: DateTime.now());
     final summaryResult = getSummary.fold((left) {
