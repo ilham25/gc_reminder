@@ -1,16 +1,13 @@
+import 'package:gc_reminder/application/location/usecases/get_current_placemark_usecase.dart';
+import 'package:gc_reminder/application/location/usecases/get_current_position_usecase.dart';
+import 'package:gc_reminder/application/permission/usecases/request_permission_usecase.dart';
 import 'package:gc_reminder/application/reminder/usecases/create_reminder_usecase.dart';
 import 'package:gc_reminder/application/reminder/usecases/delete_reminders_usecase.dart';
 import 'package:gc_reminder/application/reminder/usecases/update_reminder_usecase.dart';
 import 'package:gc_reminder/domain/location/services/location_reminder_service.dart';
 import 'package:gc_reminder/domain/location/services/location_service.dart';
-import 'package:gc_reminder/domain/location/usecases/get_current_placemark_usecase.dart';
-import 'package:gc_reminder/domain/location/usecases/get_current_position_usecase.dart';
 import 'package:gc_reminder/domain/notification/notification_service.dart';
-import 'package:gc_reminder/domain/notification/usecases/delete_notifications_usecase.dart';
-import 'package:gc_reminder/domain/notification/usecases/schedule_notification_usecase.dart';
-import 'package:gc_reminder/domain/notification/usecases/show_notification_usecase.dart';
 import 'package:gc_reminder/domain/permission/permission_service.dart';
-import 'package:gc_reminder/domain/permission/usecases/request_permission_usecase.dart';
 import 'package:gc_reminder/domain/repositories/auth/auth_repository.dart';
 import 'package:gc_reminder/domain/repositories/reminder/reminder_local_repository.dart';
 import 'package:gc_reminder/infrastructure/database/database.dart';
@@ -99,17 +96,6 @@ Future<void> setupInjector() async {
       reminderLocalRepository: inject<ReminderLocalRepository>(),
       eventBus: inject<EventBus>(),
     ),
-  );
-
-  // Notification usecases
-  inject.registerLazySingleton<ShowNotificationUseCase>(
-    () => ShowNotificationUseCase(inject<NotificationService>()),
-  );
-  inject.registerLazySingleton<ScheduleNotificationUseCase>(
-    () => ScheduleNotificationUseCase(inject<NotificationService>()),
-  );
-  inject.registerLazySingleton<DeleteNotificationsUseCase>(
-    () => DeleteNotificationsUseCase(inject<NotificationService>()),
   );
 
   // Location usecases

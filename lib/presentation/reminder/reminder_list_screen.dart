@@ -1,13 +1,13 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gc_reminder/application/permission/usecases/request_permission_usecase.dart';
 import 'package:gc_reminder/bloc/reminder/reminder_dashboard/reminder_dashboard_bloc.dart';
 import 'package:gc_reminder/config/app_config.dart';
 import 'package:gc_reminder/core/widgets/app_bar/app_bar.dart';
 import 'package:gc_reminder/core/widgets/button/icon_button.dart';
 import 'package:gc_reminder/core/widgets/content/calendar_timeline.dart';
 import 'package:gc_reminder/domain/location/services/location_reminder_service.dart';
-import 'package:gc_reminder/domain/permission/usecases/request_permission_usecase.dart';
 import 'package:gc_reminder/gen/assets.gen.dart';
 import 'package:gc_reminder/injection/injector.dart';
 import 'package:gc_reminder/presentation/reminder/widgets/bottom_sheet/reminder_create_bottom_sheet.dart';

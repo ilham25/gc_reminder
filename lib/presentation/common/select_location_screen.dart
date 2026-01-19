@@ -1,11 +1,11 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:gc_reminder/application/location/usecases/get_current_placemark_usecase.dart';
 import 'package:gc_reminder/config/app_config.dart';
 import 'package:gc_reminder/core/widgets/app_bar/app_bar.dart';
 import 'package:gc_reminder/core/widgets/button/button.dart';
 import 'package:gc_reminder/core/widgets/toast/toast.dart';
-import 'package:gc_reminder/domain/location/usecases/get_current_placemark_usecase.dart';
 import 'package:gc_reminder/domain/models/location/select_location_model.dart';
 import 'package:gc_reminder/domain/models/map/map_model.dart';
 import 'package:gc_reminder/gen/assets.gen.dart';

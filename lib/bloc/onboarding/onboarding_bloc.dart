@@ -1,8 +1,8 @@
 import 'package:dartz/dartz.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:gc_reminder/application/permission/usecases/request_permission_usecase.dart';
 import 'package:gc_reminder/core/models/base_error.dart';
 import 'package:gc_reminder/domain/cubit/safe_cubit.dart';
-import 'package:gc_reminder/domain/permission/usecases/request_permission_usecase.dart';
 import 'package:gc_reminder/domain/repositories/auth/auth_repository.dart';
 import 'package:gc_reminder/injection/injector.dart';
 

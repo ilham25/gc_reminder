@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
-import 'package:gc_reminder/domain/location/usecases/get_current_position_usecase.dart';
+import 'package:gc_reminder/application/location/usecases/get_current_position_usecase.dart';
 import 'package:gc_reminder/domain/models/map/map_model.dart';
 import 'package:gc_reminder/injection/injector.dart';
 import 'package:gc_reminder/utils/flavor/flavor_utils.dart';
