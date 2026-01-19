@@ -1,3 +1,6 @@
+import 'package:gc_reminder/application/reminder/usecases/create_reminder_usecase.dart';
+import 'package:gc_reminder/application/reminder/usecases/delete_reminders_usecase.dart';
+import 'package:gc_reminder/application/reminder/usecases/update_reminder_usecase.dart';
 import 'package:gc_reminder/domain/location/services/location_reminder_service.dart';
 import 'package:gc_reminder/domain/location/services/location_service.dart';
 import 'package:gc_reminder/domain/location/usecases/get_current_placemark_usecase.dart';
@@ -13,6 +16,7 @@ import 'package:gc_reminder/domain/repositories/reminder/reminder_local_reposito
 import 'package:gc_reminder/infrastructure/database/database.dart';
 import 'package:gc_reminder/infrastructure/datasource/reminder/reminder_local_datasource.dart';
 import 'package:gc_reminder/infrastructure/datasource/user/user_datasource.dart';
+import 'package:gc_reminder/infrastructure/event/event_bus.dart';
 import 'package:gc_reminder/infrastructure/repositories/user/user_repository_impl.dart';
 import 'package:get_it/get_it.dart';
 import 'package:gc_reminder/core/networks/api_client.dart';
@@ -40,6 +44,9 @@ Future<void> setupInjector() async {
   /// Local Database
   inject.registerLazySingleton<AppDatabase>(() => AppDatabase());
 
+  /// Event Bus
+  inject.registerLazySingleton<EventBus>(() => EventBus());
+
   /// Registering data source
   inject.registerLazySingleton<AuthLocalDataSource>(
     () => AuthLocalDataSource(),
@@ -56,7 +63,7 @@ Future<void> setupInjector() async {
 
   /// Register services
   inject.registerLazySingleton<NotificationService>(
-    () => NotificationServiceImpl(),
+    () => NotificationServiceImpl(eventBus: inject<EventBus>()),
   );
   inject.registerLazySingleton<PermissionService>(
     () => PermissionServiceImpl(),
@@ -66,23 +73,6 @@ Future<void> setupInjector() async {
   // Register usecases
   inject.registerLazySingleton<RequestPermissionUseCase>(
     () => RequestPermissionUseCase(inject<PermissionService>()),
-  );
-
-  // Notification usecases
-  inject.registerLazySingleton<ShowNotificationUseCase>(
-    () => ShowNotificationUseCase(inject<NotificationService>()),
-  );
-  inject.registerLazySingleton<ScheduleNotificationUseCase>(
-    () => ScheduleNotificationUseCase(inject<NotificationService>()),
-  );
-  inject.registerLazySingleton<DeleteNotificationsUseCase>(
-    () => DeleteNotificationsUseCase(inject<NotificationService>()),
-  );
-  inject.registerLazySingleton<GetCurrentPositionUseCase>(
-    () => GetCurrentPositionUseCase(inject<LocationService>()),
-  );
-  inject.registerLazySingleton<GetCurrentPlacemarkUseCase>(
-    () => GetCurrentPlacemarkUseCase(inject<LocationService>()),
   );
 
   /// Register bloc
@@ -107,6 +97,46 @@ Future<void> setupInjector() async {
     () => LocationReminderServiceImpl(
       notificationService: inject<NotificationService>(),
       reminderLocalRepository: inject<ReminderLocalRepository>(),
+      eventBus: inject<EventBus>(),
+    ),
+  );
+
+  // Notification usecases
+  inject.registerLazySingleton<ShowNotificationUseCase>(
+    () => ShowNotificationUseCase(inject<NotificationService>()),
+  );
+  inject.registerLazySingleton<ScheduleNotificationUseCase>(
+    () => ScheduleNotificationUseCase(inject<NotificationService>()),
+  );
+  inject.registerLazySingleton<DeleteNotificationsUseCase>(
+    () => DeleteNotificationsUseCase(inject<NotificationService>()),
+  );
+
+  // Location usecases
+  inject.registerLazySingleton<GetCurrentPositionUseCase>(
+    () => GetCurrentPositionUseCase(inject<LocationService>()),
+  );
+  inject.registerLazySingleton<GetCurrentPlacemarkUseCase>(
+    () => GetCurrentPlacemarkUseCase(inject<LocationService>()),
+  );
+
+  // Reminder Usecases
+  inject.registerLazySingleton<CreateReminderUseCase>(
+    () => CreateReminderUseCase(
+      inject<ReminderLocalRepository>(),
+      inject<EventBus>(),
+    ),
+  );
+  inject.registerLazySingleton<UpdateReminderUseCase>(
+    () => UpdateReminderUseCase(
+      inject<ReminderLocalRepository>(),
+      inject<EventBus>(),
+    ),
+  );
+  inject.registerLazySingleton<DeleteRemindersUseCase>(
+    () => DeleteRemindersUseCase(
+      inject<ReminderLocalRepository>(),
+      inject<EventBus>(),
     ),
   );
 

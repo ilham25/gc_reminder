@@ -5,10 +5,14 @@ class LocationReminderServiceImpl implements LocationReminderService {
 
   final ReminderLocalRepository reminderLocalRepository;
   final NotificationService notificationService;
+  final EventBus eventBus;
+
+  final List<StreamSubscription> _subscriptions = [];
 
   LocationReminderServiceImpl({
     required this.reminderLocalRepository,
     required this.notificationService,
+    required this.eventBus,
   });
 
   @override
@@ -23,6 +27,7 @@ class LocationReminderServiceImpl implements LocationReminderService {
     //     _showNotification(event.region.id, "You have arrived at your destination!");
     //   }
     // });
+
     _geofence.addGeofenceStatusChangedListener((
       geofenceRegion,
       geofenceStatus,
@@ -33,6 +38,18 @@ class LocationReminderServiceImpl implements LocationReminderService {
         _showNotification(geofenceRegion);
       }
     });
+
+    _subscriptions.add(
+      eventBus.on<ReminderCreatedEvent>().listen(_onReminderCreated),
+    );
+
+    _subscriptions.add(
+      eventBus.on<ReminderUpdatedEvent>().listen(_onReminderUpdated),
+    );
+
+    _subscriptions.add(
+      eventBus.on<ReminderDeletedEvent>().listen(_onReminderDeleted),
+    );
   }
 
   @override
@@ -103,5 +120,20 @@ class LocationReminderServiceImpl implements LocationReminderService {
       reminder.id,
       dto: UpdateReminderDTO(doneAt: DateTime.now()),
     );
+  }
+
+  // Event Listeners
+  void _onReminderCreated(ReminderCreatedEvent event) {
+    if (event.dto.type != .location) return;
+    createGeofence(event.id);
+  }
+
+  void _onReminderUpdated(ReminderUpdatedEvent event) {
+    if (event.dto.type != .location) return;
+    createGeofence(event.id);
+  }
+
+  void _onReminderDeleted(ReminderDeletedEvent event) {
+    _geofence.removeRegionById(event.id.toString());
   }
 }

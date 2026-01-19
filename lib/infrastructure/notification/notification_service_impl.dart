@@ -4,6 +4,11 @@ final FlutterLocalNotificationsPlugin _notificationsPlugin =
     FlutterLocalNotificationsPlugin();
 
 class NotificationServiceImpl implements NotificationService {
+  final EventBus eventBus;
+  final List<StreamSubscription> _subscriptions = [];
+
+  NotificationServiceImpl({required this.eventBus});
+
   @override
   Future<void> initialize() async {
     const AndroidInitializationSettings androidSettings =
@@ -28,6 +33,18 @@ class NotificationServiceImpl implements NotificationService {
       },
     );
     tz.initializeTimeZones();
+
+    _subscriptions.add(
+      eventBus.on<ReminderCreatedEvent>().listen(_onReminderCreated),
+    );
+
+    _subscriptions.add(
+      eventBus.on<ReminderUpdatedEvent>().listen(_onReminderUpdated),
+    );
+
+    _subscriptions.add(
+      eventBus.on<ReminderDeletedEvent>().listen(_onReminderDeleted),
+    );
   }
 
   @override
@@ -146,5 +163,30 @@ class NotificationServiceImpl implements NotificationService {
     } catch (e) {
       return Left(BaseError(message: e.toString()));
     }
+  }
+
+  // Event Listeners
+  void _onReminderCreated(ReminderCreatedEvent event) {
+    if (event.dto.type != .time) return;
+    scheduleNotification(
+      event.id,
+      title: event.dto.title,
+      date: event.dto.startAt,
+      body: event.dto.description,
+    );
+  }
+
+  void _onReminderUpdated(ReminderUpdatedEvent event) {
+    if (event.dto.type != .time) return;
+    scheduleNotification(
+      event.id,
+      title: event.dto.title!,
+      date: event.dto.startAt!,
+      body: event.dto.description,
+    );
+  }
+
+  void _onReminderDeleted(ReminderDeletedEvent event) {
+    deleteNotification(event.id);
   }
 }

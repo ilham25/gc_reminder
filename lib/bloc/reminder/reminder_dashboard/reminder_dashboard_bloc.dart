@@ -1,10 +1,10 @@
 import 'package:flutter/rendering.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:gc_reminder/application/reminder/usecases/delete_reminders_usecase.dart';
 import 'package:gc_reminder/domain/cubit/safe_cubit.dart';
 import 'package:gc_reminder/domain/models/reminder/reminder_filter_model.dart';
 import 'package:gc_reminder/domain/models/reminder/reminder_model.dart';
 import 'package:gc_reminder/domain/models/reminder/reminder_summary_model.dart';
-import 'package:gc_reminder/domain/notification/usecases/delete_notifications_usecase.dart';
 import 'package:gc_reminder/domain/repositories/reminder/reminder_local_repository.dart';
 import 'package:gc_reminder/infrastructure/database/database.dart';
 import 'package:gc_reminder/injection/injector.dart';
@@ -18,8 +18,8 @@ class ReminderDashboardBloc extends SafeCubit<ReminderDashboardBlocState> {
 
   final ReminderLocalRepository _localRepository =
       inject<ReminderLocalRepository>();
-  final DeleteNotificationsUseCase _deleteNotificationsUseCase =
-      inject<DeleteNotificationsUseCase>();
+  final DeleteRemindersUseCase _deleteRemindersUseCase =
+      inject<DeleteRemindersUseCase>();
 
   Future getData({ReminderFilterModel? filter}) async {
     state.maybeWhen(
@@ -73,36 +73,19 @@ class ReminderDashboardBloc extends SafeCubit<ReminderDashboardBlocState> {
           ),
         );
 
-        final mutateDeleteReminders = await _localRepository.deleteReminders(
-          ids,
-        );
+        final mutateDeleteReminders = await _deleteRemindersUseCase.call(ids);
 
-        await mutateDeleteReminders.fold(
-          (left) async => emit(
+        mutateDeleteReminders.fold(
+          (left) => emit(
             ReminderDashboardBlocState.loaded(
               state: oldState,
               action: ReminderDashboardActionState.error(left.message),
             ),
           ),
-          (right) async {
-            final mutateDeleteSchedules = await _deleteNotificationsUseCase
-                .call(ids);
-
-            return mutateDeleteSchedules.fold(
-              (left) => ReminderDashboardBlocState.loaded(
-                state: oldState,
-                action: ReminderDashboardActionState.error(left.message),
-              ),
-              (right) => emit(
-                ReminderDashboardBlocState.loaded(
-                  state: oldState,
-                  action: ReminderDashboardActionState.success(
-                    actionName: "delete",
-                  ),
-                ),
-              ),
-            );
-          },
+          (right) => ReminderDashboardBlocState.loaded(
+            state: oldState,
+            action: ReminderDashboardActionState.success(actionName: "delete"),
+          ),
         );
       },
     );
