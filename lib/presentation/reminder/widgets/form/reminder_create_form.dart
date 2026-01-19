@@ -204,11 +204,6 @@ class _ReminderCreateFormState extends State<ReminderCreateForm> {
               ),
             ],
           ),
-          FormBuilderField<String>(
-            name: "place",
-            initialValue: widget.initialValue["place"],
-            builder: (field) => SizedBox.shrink(),
-          ),
           FormBuilderField<LatLng>(
             name: "position",
             initialValue: widget.initialValue["position"],
@@ -234,56 +229,61 @@ class _ReminderCreateFormState extends State<ReminderCreateForm> {
                     child: Column(
                       crossAxisAlignment: .stretch,
                       children: [
-                        ValueListenableBuilder(
-                          valueListenable: place,
-                          builder: (context, placeValue, child) {
-                            if (placeValue == null) return SizedBox.shrink();
+                        Column(
+                          crossAxisAlignment: .stretch,
+                          children: [
+                            // Text(
+                            //   "Location Name",
+                            //   style: MyTheme.style.heading.h5,
+                            // ),
+                            // Space.h(2),
+                            // Text(placeValue, style: MyTheme.style.body.m),
+                            FormBuilderField<String>(
+                              name: "place",
+                              initialValue: widget.initialValue["place"],
+                              builder: (field) {
+                                return UIKitTextField(
+                                  title: "Location Name",
+                                  placeholder: "Enter Location Name",
+                                  onChanged: field.didChange,
+                                  errorText: field.errorText,
+                                  initialValue: field.value,
+                                );
+                              },
+                              validator: FormBuilderValidators.compose([
+                                FormBuilderValidators.required(),
+                              ]),
+                            ),
+                            Space.h(8),
+                            Text("Trigger", style: MyTheme.style.heading.h5),
+                            Space.h(16),
+                            Container(
+                              clipBehavior: .antiAlias,
+                              height: AppSetting.setHeight(180),
+                              decoration: BoxDecoration(
+                                color: MyTheme.color.palette.light.dark,
+                                borderRadius: .circular(12),
+                              ),
+                              child: ValueListenableBuilder(
+                                valueListenable: position,
+                                builder: (context, positionValue, child) {
+                                  return PrimaryMap(
+                                    markers: positionValue == null
+                                        ? []
+                                        : [
+                                            MapMarkerModel(
+                                              latitude: positionValue.latitude,
+                                              longitude:
+                                                  positionValue.longitude,
+                                            ),
+                                          ],
+                                  );
+                                },
+                              ),
+                            ),
 
-                            return Column(
-                              crossAxisAlignment: .stretch,
-                              children: [
-                                Text(
-                                  "Location Name",
-                                  style: MyTheme.style.heading.h5,
-                                ),
-                                Space.h(2),
-                                Text(placeValue, style: MyTheme.style.body.m),
-                                Space.h(8),
-                                Text(
-                                  "Trigger",
-                                  style: MyTheme.style.heading.h5,
-                                ),
-                                Space.h(16),
-                                Container(
-                                  clipBehavior: .antiAlias,
-                                  height: AppSetting.setHeight(180),
-                                  decoration: BoxDecoration(
-                                    color: MyTheme.color.palette.light.dark,
-                                    borderRadius: .circular(12),
-                                  ),
-                                  child: ValueListenableBuilder(
-                                    valueListenable: position,
-                                    builder: (context, positionValue, child) {
-                                      return PrimaryMap(
-                                        markers: positionValue == null
-                                            ? []
-                                            : [
-                                                MapMarkerModel(
-                                                  latitude:
-                                                      positionValue.latitude,
-                                                  longitude:
-                                                      positionValue.longitude,
-                                                ),
-                                              ],
-                                      );
-                                    },
-                                  ),
-                                ),
-
-                                Space.h(16),
-                              ],
-                            );
-                          },
+                            Space.h(16),
+                          ],
                         ),
                         ValueListenableBuilder(
                           valueListenable: position,

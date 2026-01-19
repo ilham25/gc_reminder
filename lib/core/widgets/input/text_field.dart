@@ -28,6 +28,7 @@ class UIKitTextField extends StatefulWidget {
 
   final ValueChanged<String>? onChanged;
   final String? initialValue;
+  final String? value;
 
   const UIKitTextField({
     super.key,
@@ -48,6 +49,7 @@ class UIKitTextField extends StatefulWidget {
     this.title = "",
     this.onChanged,
     this.initialValue,
+    this.value,
   });
 
   factory UIKitTextField.textArea({
@@ -66,6 +68,7 @@ class UIKitTextField extends StatefulWidget {
     String title = "",
     ValueChanged<String>? onChanged,
     String? initialValue,
+    String? value,
   }) {
     return UIKitTextField(
       placeholder: placeholder,
@@ -83,6 +86,7 @@ class UIKitTextField extends StatefulWidget {
       title: title,
       onChanged: onChanged,
       initialValue: initialValue,
+      value: value,
     );
   }
 
@@ -94,12 +98,15 @@ class _UIKitTextFieldState extends State<UIKitTextField> {
   late TextEditingController _controller;
   late FocusNode _focusNode;
   bool isShowPassword = false;
+  bool _isInternalUpdate = false;
 
   @override
   void initState() {
     super.initState();
     _controller =
         widget.controller ?? TextEditingController(text: widget.initialValue);
+    _controller.addListener(_onControllerChanged);
+    //
     _focusNode = FocusNode();
   }
 
@@ -107,9 +114,40 @@ class _UIKitTextFieldState extends State<UIKitTextField> {
   void dispose() {
     _focusNode.dispose();
     if (widget.controller == null) {
+      _controller.removeListener(_onControllerChanged);
       _controller.dispose();
     }
     super.dispose();
+  }
+
+  void _onControllerChanged() {
+    if (!_isInternalUpdate && widget.onChanged != null) {
+      widget.onChanged!(_controller.text);
+    }
+  }
+
+  @override
+  void didUpdateWidget(UIKitTextField oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    // Only update if initialValue changed AND it's different from current text
+    if (widget.initialValue != oldWidget.initialValue &&
+        widget.initialValue != _controller.text) {
+      _isInternalUpdate = true;
+
+      final oldSelection = _controller.selection;
+      final newText = widget.initialValue ?? '';
+
+      // Calculate safe cursor position
+      final newOffset = oldSelection.baseOffset.clamp(0, newText.length);
+
+      _controller.value = TextEditingValue(
+        text: newText,
+        selection: TextSelection.collapsed(offset: newOffset),
+      );
+
+      _isInternalUpdate = false;
+    }
   }
 
   TextStyle get _textStyle => MyTheme.style.body.m;
