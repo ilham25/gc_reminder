@@ -24,6 +24,10 @@ class ReminderUpdateBloc extends SafeCubit<ReminderUpdateBlocState> {
     emit(const ReminderUpdateBlocState.loading());
 
     final dto = UpdateReminderDTO.fromReminderUpdateForm(formData);
+    if (dto.type == .time && DateTime.now().isAfter(dto.startAt!)) {
+      emit(ReminderUpdateBlocState.error("Start date must be in the future"));
+      return;
+    }
 
     final mutateUpdateReminder = await _localRepository.updateReminder(
       id,

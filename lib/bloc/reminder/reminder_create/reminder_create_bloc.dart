@@ -25,6 +25,11 @@ class ReminderCreateBloc extends SafeCubit<ReminderCreateBlocState> {
 
     final dto = CreateReminderDTO.fromReminderCreateForm(formData);
 
+    if (dto.type == .time && DateTime.now().isAfter(dto.startAt)) {
+      emit(ReminderCreateBlocState.error("Start date must be in the future"));
+      return;
+    }
+
     final result = await _localRepository.createReminder(dto: dto);
     await result.fold(
       (left) async => emit(ReminderCreateBlocState.error(left.message)),

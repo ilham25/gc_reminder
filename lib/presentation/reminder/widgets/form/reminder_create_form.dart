@@ -76,6 +76,11 @@ class _ReminderCreateFormState extends State<ReminderCreateForm> {
           return;
         }
 
+        if (result != null && context.mounted) {
+          Navigator.pop(context, result);
+          return;
+        }
+
         final bool shouldPop = !isFormChanged.value;
         if (context.mounted && shouldPop) {
           Navigator.pop(context);
