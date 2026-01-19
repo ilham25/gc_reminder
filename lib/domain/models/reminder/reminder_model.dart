@@ -1,4 +1,6 @@
+import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:gc_reminder/domain/models/map/map_model.dart';
 import 'package:gc_reminder/infrastructure/database/database.dart';
 import 'package:latlong2/latlong.dart';
 
@@ -62,5 +64,9 @@ extension ReminderModelExt on ReminderModel {
     }
 
     return initialValue;
+  }
+
+  MapMarkerModel toMapMarkerModel({VoidCallback? onTap}) {
+    return MapMarkerModel(latitude: lat!, longitude: lng!, onTap: onTap);
   }
 }
